@@ -14,6 +14,7 @@ This checklist describes the first useful version of the municipality assistant.
 - [x] Add a small mock backend API.
 - [x] Add a simple demo tenant configuration.
 - [x] Add optional server-side OpenAI support.
+- [x] Add basic input validation and rate limiting.
 - [x] Avoid real API keys.
 - [x] Avoid npm, Docker, database, and authentication requirements.
 

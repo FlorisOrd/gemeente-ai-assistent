@@ -36,6 +36,7 @@
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
+    '  <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens.</p>' +
     '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
     '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant">Hallo! Stel gerust een vraag. Deze demo gebruikt een mock-antwoord en geen echte AI API.</p>' +
     "  </div>" +
@@ -104,6 +105,14 @@
     "}" +
     ".gemeente-ai-assistent-body {" +
     "  padding: 16px;" +
+    "}" +
+    ".gemeente-ai-assistent-privacy-notice {" +
+    "  margin: 0 0 12px;" +
+    "  padding: 10px 12px;" +
+    "  border-left: 4px solid #f59e0b;" +
+    "  background: #fff7ed;" +
+    "  color: #7c2d12;" +
+    "  font-size: 0.92rem;" +
     "}" +
     ".gemeente-ai-assistent-messages {" +
     "  display: flex;" +
@@ -229,7 +238,12 @@
       var data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "De demo-server gaf een fout terug.");
+        addMessage(
+          "assistant",
+          data.error || "De demo-server kon uw bericht niet verwerken."
+        );
+        note.textContent = "";
+        return;
       }
 
       addMessage("assistant", data.message, data.sources || []);

@@ -3,6 +3,15 @@
   "municipalityName": "Gemeente Demo",
   "assistantName": "Demo Gemeente Assistent",
   "themeColor": "#0f766e",
+  "contactUrl": "https://example.com/contact",
+  "privacyUrl": "https://example.com/privacy",
+  "allowedTopics": [
+    "paspoorten en identiteitskaarten",
+    "verhuizen",
+    "afval en openbare ruimte",
+    "vergunningen",
+    "contact met de gemeente"
+  ],
   "mockSources": [
     {
       "title": "Contact met de gemeente",

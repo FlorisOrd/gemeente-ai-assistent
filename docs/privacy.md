@@ -99,3 +99,5 @@ The current version:
 - Does not include tracking.
 - Uses a fake demo tenant configuration.
 - Keeps the API key on the server and out of browser files.
+- Avoids logging full citizen messages.
+- Requests no response storage when calling OpenAI.
