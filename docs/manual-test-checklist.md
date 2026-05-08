@@ -49,6 +49,16 @@ Use this checklist before sharing the demo outside a local development context.
 - [ ] Open the chat panel.
 - [ ] Confirm this notice is visible before sending a message: `Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens.`
 
+## Tenant Configuration
+
+- [ ] Confirm the widget title shows the `assistantName` from `apps/server/tenants/demo.json`.
+- [ ] Confirm the widget theme color matches `themeColor` from `apps/server/tenants/demo.json`.
+- [ ] Confirm the privacy link opens `privacyUrl` from `apps/server/tenants/demo.json`.
+- [ ] Confirm the contact link opens `contactUrl` from `apps/server/tenants/demo.json`.
+- [ ] Confirm chat still works in mock mode.
+- [ ] Confirm chat still works in real OpenAI mode.
+- [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected.
+
 ## Secret Safety
 
 - [ ] Search `widget/widget.js` for `OPENAI_API_KEY` and confirm it is not present.
