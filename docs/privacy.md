@@ -89,11 +89,13 @@ Before a real launch, municipalities should review:
 
 ## Current Version
 
-The current mock version:
+The current version:
 
-- Does not call an AI API.
-- Sends the typed message to the local mock backend at `/api/chat`.
+- Uses mock responses when `OPENAI_API_KEY` is not set.
+- Can call OpenAI from the server when `OPENAI_API_KEY` is set.
+- Sends the typed message to the backend at `/api/chat`.
 - Does not store messages.
 - Does not use cookies.
 - Does not include tracking.
 - Uses a fake demo tenant configuration.
+- Keeps the API key on the server and out of browser files.

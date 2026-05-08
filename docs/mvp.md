@@ -2,7 +2,7 @@
 
 This checklist describes the first useful version of the municipality assistant.
 
-## Current Mock Version
+## Current Version
 
 - [x] Add project README.
 - [x] Add future Codex working rules.
@@ -13,6 +13,7 @@ This checklist describes the first useful version of the municipality assistant.
 - [x] Add widget script.
 - [x] Add a small mock backend API.
 - [x] Add a simple demo tenant configuration.
+- [x] Add optional server-side OpenAI support.
 - [x] Avoid real API keys.
 - [x] Avoid npm, Docker, database, and authentication requirements.
 
@@ -47,11 +48,11 @@ This checklist describes the first useful version of the municipality assistant.
 
 ## MVP 4: AI Prototype
 
-- [ ] Connect to an AI provider without exposing API keys in the browser.
+- [x] Connect to an AI provider without exposing API keys in the browser.
 - [ ] Use only approved demo content.
 - [ ] Return source links.
 - [ ] Add a fallback when the assistant is unsure.
-- [ ] Add safety text for official information.
+- [x] Add safety text for official information.
 
 ## MVP 5: Municipality Pilot
 

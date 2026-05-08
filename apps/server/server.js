@@ -2,9 +2,11 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const TENANTS_DIR = path.join(__dirname, "tenants");
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_MODEL = "gpt-5.4-mini";
 
 const CONTENT_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -50,7 +52,34 @@ async function handleChat(request, response) {
     return;
   }
 
-  // This is intentionally a mock answer. Later, this is where retrieval and AI calls can be added.
+  if (OPENAI_API_KEY) {
+    try {
+      const openAIMessage = await callOpenAI(message, tenant);
+
+      sendJson(response, 200, {
+        tenant: tenant.id,
+        assistantName: tenant.assistantName,
+        message: openAIMessage,
+        sources: tenant.mockSources,
+        mode: "openai",
+      });
+      return;
+    } catch (error) {
+      // Keep raw provider errors on the server only. Visitors get a friendly Dutch message.
+      console.error("OpenAI request failed:", error.message);
+      sendJson(response, 200, {
+        tenant: tenant.id,
+        assistantName: tenant.assistantName,
+        message:
+          "Sorry, de assistent kan nu geen antwoord ophalen. Probeer het later opnieuw of neem contact op met de gemeente via de officiele contactkanalen.",
+        sources: tenant.mockSources,
+        mode: "openai-error",
+      });
+      return;
+    }
+  }
+
+  // This is intentionally a mock answer. It keeps the demo working without an API key.
   sendJson(response, 200, {
     tenant: tenant.id,
     assistantName: tenant.assistantName,
@@ -61,7 +90,117 @@ async function handleChat(request, response) {
       message +
       "\".",
     sources: tenant.mockSources,
+    mode: "mock",
   });
+}
+
+async function callOpenAI(message, tenant) {
+  const instructionPrompt =
+    "Je bent " +
+    tenant.assistantName +
+    " voor " +
+    tenant.municipalityName +
+    ". Antwoord in helder Nederlands. Vraag nooit om een BSN. Neem geen juridische beslissingen en doe niet alsof je een officieel besluit namens de gemeente neemt. Adviseer gebruikers om officiele gemeentelijke pagina's te controleren voor definitieve informatie. Verwijs urgente of persoonlijke situaties door naar de officiele contactkanalen van de gemeente.";
+
+  const response = await postJson("https://api.openai.com/v1/responses", {
+    model: OPENAI_MODEL,
+    instructions: instructionPrompt,
+    input: message,
+  });
+
+  if (!response.ok) {
+    throw new Error("OpenAI returned status " + response.status);
+  }
+
+  const data = await response.json();
+  const text = extractOpenAIText(data);
+
+  if (!text) {
+    throw new Error("OpenAI response did not contain text");
+  }
+
+  return text;
+}
+
+async function postJson(url, body) {
+  if (typeof fetch === "function") {
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + OPENAI_API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  // Older Node versions do not have built-in fetch. This tiny fallback still avoids npm packages.
+  return postJsonWithHttps(url, body);
+}
+
+function postJsonWithHttps(url, body) {
+  const https = require("https");
+  const parsedUrl = new URL(url);
+  const payload = JSON.stringify(body);
+
+  return new Promise(function (resolve, reject) {
+    const request = https.request(
+      {
+        hostname: parsedUrl.hostname,
+        path: parsedUrl.pathname,
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + OPENAI_API_KEY,
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(payload),
+        },
+      },
+      function (response) {
+        let rawBody = "";
+
+        response.on("data", function (chunk) {
+          rawBody += chunk;
+        });
+
+        response.on("end", function () {
+          resolve({
+            ok: response.statusCode >= 200 && response.statusCode < 300,
+            status: response.statusCode,
+            json: async function () {
+              return rawBody ? JSON.parse(rawBody) : {};
+            },
+          });
+        });
+      }
+    );
+
+    request.on("error", reject);
+    request.write(payload);
+    request.end();
+  });
+}
+
+function extractOpenAIText(data) {
+  if (data.output_text) {
+    return data.output_text;
+  }
+
+  if (!Array.isArray(data.output)) {
+    return "";
+  }
+
+  return data.output
+    .flatMap(function (item) {
+      return Array.isArray(item.content) ? item.content : [];
+    })
+    .filter(function (content) {
+      return content.type === "output_text" && content.text;
+    })
+    .map(function (content) {
+      return content.text;
+    })
+    .join("\n")
+    .trim();
 }
 
 function readJsonBody(request) {

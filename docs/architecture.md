@@ -2,7 +2,7 @@
 
 This document describes the planned architecture for the embeddable municipality assistant.
 
-The first version is intentionally small. It has a static widget script, a demo page, a tiny mock backend, and a demo tenant configuration. Later versions can add real content retrieval and AI integrations.
+The first version is intentionally small. It has a static widget script, a demo page, a tiny backend, optional server-side OpenAI support, and a demo tenant configuration. Later versions can add real content retrieval.
 
 ## Future Embed Flow
 
@@ -33,23 +33,24 @@ The widget script is the browser code loaded by the municipality website.
 
 It currently:
 
-- Read tenant settings.
-- Sends visitor questions to the mock backend.
-- Displays mock answers and source links.
+- Reads tenant settings.
+- Sends visitor questions to the backend.
+- Displays assistant answers and source links.
 
 In the future it may show richer municipality branding and privacy information before sending a message.
 
 ### 3. Backend API
 
-The backend is currently a very small mock server in `apps/server`.
+The backend is currently a very small server in `apps/server`.
 
 It currently:
 
-- Receive chat messages from the widget.
-- Load tenant-specific configuration.
-- Return a fake Dutch assistant answer with mock source links.
+- Receives chat messages from the widget.
+- Loads tenant-specific configuration.
+- Returns a fake Dutch assistant answer when `OPENAI_API_KEY` is not set.
+- Calls the OpenAI Responses API from the server when `OPENAI_API_KEY` is set.
 
-It does not call an AI model yet.
+The API key is never sent to the browser.
 
 ### 4. Tenant Configuration
 
@@ -88,17 +89,18 @@ Answers should include links back to official municipality pages whenever possib
 5. The visitor asks a question.
 6. The widget sends the question to the backend.
 7. The backend loads the tenant configuration.
-8. The backend returns a mock Dutch answer and source links.
+8. The backend returns either a mock Dutch answer or an OpenAI answer and source links.
 9. The widget shows the response to the visitor.
 
 ## Current Version
 
-The current mock version contains:
+The current version contains:
 
 - Static documentation.
 - A demo page.
 - A browser widget that posts to `/api/chat`.
 - A small backend server in `apps/server`.
 - A demo tenant config in `apps/server/tenants/demo.json`.
+- Optional server-side OpenAI support through `OPENAI_API_KEY`.
 
-There is still no real AI API call, database, authentication, or storage.
+There is still no database, authentication, streaming, file search, or storage.
