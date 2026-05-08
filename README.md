@@ -14,13 +14,14 @@ Example of the future embed snippet:
 
 - A demo HTML page that shows how the widget could be embedded.
 - A widget script that creates a floating chat button and panel.
-- A very small backend server with a mock `POST /api/chat` endpoint.
+- A very small backend server with a `POST /api/chat` endpoint.
+- Optional server-side OpenAI support when `OPENAI_API_KEY` is set.
 - A simple tenant config for `demo`.
 - Documentation for the planned architecture, privacy principles, and MVP scope.
 
 ## What is not included yet
 
-- No AI API calls.
+- No AI API calls unless `OPENAI_API_KEY` is set on the server.
 - No real API keys.
 - No build step.
 - No npm, Docker, database, or authentication required.
@@ -30,6 +31,10 @@ Example of the future embed snippet:
 This version has a tiny server so the widget can send a message to `/api/chat`.
 
 No packages need to be installed. The server uses only built-in Node.js features.
+
+### Mock Mode
+
+Mock mode is the default. It works when `OPENAI_API_KEY` is not set.
 
 Run:
 
@@ -53,7 +58,26 @@ The flow is:
 6. The server returns a fake Dutch assistant response.
 7. The widget shows the response and mock source links.
 
-The backend does not call OpenAI or any other AI provider yet.
+### Real OpenAI Mode
+
+Real OpenAI mode is optional. The browser still talks only to this backend. The API key stays on the server.
+
+In PowerShell, set the environment variable without typing it into any project file:
+
+```powershell
+$env:OPENAI_API_KEY = Read-Host "OpenAI API key"
+node apps/server/server.js
+```
+
+Then open:
+
+```text
+http://localhost:3000/demo/demo.html
+```
+
+Never commit a real API key. Do not put keys in `widget.js`, `demo.html`, tenant config, README examples, or any file that is committed to git.
+
+`.env.example` shows the variable name only. It is a placeholder, not a real key.
 
 ## Project Structure
 
@@ -61,6 +85,7 @@ The backend does not call OpenAI or any other AI provider yet.
 gemeente-ai-assistent/
   README.md
   AGENTS.md
+  .env.example
   apps/
     server/
       server.js
@@ -78,4 +103,4 @@ gemeente-ai-assistent/
 
 ## Current Status
 
-This is a mock chat assistant. It is meant to feel like a real assistant while keeping the backend safe and simple.
+This is a mock-first chat assistant with optional server-side OpenAI support. It is meant to feel like a real assistant while keeping the backend safe and simple.
