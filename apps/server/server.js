@@ -12,6 +12,45 @@ const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
 const RATE_LIMIT_MAX_MESSAGES = 10;
 const OPENAI_MAX_OUTPUT_TOKENS = 450;
 const rateLimitStore = new Map();
+const MUNICIPALITY_KEYWORDS = [
+  "gemeente",
+  "paspoort",
+  "paspoorten",
+  "identiteitskaart",
+  "identiteitskaarten",
+  "rijbewijs",
+  "verhuizen",
+  "verhuizing",
+  "afval",
+  "container",
+  "vergunning",
+  "vergunningen",
+  "melding",
+  "openbare ruimte",
+  "afspraak",
+  "loket",
+  "openingstijden",
+  "contact",
+  "bezwaar",
+  "belasting",
+  "woz",
+  "parkeren",
+  "uittreksel",
+  "geboorte",
+  "huwelijk",
+];
+const OFF_TOPIC_KEYWORDS = [
+  "taart bakken",
+  "cake bakken",
+  "recept",
+  "voetbal",
+  "film",
+  "vakantieadvies",
+  "programmeerhulp",
+  "liefdesadvies",
+];
+const OFF_TOPIC_MESSAGE =
+  "Sorry, ik kan alleen helpen met vragen over gemeentelijke onderwerpen. Stel bijvoorbeeld een vraag over paspoorten, verhuizen, afval, vergunningen of contact met de gemeente.";
 
 const CONTENT_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -64,6 +103,18 @@ async function handleChat(request, response) {
         "Uw bericht is te lang. Houd uw vraag korter dan " +
         MAX_MESSAGE_LENGTH +
         " tekens.",
+    });
+    return;
+  }
+
+  if (!isProbablyAllowedTopic(message, tenant)) {
+    logChatStatus("off_topic", tenant.id, clientIp);
+    sendJson(response, 200, {
+      tenant: tenant.id,
+      assistantName: tenant.assistantName,
+      message: OFF_TOPIC_MESSAGE,
+      sources: tenant.mockSources,
+      mode: "off-topic",
     });
     return;
   }
@@ -122,6 +173,50 @@ async function handleChat(request, response) {
     sources: tenant.mockSources,
     mode: "mock",
   });
+}
+
+function isProbablyAllowedTopic(message, tenant) {
+  const normalizedMessage = normalizeText(message);
+
+  // This MVP gate is intentionally simple keyword matching. It catches clear off-topic
+  // questions before OpenAI or mock mode, but a production version needs a stronger policy layer.
+  if (
+    OFF_TOPIC_KEYWORDS.some(function (keyword) {
+      return normalizedMessage.includes(normalizeText(keyword));
+    })
+  ) {
+    return false;
+  }
+
+  const tenantTopicKeywords = Array.isArray(tenant.allowedTopics)
+    ? tenant.allowedTopics.flatMap(topicToKeywords)
+    : [];
+  const allowedKeywords = MUNICIPALITY_KEYWORDS.concat(tenantTopicKeywords);
+
+  return allowedKeywords.some(function (keyword) {
+    return normalizedMessage.includes(normalizeText(keyword));
+  });
+}
+
+function topicToKeywords(topic) {
+  const normalizedTopic = normalizeText(topic);
+  const words = normalizedTopic
+    .split(" ")
+    .map(function (word) {
+      return word.trim();
+    })
+    .filter(function (word) {
+      return word.length >= 4;
+    });
+
+  return [normalizedTopic].concat(words);
+}
+
+function normalizeText(value) {
+  return String(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 async function callOpenAI(message, tenant) {

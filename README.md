@@ -88,6 +88,7 @@ This project now includes a few basic guardrails:
 - Messages longer than 1000 characters are rejected.
 - Very large request bodies are rejected.
 - `/api/chat` has a simple in-memory per-IP rate limit: 10 messages per 5 minutes.
+- `/api/chat` has a simple MVP topic gate that rejects clearly off-topic questions before mock mode or OpenAI runs.
 - OpenAI responses are capped with a small max output token setting.
 - OpenAI calls request no response storage.
 - The widget warns visitors not to share BSN, medical data, or other sensitive personal data.
@@ -96,6 +97,8 @@ This project now includes a few basic guardrails:
 These guardrails are useful for the MVP, but they are not enough for public production use. A real deployment should add production-grade rate limiting, monitoring, privacy review, security review, and approved municipal content sources.
 
 To test the rate limit manually, start the server and send more than 10 chat messages within 5 minutes from the same browser. The widget should show a friendly Dutch message asking you to wait a few minutes.
+
+The topic gate is keyword-based and not perfect. It checks the demo tenant's allowed topics plus common municipality words, and rejects obvious off-topic examples such as recipes, football, films, programming help, and relationship advice. A production version should use a stronger policy layer and/or an approved municipal knowledge base.
 
 ## Project Structure
 

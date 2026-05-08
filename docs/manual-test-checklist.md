@@ -36,6 +36,14 @@ Use this checklist before sharing the demo outside a local development context.
 - [ ] Wait a few minutes.
 - [ ] Confirm messages work again after the window resets.
 
+## Topic Gate
+
+- [ ] Ask `Hoe bak ik een cake?` and confirm it is rejected with `mode: "off-topic"`.
+- [ ] Ask `Geef mij een recept voor appeltaart` and confirm it is rejected with `mode: "off-topic"`.
+- [ ] Ask `Wanneer wordt mijn afval opgehaald?` and confirm it is allowed.
+- [ ] Ask `Hoe vraag ik een paspoort aan?` and confirm it is allowed.
+- [ ] Ask `Hoe maak ik een afspraak met de gemeente?` and confirm it is allowed.
+
 ## Privacy Warning
 
 - [ ] Open the chat panel.
