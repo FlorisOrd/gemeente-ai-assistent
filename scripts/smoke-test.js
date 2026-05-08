@@ -24,6 +24,42 @@ async function runSmokeTests() {
   console.log("Starting smoke test server on port " + PORT + "...");
   await startServer();
 
+  await test("GET /health returns 200", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/health",
+    });
+
+    assertEqual(response.statusCode, 200);
+  });
+
+  await test("GET /health reports mock mode during smoke tests", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/health",
+    });
+
+    assertEqual(response.json.mode, "mock");
+  });
+
+  await test("GET /ready returns 200", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/ready",
+    });
+
+    assertEqual(response.statusCode, 200);
+  });
+
+  await test("GET /ready reports at least two tenants", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/ready",
+    });
+
+    assertGreaterOrEqual(response.json.tenants, 2);
+  });
+
   await test("GET /api/config returns 200 for allowed origin", async function () {
     const response = await request({
       method: "GET",
@@ -322,5 +358,11 @@ function parseJson(rawBody) {
 function assertEqual(actual, expected) {
   if (actual !== expected) {
     throw new Error("Expected " + expected + " but got " + actual);
+  }
+}
+
+function assertGreaterOrEqual(actual, expected) {
+  if (actual < expected) {
+    throw new Error("Expected at least " + expected + " but got " + actual);
   }
 }

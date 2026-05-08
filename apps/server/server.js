@@ -61,17 +61,29 @@ const CONTENT_TYPES = {
 
 const server = http.createServer(async function (request, response) {
   try {
+    const url = new URL(request.url, "http://localhost");
+
+    if (request.method === "GET" && url.pathname === "/health") {
+      handleHealth(response);
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/ready") {
+      handleReady(response);
+      return;
+    }
+
     if (request.method === "OPTIONS") {
       handleOptions(request, response);
       return;
     }
 
-    if (request.method === "GET" && request.url.startsWith("/api/config")) {
+    if (request.method === "GET" && url.pathname === "/api/config") {
       handleConfig(request, response);
       return;
     }
 
-    if (request.method === "POST" && request.url.startsWith("/api/chat")) {
+    if (request.method === "POST" && url.pathname === "/api/chat") {
       await handleChat(request, response);
       return;
     }
@@ -90,8 +102,42 @@ const server = http.createServer(async function (request, response) {
 
 server.listen(PORT, function () {
   console.log("Gemeente AI Assistent demo server");
-  console.log("Open http://localhost:" + PORT + "/demo/demo.html");
+  console.log("port=" + PORT);
+  console.log("mode=" + getServerMode());
+  console.log("tenants_loaded=" + getTenantCountForLog());
+  console.log("demo_url=http://localhost:" + PORT + "/demo/demo.html");
 });
+
+function handleHealth(response) {
+  // Health checks are intentionally public and contain no tenant or secret data.
+  sendJson(response, 200, {
+    status: "ok",
+    service: "gemeente-ai-assistent",
+    mode: getServerMode(),
+  });
+}
+
+function handleReady(response) {
+  try {
+    const tenantFiles = getTenantFiles();
+
+    tenantFiles.forEach(function (tenantFile) {
+      loadTenantFromFile(tenantFile);
+    });
+
+    sendJson(response, 200, {
+      status: "ready",
+      tenants: tenantFiles.length,
+    });
+  } catch (error) {
+    // Keep readiness errors safe for browsers and logs. Do not expose file paths.
+    console.error("readiness_status=failed");
+    sendJson(response, 500, {
+      status: "error",
+      error: "Tenantconfiguratie kan niet worden geladen.",
+    });
+  }
+}
 
 function handleConfig(request, response) {
   const url = new URL(request.url, "http://localhost");
@@ -155,6 +201,32 @@ function handleOptions(request, response) {
 
 function getRequestOrigin(request) {
   return request.headers.origin || "";
+}
+
+function getServerMode() {
+  return OPENAI_API_KEY ? "openai" : "mock";
+}
+
+function getTenantFiles() {
+  const tenantFiles = fs
+    .readdirSync(TENANTS_DIR)
+    .filter(function (fileName) {
+      return fileName.endsWith(".json");
+    });
+
+  if (tenantFiles.length === 0) {
+    throw new Error("No tenant files found");
+  }
+
+  return tenantFiles;
+}
+
+function getTenantCountForLog() {
+  try {
+    return getTenantFiles().length;
+  } catch (error) {
+    return "unknown";
+  }
 }
 
 function isAllowedOrigin(origin, tenant) {
@@ -549,7 +621,11 @@ function loadTenant(tenantId) {
     return loadTenant("demo");
   }
 
-  return JSON.parse(fs.readFileSync(tenantPath, "utf8"));
+  return loadTenantFromFile(safeTenantId + ".json");
+}
+
+function loadTenantFromFile(fileName) {
+  return JSON.parse(fs.readFileSync(path.join(TENANTS_DIR, fileName), "utf8"));
 }
 
 function serveStaticFile(request, response) {
