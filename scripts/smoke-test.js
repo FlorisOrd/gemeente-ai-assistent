@@ -34,6 +34,37 @@ async function runSmokeTests() {
     assertEqual(response.statusCode, 200);
   });
 
+  await test("GET /api/config returns the demo assistant name", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/api/config?tenant=demo",
+      origin: ORIGIN,
+    });
+
+    assertEqual(response.json.assistantName, "Demo Gemeente Assistent");
+  });
+
+  await test("GET /api/config returns the Waterstad assistant name", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/api/config?tenant=waterstad",
+      origin: ORIGIN,
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.assistantName, "Waterstad Assistent");
+  });
+
+  await test("GET /api/config returns the Waterstad theme color", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/api/config?tenant=waterstad",
+      origin: ORIGIN,
+    });
+
+    assertEqual(response.json.themeColor, "#2563eb");
+  });
+
   await test("POST /api/chat allows a passport question", async function () {
     const response = await request({
       method: "POST",
@@ -98,6 +129,61 @@ async function runSmokeTests() {
     });
 
     assertEqual(response.statusCode, 400);
+  });
+
+  await test("POST /api/chat allows a Waterstad passport question", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=waterstad",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.tenant, "waterstad");
+  });
+
+  await test("POST /api/chat rejects a Waterstad cake question", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=waterstad",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe bak ik een cake?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.mode, "off-topic");
+  });
+
+  await test("POST /api/chat rejects an unapproved Waterstad origin", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=waterstad",
+      origin: "https://evil.example",
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 403);
+  });
+
+  await test("POST /api/chat allows the local Waterstad origin", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=waterstad",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.tenant, "waterstad");
   });
 }
 

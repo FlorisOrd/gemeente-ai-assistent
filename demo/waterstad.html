@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Waterstad Assistent Demo</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        color: #1f2933;
+        background: #f5f7fa;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 20px;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 2rem;
+      }
+
+      code {
+        display: block;
+        overflow-x: auto;
+        padding: 16px;
+        background: #111827;
+        color: #f9fafb;
+        border-radius: 6px;
+      }
+
+      a {
+        color: #2563eb;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Demo: Waterstad Assistent</h1>
+      <p>
+        Deze pagina gebruikt dezelfde widget, maar met de tenant
+        <strong>waterstad</strong>.
+      </p>
+      <p>Toekomstige embed-snippet:</p>
+      <code>&lt;script src="https://example.com/widget.js" data-tenant="waterstad"&gt;&lt;/script&gt;</code>
+      <p>
+        De widget laadt publieke tenant-configuratie voor Waterstad, zoals naam,
+        kleur, privacylink, contactlink en toegestane onderwerpen.
+      </p>
+      <p>
+        <a href="./demo.html">Bekijk ook de demo tenant</a>
+      </p>
+    </main>
+
+    <script src="../widget/widget.js" data-tenant="waterstad"></script>
+  </body>
+</html>
