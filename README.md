@@ -12,13 +12,13 @@ Example of the future embed snippet:
 
 ## What is included now
 
-- A demo HTML page that shows how the widget could be embedded.
+- Demo HTML pages that show how the widget could be embedded for different tenants.
 - A widget script that creates a floating chat button and panel.
 - A very small backend server with a `POST /api/chat` endpoint.
 - A public `GET /api/config?tenant=demo` endpoint for browser-safe tenant configuration.
 - Optional server-side OpenAI support when `OPENAI_API_KEY` is set.
 - Basic MVP guardrails for validation, privacy, rate limiting, and cost control.
-- A simple tenant config for `demo`.
+- Tenant configs for `demo` and `waterstad`.
 - Documentation for the planned architecture, privacy principles, and MVP scope.
 
 ## What is not included yet
@@ -48,6 +48,12 @@ Then open:
 
 ```text
 http://localhost:3000/demo/demo.html
+```
+
+You can also open the second fake municipality tenant:
+
+```text
+http://localhost:3000/demo/waterstad.html
 ```
 
 The flow is:
@@ -86,7 +92,7 @@ Never commit a real API key. Do not put keys in `widget.js`, `demo.html`, tenant
 
 The widget now loads public tenant configuration from the backend.
 
-The demo tenant config controls:
+Each tenant config controls:
 
 - Municipality name.
 - Assistant name.
@@ -95,10 +101,13 @@ The demo tenant config controls:
 - Contact link.
 - Allowed topics.
 - Allowed website origins.
+- Mock source links.
 
 Only public-safe fields are returned to the browser. The OpenAI API key stays server-side and is never included in `GET /api/config`, `widget.js`, or `demo.html`.
 
 Tenants now include `allowedOrigins`. This helps prevent random websites from using another municipality's tenant. The demo tenant allows localhost for local testing. Production tenants should list only the real municipality website origins, such as `https://www.gemeente-demo.nl`.
+
+The same widget code is reused for each tenant. The tenant is selected with `data-tenant`, for example `data-tenant="demo"` or `data-tenant="waterstad"`.
 
 ## Safety Guardrails
 
@@ -152,6 +161,7 @@ gemeente-ai-assistent/
       server.js
       tenants/
         demo.json
+        waterstad.json
   docs/
     architecture.md
     manual-test-checklist.md
@@ -159,6 +169,7 @@ gemeente-ai-assistent/
     mvp.md
   demo/
     demo.html
+    waterstad.html
   scripts/
     smoke-test.js
   widget/

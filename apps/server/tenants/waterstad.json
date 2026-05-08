@@ -1,0 +1,30 @@
+{
+  "id": "waterstad",
+  "municipalityName": "Gemeente Waterstad",
+  "assistantName": "Waterstad Assistent",
+  "themeColor": "#2563eb",
+  "contactUrl": "https://example.com/waterstad/contact",
+  "privacyUrl": "https://example.com/waterstad/privacy",
+  "allowedOrigins": [
+    "http://localhost:3000",
+    "https://waterstad.example.com"
+  ],
+  "allowedTopics": [
+    "paspoorten en identiteitskaarten",
+    "verhuizen",
+    "afvalinzameling",
+    "parkeren",
+    "evenementenvergunningen",
+    "contact met de gemeente"
+  ],
+  "mockSources": [
+    {
+      "title": "Waterstad contact",
+      "url": "https://example.com/waterstad/contact"
+    },
+    {
+      "title": "Waterstad veelgestelde vragen",
+      "url": "https://example.com/waterstad/veelgestelde-vragen"
+    }
+  ]
+}

@@ -69,6 +69,15 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm chat still works in real OpenAI mode.
 - [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected.
 
+## Multiple Tenants
+
+- [ ] Run `node scripts/smoke-test.js` and confirm it passes.
+- [ ] Open `/demo/demo.html` and confirm it shows `Demo Gemeente Assistent`.
+- [ ] Open `/demo/waterstad.html` and confirm it shows `Waterstad Assistent`.
+- [ ] Confirm the two tenants use different colors.
+- [ ] Confirm both tenants reject cake questions.
+- [ ] Confirm both tenants allow passport questions.
+
 ## Origin Allowlist
 
 - [ ] Confirm the demo still works from `http://localhost:3000`.
