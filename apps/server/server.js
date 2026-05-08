@@ -7,6 +7,11 @@ const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const TENANTS_DIR = path.join(__dirname, "tenants");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = "gpt-5.4-mini";
+const MAX_MESSAGE_LENGTH = 1000;
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
+const RATE_LIMIT_MAX_MESSAGES = 10;
+const OPENAI_MAX_OUTPUT_TOKENS = 450;
+const rateLimitStore = new Map();
 
 const CONTENT_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -44,6 +49,7 @@ async function handleChat(request, response) {
   const tenantId = body.tenant || "demo";
   const message = String(body.message || "").trim();
   const tenant = loadTenant(tenantId);
+  const clientIp = getClientIp(request);
 
   if (!message) {
     sendJson(response, 400, {
@@ -52,10 +58,32 @@ async function handleChat(request, response) {
     return;
   }
 
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    sendJson(response, 400, {
+      error:
+        "Uw bericht is te lang. Houd uw vraag korter dan " +
+        MAX_MESSAGE_LENGTH +
+        " tekens.",
+    });
+    return;
+  }
+
+  const rateLimit = checkRateLimit(clientIp);
+
+  if (!rateLimit.allowed) {
+    logChatStatus("rate_limited", tenant.id, clientIp);
+    sendJson(response, 429, {
+      error:
+        "U heeft te veel berichten kort achter elkaar gestuurd. Wacht een paar minuten en probeer het daarna opnieuw.",
+    });
+    return;
+  }
+
   if (OPENAI_API_KEY) {
     try {
       const openAIMessage = await callOpenAI(message, tenant);
 
+      logChatStatus("openai_success", tenant.id, clientIp);
       sendJson(response, 200, {
         tenant: tenant.id,
         assistantName: tenant.assistantName,
@@ -67,6 +95,7 @@ async function handleChat(request, response) {
     } catch (error) {
       // Keep raw provider errors on the server only. Visitors get a friendly Dutch message.
       console.error("OpenAI request failed:", error.message);
+      logChatStatus("openai_error", tenant.id, clientIp);
       sendJson(response, 200, {
         tenant: tenant.id,
         assistantName: tenant.assistantName,
@@ -80,6 +109,7 @@ async function handleChat(request, response) {
   }
 
   // This is intentionally a mock answer. It keeps the demo working without an API key.
+  logChatStatus("mock_success", tenant.id, clientIp);
   sendJson(response, 200, {
     tenant: tenant.id,
     assistantName: tenant.assistantName,
@@ -95,17 +125,28 @@ async function handleChat(request, response) {
 }
 
 async function callOpenAI(message, tenant) {
+  const allowedTopics = Array.isArray(tenant.allowedTopics)
+    ? tenant.allowedTopics.join(", ")
+    : "algemene gemeentelijke informatie";
   const instructionPrompt =
     "Je bent " +
     tenant.assistantName +
     " voor " +
     tenant.municipalityName +
-    ". Antwoord in helder Nederlands. Vraag nooit om een BSN. Neem geen juridische beslissingen en doe niet alsof je een officieel besluit namens de gemeente neemt. Adviseer gebruikers om officiele gemeentelijke pagina's te controleren voor definitieve informatie. Verwijs urgente of persoonlijke situaties door naar de officiele contactkanalen van de gemeente.";
+    ". Antwoord in helder Nederlands en blijf gericht op gemeentelijke informatie. Richt je vooral op deze onderwerpen: " +
+    allowedTopics +
+    ". Vraag nooit om een BSN. Verwerk geen gevoelige persoonsgegevens, zoals medische gegevens, financiele details of gegevens over persoonlijke dossiers. Neem geen definitieve juridische beslissingen en doe niet alsof je een officieel besluit namens de gemeente neemt. Adviseer gebruikers om officiele gemeentelijke bronnen te controleren voor definitieve informatie. Verwijs urgente of persoonlijke situaties door naar de officiele contactkanalen van de gemeente: " +
+    tenant.contactUrl +
+    ". Verwijs voor privacyinformatie naar: " +
+    tenant.privacyUrl +
+    ". Houd antwoorden kort en praktisch.";
 
   const response = await postJson("https://api.openai.com/v1/responses", {
     model: OPENAI_MODEL,
     instructions: instructionPrompt,
     input: message,
+    max_output_tokens: OPENAI_MAX_OUTPUT_TOKENS,
+    store: false,
   });
 
   if (!response.ok) {
@@ -120,6 +161,66 @@ async function callOpenAI(message, tenant) {
   }
 
   return text;
+}
+
+function checkRateLimit(clientIp) {
+  const now = Date.now();
+  const current = rateLimitStore.get(clientIp);
+
+  // This in-memory limiter is only suitable for the MVP. A public deployment should use
+  // production-grade rate limiting shared across server instances, such as a gateway or Redis.
+  if (!current || now > current.resetAt) {
+    rateLimitStore.set(clientIp, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return { allowed: true };
+  }
+
+  if (current.count >= RATE_LIMIT_MAX_MESSAGES) {
+    return { allowed: false, resetAt: current.resetAt };
+  }
+
+  current.count += 1;
+  return { allowed: true };
+}
+
+function getClientIp(request) {
+  const forwardedFor = request.headers["x-forwarded-for"];
+
+  if (forwardedFor) {
+    return String(forwardedFor).split(",")[0].trim();
+  }
+
+  return request.socket.remoteAddress || "unknown";
+}
+
+function logChatStatus(status, tenantId, clientIp) {
+  // Avoid logging citizen messages. Even a simple question may contain personal data.
+  console.log(
+    "chat_status=" +
+      status +
+      " tenant=" +
+      tenantId +
+      " ip=" +
+      maskIp(clientIp)
+  );
+}
+
+function maskIp(clientIp) {
+  if (!clientIp || clientIp === "unknown") {
+    return "unknown";
+  }
+
+  if (clientIp.includes(".")) {
+    return clientIp.split(".").slice(0, 3).join(".") + ".x";
+  }
+
+  if (clientIp.includes(":")) {
+    return clientIp.split(":").slice(0, 4).join(":") + "::";
+  }
+
+  return "masked";
 }
 
 async function postJson(url, body) {

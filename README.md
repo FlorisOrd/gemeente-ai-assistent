@@ -16,6 +16,7 @@ Example of the future embed snippet:
 - A widget script that creates a floating chat button and panel.
 - A very small backend server with a `POST /api/chat` endpoint.
 - Optional server-side OpenAI support when `OPENAI_API_KEY` is set.
+- Basic MVP guardrails for validation, privacy, rate limiting, and cost control.
 - A simple tenant config for `demo`.
 - Documentation for the planned architecture, privacy principles, and MVP scope.
 
@@ -79,6 +80,23 @@ Never commit a real API key. Do not put keys in `widget.js`, `demo.html`, tenant
 
 `.env.example` shows the variable name only. It is a placeholder, not a real key.
 
+## Safety Guardrails
+
+This project now includes a few basic guardrails:
+
+- Empty messages are rejected.
+- Messages longer than 1000 characters are rejected.
+- Very large request bodies are rejected.
+- `/api/chat` has a simple in-memory per-IP rate limit: 10 messages per 5 minutes.
+- OpenAI responses are capped with a small max output token setting.
+- OpenAI calls request no response storage.
+- The widget warns visitors not to share BSN, medical data, or other sensitive personal data.
+- The server avoids logging full citizen messages.
+
+These guardrails are useful for the MVP, but they are not enough for public production use. A real deployment should add production-grade rate limiting, monitoring, privacy review, security review, and approved municipal content sources.
+
+To test the rate limit manually, start the server and send more than 10 chat messages within 5 minutes from the same browser. The widget should show a friendly Dutch message asking you to wait a few minutes.
+
 ## Project Structure
 
 ```text
@@ -93,6 +111,7 @@ gemeente-ai-assistent/
         demo.json
   docs/
     architecture.md
+    manual-test-checklist.md
     privacy.md
     mvp.md
   demo/
