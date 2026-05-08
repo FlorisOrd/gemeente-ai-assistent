@@ -2,6 +2,14 @@
 
 Use this checklist before sharing the demo outside a local development context.
 
+Before doing the browser checks, run the automated smoke test:
+
+```bash
+node scripts/smoke-test.js
+```
+
+Keep using this manual checklist too, because the smoke test does not click through the browser widget.
+
 ## Mock Mode
 
 - [ ] Make sure `OPENAI_API_KEY` is not set.
