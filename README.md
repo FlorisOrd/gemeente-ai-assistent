@@ -56,6 +56,12 @@ You can also open the second fake municipality tenant:
 http://localhost:3000/demo/waterstad.html
 ```
 
+And the staging embed simulation:
+
+```text
+http://localhost:3000/demo/staging-embed.html
+```
+
 The flow is:
 
 1. The demo page loads `widget/widget.js`.
@@ -177,6 +183,14 @@ node scripts/check-deployment-config.js
 
 This checks that tenant JSON files have the required deployment fields, warns about localhost-only origins, and warns about `example.com` contact or privacy links. It does not deploy anything and does not require `OPENAI_API_KEY`.
 
+## Staging Embed Simulation
+
+`demo/staging-embed.html` simulates the future hosted snippet for an FXW/server deployment.
+
+In production, the widget script and API base will point to the FXW-hosted domain, for example `https://assistant.example.nl`. The current local version uses localhost only and keeps `data-api-base=""` so the widget calls the same local demo server.
+
+No API key is exposed in the snippet. The browser still only receives public tenant configuration and sends chat messages to this backend.
+
 ## Project Structure
 
 ```text
@@ -192,6 +206,7 @@ gemeente-ai-assistent/
       server.js
       tenants/
         demo.json
+        staging.json
         waterstad.json
   docs/
     architecture.md
@@ -202,6 +217,7 @@ gemeente-ai-assistent/
     mvp.md
   demo/
     demo.html
+    staging-embed.html
     waterstad.html
   scripts/
     check-deployment-config.js

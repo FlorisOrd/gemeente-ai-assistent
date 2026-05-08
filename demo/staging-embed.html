@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Staging Embed Demo</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        color: #1f2933;
+        background: #f5f7fa;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 20px;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 2rem;
+      }
+
+      code {
+        display: block;
+        overflow-x: auto;
+        padding: 16px;
+        background: #111827;
+        color: #f9fafb;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Staging embed simulatie</h1>
+      <p>
+        Deze pagina simuleert hoe de widget later vanaf een FXW-server kan worden
+        ingeladen. Lokaal gebruikt de widget dezelfde server voor het script en
+        de API.
+      </p>
+      <p>Lokale staging-snippet:</p>
+      <code>&lt;script src="/widget/widget.js" data-tenant="staging" data-api-base="" async&gt;&lt;/script&gt;</code>
+      <p>
+        De productievariant zou naar het publieke assistent-domein verwijzen.
+        De API-key staat nooit in deze snippet.
+      </p>
+      <p>
+        <a href="./demo.html">Terug naar de demo tenant</a>
+      </p>
+    </main>
+
+    <!-- Future production example:
+    <script
+      src="https://assistant.example.nl/widget/widget.js"
+      data-tenant="staging"
+      data-api-base="https://assistant.example.nl"
+      async>
+    </script>
+    -->
+
+    <script
+      src="/widget/widget.js"
+      data-tenant="staging"
+      data-api-base=""
+      async>
+    </script>
+  </body>
+</html>

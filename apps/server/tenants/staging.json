@@ -1,0 +1,30 @@
+{
+  "id": "staging",
+  "municipalityName": "Gemeente Staging",
+  "assistantName": "Staging Gemeente Assistent",
+  "themeColor": "#1d4ed8",
+  "contactUrl": "https://example.com/staging/contact",
+  "privacyUrl": "https://example.com/staging/privacy",
+  "allowedOrigins": [
+    "http://localhost:3000",
+    "https://staging.example.com"
+  ],
+  "allowedTopics": [
+    "paspoorten en identiteitskaarten",
+    "verhuizen",
+    "afvalinzameling",
+    "vergunningen",
+    "parkeren",
+    "contact met de gemeente"
+  ],
+  "mockSources": [
+    {
+      "title": "Staging contact",
+      "url": "https://example.com/staging/contact"
+    },
+    {
+      "title": "Staging veelgestelde vragen",
+      "url": "https://example.com/staging/veelgestelde-vragen"
+    }
+  ]
+}

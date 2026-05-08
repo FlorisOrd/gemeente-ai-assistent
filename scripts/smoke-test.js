@@ -101,6 +101,17 @@ async function runSmokeTests() {
     assertEqual(response.json.themeColor, "#2563eb");
   });
 
+  await test("GET /api/config returns the staging assistant name", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/api/config?tenant=staging",
+      origin: ORIGIN,
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.assistantName, "Staging Gemeente Assistent");
+  });
+
   await test("POST /api/chat allows a passport question", async function () {
     const response = await request({
       method: "POST",
@@ -220,6 +231,47 @@ async function runSmokeTests() {
 
     assertEqual(response.statusCode, 200);
     assertEqual(response.json.tenant, "waterstad");
+  });
+
+  await test("POST /api/chat allows a staging passport question", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=staging",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.tenant, "staging");
+  });
+
+  await test("POST /api/chat rejects a staging cake question", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=staging",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe bak ik een cake?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.mode, "off-topic");
+  });
+
+  await test("POST /api/chat rejects an unapproved staging origin", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=staging",
+      origin: "https://evil.example",
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 403);
   });
 }
 
