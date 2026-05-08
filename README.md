@@ -148,6 +148,16 @@ When OpenAI mode is enabled, the backend sends only the relevant approved summar
 
 For production, replace this with a stronger approved content pipeline, search system, or retrieval system that is reviewed by the municipality.
 
+## Widget Trust and Feedback
+
+The widget now shows a short disclaimer explaining that it is an AI assistant, that it does not make decisions, and that visitors should check official municipal information.
+
+Sources under answers are labeled with `Gebruikte bron(nen):`, and each answer shows a friendly status label such as `Demo-antwoord`, `Buiten onderwerp`, or `Geen goedgekeurde bron gevonden`.
+
+The `Nuttig` and `Niet nuttig` buttons are local-only for now. They update the page to thank the visitor, but they do not send feedback to the server, store data, or collect personal data.
+
+The `Gesprek wissen` button only clears the visible browser conversation and restores the intro message. It does not call the server.
+
 ## Run Smoke Tests
 
 Run the backend smoke tests with:
