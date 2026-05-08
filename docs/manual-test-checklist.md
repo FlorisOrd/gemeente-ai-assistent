@@ -10,6 +10,8 @@ node scripts/smoke-test.js
 
 Keep using this manual checklist too, because the smoke test does not click through the browser widget.
 
+Before merging a pull request, check that the GitHub Actions smoke test passes. Manual browser testing is still needed for widget appearance and real OpenAI mode.
+
 ## Mock Mode
 
 - [ ] Make sure `OPENAI_API_KEY` is not set.

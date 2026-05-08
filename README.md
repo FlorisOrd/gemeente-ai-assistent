@@ -131,6 +131,12 @@ node scripts/smoke-test.js
 
 The smoke test starts the server on port `3100`, runs in mock mode, checks the most important backend responses, and stops the server when it is done.
 
+## Automatic Smoke Tests
+
+GitHub runs the smoke test automatically on pull requests and pushes to `main`.
+
+This helps catch broken origin checks, topic gate behavior, and validation before merging. The workflow runs in mock mode only and does not test real OpenAI mode.
+
 ## Project Structure
 
 ```text
@@ -138,6 +144,9 @@ gemeente-ai-assistent/
   README.md
   AGENTS.md
   .env.example
+  .github/
+    workflows/
+      smoke-test.yml
   apps/
     server/
       server.js
