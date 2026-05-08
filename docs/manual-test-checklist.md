@@ -87,6 +87,15 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Send a request with an unapproved `Origin` header and confirm it returns `403`.
 - [ ] Confirm OpenAI is not called when the origin is blocked.
 
+## Deployment Readiness
+
+- [ ] Check `/health` in a browser or with curl.
+- [ ] Check `/ready` in a browser or with curl.
+- [ ] Confirm `/health` does not expose API keys.
+- [ ] Confirm `/ready` does not expose API keys or internal file paths.
+- [ ] Confirm startup logs print port, mode, tenant count, and demo URL.
+- [ ] Confirm startup logs do not print API keys.
+
 ## Secret Safety
 
 - [ ] Search `widget/widget.js` for `OPENAI_API_KEY` and confirm it is not present.

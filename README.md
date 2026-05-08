@@ -146,6 +146,19 @@ GitHub runs the smoke test automatically on pull requests and pushes to `main`.
 
 This helps catch broken origin checks, topic gate behavior, and validation before merging. The workflow runs in mock mode only and does not test real OpenAI mode.
 
+## Deployment Readiness
+
+The app now has basic endpoints that hosting platforms can use during a private staging deployment:
+
+- `GET /health` returns whether the server is running and whether it is in `mock` or `openai` mode.
+- `GET /ready` checks whether tenant config files can be loaded and returns the number of tenants found.
+
+The server reads `PORT` from the environment, which most hosting providers set automatically. `OPENAI_API_KEY` is still optional. Without it, the app runs in mock mode. With it, the backend can call OpenAI, but the browser still never receives the key.
+
+This is still meant for staging and private demos, not public production. Before production, the project still needs stronger rate limiting, monitoring, security review, privacy review, and approved municipal knowledge sources.
+
+See `docs/deployment.md` for the deployment notes.
+
 ## Project Structure
 
 ```text
@@ -164,6 +177,7 @@ gemeente-ai-assistent/
         waterstad.json
   docs/
     architecture.md
+    deployment.md
     manual-test-checklist.md
     privacy.md
     mvp.md
