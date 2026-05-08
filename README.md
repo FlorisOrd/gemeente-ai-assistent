@@ -121,6 +121,16 @@ To test the rate limit manually, start the server and send more than 10 chat mes
 
 The topic gate is keyword-based and not perfect. It checks the demo tenant's allowed topics plus common municipality words, and rejects obvious off-topic examples such as recipes, football, films, programming help, and relationship advice. A production version should use a stronger policy layer and/or an approved municipal knowledge base.
 
+## Run Smoke Tests
+
+Run the backend smoke tests with:
+
+```bash
+node scripts/smoke-test.js
+```
+
+The smoke test starts the server on port `3100`, runs in mock mode, checks the most important backend responses, and stops the server when it is done.
+
 ## Project Structure
 
 ```text
@@ -140,6 +150,8 @@ gemeente-ai-assistent/
     mvp.md
   demo/
     demo.html
+  scripts/
+    smoke-test.js
   widget/
     widget.js
 ```
