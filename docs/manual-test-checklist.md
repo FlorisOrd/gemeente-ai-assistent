@@ -68,6 +68,17 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Open the chat panel.
 - [ ] Confirm this notice is visible before sending a message: `Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens.`
 
+## Widget Trust and Feedback
+
+- [ ] Confirm the AI assistant disclaimer is visible.
+- [ ] Confirm the privacy warning is visible.
+- [ ] Ask a question with sources and confirm the `Gebruikte bron(nen):` label appears.
+- [ ] Confirm a friendly mode label appears after answers.
+- [ ] Click `Nuttig` and confirm it says `Bedankt voor uw feedback.`
+- [ ] Click `Niet nuttig` and confirm it says `Bedankt voor uw feedback.`
+- [ ] Click `Gesprek wissen` and confirm the intro message returns.
+- [ ] Confirm keyboard navigation still works for opening, sending, feedback, and clearing.
+
 ## Tenant Configuration
 
 - [ ] Confirm the widget title shows the `assistantName` from `apps/server/tenants/demo.json`.

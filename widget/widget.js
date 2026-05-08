@@ -51,10 +51,12 @@
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
+    '  <p class="gemeente-ai-assistent-disclaimer">Deze AI-assistent helpt u informatie te vinden, maar neemt geen besluiten. Controleer altijd de officiële gemeentelijke informatie.</p>' +
     '  <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens. Lees de <a href="https://example.com/privacy" target="_blank" rel="noopener noreferrer">privacyinformatie</a>.</p>' +
     '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
     '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Ik kan helpen met vragen over paspoorten en identiteitskaarten, verhuizen, afval, vergunningen en contact met de gemeente.</p>' +
     "  </div>" +
+    '  <button type="button" class="gemeente-ai-assistent-clear">Gesprek wissen</button>' +
     '  <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
     '  <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Bijvoorbeeld: hoe vraag ik een paspoort aan?"></textarea>' +
     '  <button type="button" class="gemeente-ai-assistent-send">Verstuur</button>' +
@@ -122,6 +124,14 @@
     ".gemeente-ai-assistent-body {" +
     "  padding: 16px;" +
     "}" +
+    ".gemeente-ai-assistent-disclaimer {" +
+    "  margin: 0 0 12px;" +
+    "  padding: 10px 12px;" +
+    "  border-left: 4px solid var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "  background: #eef6ff;" +
+    "  color: #1f3a5f;" +
+    "  font-size: 0.92rem;" +
+    "}" +
     ".gemeente-ai-assistent-privacy-notice {" +
     "  margin: 0 0 12px;" +
     "  padding: 10px 12px;" +
@@ -159,11 +169,64 @@
     "  background: #eef2f7;" +
     "}" +
     ".gemeente-ai-assistent-sources {" +
-    "  margin: 8px 0 0;" +
+    "  margin-top: 10px;" +
+    "  padding-top: 8px;" +
+    "  border-top: 1px solid #d6dce5;" +
+    "}" +
+    ".gemeente-ai-assistent-sources-label {" +
+    "  display: block;" +
+    "  margin-bottom: 4px;" +
+    "  color: #52616f;" +
+    "  font-size: 0.84rem;" +
+    "  font-weight: 700;" +
+    "}" +
+    ".gemeente-ai-assistent-sources-list {" +
+    "  margin: 0;" +
     "  padding-left: 18px;" +
     "}" +
     ".gemeente-ai-assistent-sources a {" +
     "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "  font-weight: 700;" +
+    "  text-decoration: underline;" +
+    "}" +
+    ".gemeente-ai-assistent-status-label {" +
+    "  display: block;" +
+    "  width: fit-content;" +
+    "  margin-top: 8px;" +
+    "  padding: 3px 7px;" +
+    "  border-radius: 999px;" +
+    "  background: #ffffff;" +
+    "  color: #52616f;" +
+    "  font-size: 0.78rem;" +
+    "  border: 1px solid #d6dce5;" +
+    "}" +
+    ".gemeente-ai-assistent-feedback {" +
+    "  display: flex;" +
+    "  flex-wrap: wrap;" +
+    "  align-items: center;" +
+    "  gap: 6px;" +
+    "  margin-top: 8px;" +
+    "}" +
+    ".gemeente-ai-assistent-feedback button," +
+    ".gemeente-ai-assistent-clear {" +
+    "  border: 1px solid #bcc7d3;" +
+    "  border-radius: 6px;" +
+    "  background: #ffffff;" +
+    "  color: #1f2933;" +
+    "  font: inherit;" +
+    "  font-size: 0.86rem;" +
+    "  cursor: pointer;" +
+    "}" +
+    ".gemeente-ai-assistent-feedback button {" +
+    "  padding: 5px 8px;" +
+    "}" +
+    ".gemeente-ai-assistent-feedback-message {" +
+    "  color: #52616f;" +
+    "  font-size: 0.84rem;" +
+    "}" +
+    ".gemeente-ai-assistent-clear {" +
+    "  margin: 0 0 12px;" +
+    "  padding: 7px 9px;" +
     "}" +
     ".gemeente-ai-assistent-body p {" +
     "  margin: 0 0 12px;" +
@@ -209,6 +272,7 @@
 
   var closeButton = panel.querySelector(".gemeente-ai-assistent-close");
   var sendButton = panel.querySelector(".gemeente-ai-assistent-send");
+  var clearButton = panel.querySelector(".gemeente-ai-assistent-clear");
   var input = panel.querySelector("#gemeente-ai-assistent-input");
   var messages = panel.querySelector(".gemeente-ai-assistent-messages");
   var note = panel.querySelector(".gemeente-ai-assistent-note");
@@ -233,6 +297,7 @@
   });
 
   sendButton.addEventListener("click", sendMessage);
+  clearButton.addEventListener("click", resetConversation);
 
   input.addEventListener("keydown", function (event) {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -279,7 +344,7 @@
         return;
       }
 
-      addMessage("assistant", data.message, data.sources || []);
+      addMessage("assistant", data.message, data.sources || [], data.mode);
       note.textContent = "";
     } catch (error) {
       addMessage(
@@ -293,23 +358,56 @@
     }
   }
 
-  function addMessage(sender, text, sources) {
+  function addMessage(sender, text, sources, mode) {
     var messageElement = document.createElement("div");
     messageElement.className =
       "gemeente-ai-assistent-message gemeente-ai-assistent-message-" + sender;
     messageElement.textContent = text;
 
+    if (sender === "assistant" && mode) {
+      messageElement.appendChild(createStatusLabel(mode));
+    }
+
     if (sources && sources.length) {
       messageElement.appendChild(createSourcesList(sources));
+    }
+
+    if (sender === "assistant") {
+      messageElement.appendChild(createFeedbackControls());
     }
 
     messages.appendChild(messageElement);
     messages.scrollTop = messages.scrollHeight;
   }
 
+  function createStatusLabel(mode) {
+    var label = document.createElement("span");
+    label.className = "gemeente-ai-assistent-status-label";
+    label.textContent = getFriendlyModeLabel(mode);
+    return label;
+  }
+
+  function getFriendlyModeLabel(mode) {
+    var labels = {
+      mock: "Demo-antwoord",
+      openai: "Antwoord op basis van goedgekeurde bronnen",
+      "off-topic": "Buiten onderwerp",
+      "no-approved-source": "Geen goedgekeurde bron gevonden",
+      "openai-error": "Tijdelijke storing",
+    };
+
+    return labels[mode] || "Antwoord";
+  }
+
   function createSourcesList(sources) {
+    var wrapper = document.createElement("div");
+    var label = document.createElement("span");
     var list = document.createElement("ul");
-    list.className = "gemeente-ai-assistent-sources";
+
+    wrapper.className = "gemeente-ai-assistent-sources";
+    label.className = "gemeente-ai-assistent-sources-label";
+    label.textContent = "Gebruikte bron(nen):";
+    list.className = "gemeente-ai-assistent-sources-list";
 
     sources.forEach(function (source) {
       var item = document.createElement("li");
@@ -322,7 +420,60 @@
       list.appendChild(item);
     });
 
-    return list;
+    wrapper.appendChild(label);
+    wrapper.appendChild(list);
+    return wrapper;
+  }
+
+  function createFeedbackControls() {
+    var wrapper = document.createElement("div");
+    var usefulButton = document.createElement("button");
+    var notUsefulButton = document.createElement("button");
+    var message = document.createElement("span");
+
+    wrapper.className = "gemeente-ai-assistent-feedback";
+    usefulButton.type = "button";
+    usefulButton.textContent = "Nuttig";
+    usefulButton.setAttribute("aria-label", "Markeer dit antwoord als nuttig");
+    notUsefulButton.type = "button";
+    notUsefulButton.textContent = "Niet nuttig";
+    notUsefulButton.setAttribute(
+      "aria-label",
+      "Markeer dit antwoord als niet nuttig"
+    );
+    message.className = "gemeente-ai-assistent-feedback-message";
+    message.setAttribute("role", "status");
+
+    function handleFeedback() {
+      // Future feedback storage needs a privacy review before anything is sent or saved.
+      message.textContent = "Bedankt voor uw feedback.";
+      usefulButton.disabled = true;
+      notUsefulButton.disabled = true;
+    }
+
+    usefulButton.addEventListener("click", handleFeedback);
+    notUsefulButton.addEventListener("click", handleFeedback);
+
+    wrapper.appendChild(usefulButton);
+    wrapper.appendChild(notUsefulButton);
+    wrapper.appendChild(message);
+    return wrapper;
+  }
+
+  function resetConversation() {
+    messages.innerHTML = "";
+    addIntroMessage();
+    note.textContent = "";
+    input.focus();
+  }
+
+  function addIntroMessage() {
+    var introElement = document.createElement("p");
+    introElement.className =
+      "gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro";
+    introElement.textContent = getIntroText(tenantConfig);
+    messages.appendChild(introElement);
+    intro = introElement;
   }
 
   async function loadTenantConfig() {
@@ -358,15 +509,25 @@
 
     title.textContent = assistantName;
     button.textContent = "Vraag " + (config.municipalityName || "de gemeente");
-    intro.textContent =
+    intro.textContent = getIntroText(config);
+
+    privacyLink.href = config.privacyUrl || "https://example.com/privacy";
+    contactLink.href = config.contactUrl || "https://example.com/contact";
+  }
+
+  function getIntroText(config) {
+    var assistantName = config.assistantName || "Gemeente AI Assistent";
+    var topics = Array.isArray(config.allowedTopics)
+      ? config.allowedTopics.join(", ")
+      : "gemeentelijke onderwerpen";
+
+    return (
       "Hoi, ik ben " +
       assistantName +
       ". Ik kan helpen met vragen over " +
       topics +
-      ".";
-
-    privacyLink.href = config.privacyUrl || "https://example.com/privacy";
-    contactLink.href = config.contactUrl || "https://example.com/contact";
+      "."
+    );
   }
 
   function getSafeThemeColor(color) {
