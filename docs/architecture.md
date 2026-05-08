@@ -2,7 +2,7 @@
 
 This document describes the planned architecture for the embeddable municipality assistant.
 
-The first version is intentionally small. It starts with a static widget script and a demo page. Later versions can add a backend, tenant configuration, and AI integrations.
+The first version is intentionally small. It has a static widget script, a demo page, a tiny mock backend, and a demo tenant configuration. Later versions can add real content retrieval and AI integrations.
 
 ## Future Embed Flow
 
@@ -31,27 +31,25 @@ The widget should:
 
 The widget script is the browser code loaded by the municipality website.
 
-In the future it may:
+It currently:
 
 - Read tenant settings.
-- Show the municipality name and colors.
-- Send visitor questions to a backend.
-- Display answers and source links.
-- Show privacy information before sending a message.
+- Sends visitor questions to the mock backend.
+- Displays mock answers and source links.
 
-For now, it only creates a placeholder chat button and panel.
+In the future it may show richer municipality branding and privacy information before sending a message.
 
 ### 3. Backend API
 
-The backend does not exist yet.
+The backend is currently a very small mock server in `apps/server`.
 
-When added later, it may:
+It currently:
 
 - Receive chat messages from the widget.
-- Apply tenant-specific configuration.
-- Retrieve approved municipal content.
-- Call an AI model.
-- Return an answer with useful source links.
+- Load tenant-specific configuration.
+- Return a fake Dutch assistant answer with mock source links.
+
+It does not call an AI model yet.
 
 ### 4. Tenant Configuration
 
@@ -89,17 +87,18 @@ Answers should include links back to official municipality pages whenever possib
 4. The visitor opens the chat panel.
 5. The visitor asks a question.
 6. The widget sends the question to the backend.
-7. The backend finds relevant approved information.
-8. The backend asks an AI model to draft an answer.
-9. The backend returns the answer and source links.
-10. The widget shows the response to the visitor.
+7. The backend loads the tenant configuration.
+8. The backend returns a mock Dutch answer and source links.
+9. The widget shows the response to the visitor.
 
 ## Current Version
 
-The current scaffold only contains:
+The current mock version contains:
 
 - Static documentation.
 - A demo page.
-- A placeholder browser widget.
+- A browser widget that posts to `/api/chat`.
+- A small backend server in `apps/server`.
+- A demo tenant config in `apps/server/tenants/demo.json`.
 
-There is no backend and no AI API call yet.
+There is still no real AI API call, database, authentication, or storage.

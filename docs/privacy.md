@@ -89,10 +89,11 @@ Before a real launch, municipalities should review:
 
 ## Current Version
 
-The current placeholder widget:
+The current mock version:
 
 - Does not call an AI API.
-- Does not call a backend.
+- Sends the typed message to the local mock backend at `/api/chat`.
 - Does not store messages.
 - Does not use cookies.
 - Does not include tracking.
+- Uses a fake demo tenant configuration.

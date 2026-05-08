@@ -3,6 +3,7 @@
 
   var currentScript = document.currentScript;
   var tenant = currentScript ? currentScript.getAttribute("data-tenant") : "demo";
+  var apiBase = currentScript ? currentScript.getAttribute("data-api-base") || "" : "";
   var widgetId = "gemeente-ai-assistent-widget";
 
   if (document.getElementById(widgetId)) {
@@ -25,6 +26,7 @@
   panel.setAttribute("aria-label", "Gemeente AI Assistent");
   panel.hidden = true;
 
+  // The widget builds its own small interface so the host website only needs one script tag.
   panel.innerHTML =
     '<div class="gemeente-ai-assistent-header">' +
     '  <div>' +
@@ -34,11 +36,12 @@
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
-    "  <p>Hallo! Ik ben een placeholder voor de toekomstige gemeente-assistent.</p>" +
-    "  <p>Er wordt nog geen AI API aangeroepen en er worden geen berichten opgeslagen.</p>" +
+    '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
+    '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant">Hallo! Stel gerust een vraag. Deze demo gebruikt een mock-antwoord en geen echte AI API.</p>' +
+    "  </div>" +
     '  <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
-    '  <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Typ hier later uw vraag..."></textarea>' +
-    '  <button type="button" class="gemeente-ai-assistent-send">Verstuur demo</button>' +
+    '  <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Bijvoorbeeld: hoe vraag ik een paspoort aan?"></textarea>' +
+    '  <button type="button" class="gemeente-ai-assistent-send">Verstuur</button>' +
     '  <p class="gemeente-ai-assistent-note" role="status"></p>' +
     "</div>";
 
@@ -102,6 +105,37 @@
     ".gemeente-ai-assistent-body {" +
     "  padding: 16px;" +
     "}" +
+    ".gemeente-ai-assistent-messages {" +
+    "  display: flex;" +
+    "  flex-direction: column;" +
+    "  gap: 10px;" +
+    "  max-height: 260px;" +
+    "  overflow-y: auto;" +
+    "  margin-bottom: 14px;" +
+    "}" +
+    ".gemeente-ai-assistent-message {" +
+    "  width: fit-content;" +
+    "  max-width: 100%;" +
+    "  margin: 0;" +
+    "  padding: 10px 12px;" +
+    "  border-radius: 8px;" +
+    "  line-height: 1.4;" +
+    "}" +
+    ".gemeente-ai-assistent-message-user {" +
+    "  align-self: flex-end;" +
+    "  background: #e6fffb;" +
+    "}" +
+    ".gemeente-ai-assistent-message-assistant {" +
+    "  align-self: flex-start;" +
+    "  background: #eef2f7;" +
+    "}" +
+    ".gemeente-ai-assistent-sources {" +
+    "  margin: 8px 0 0;" +
+    "  padding-left: 18px;" +
+    "}" +
+    ".gemeente-ai-assistent-sources a {" +
+    "  color: #0f766e;" +
+    "}" +
     ".gemeente-ai-assistent-body p {" +
     "  margin: 0 0 12px;" +
     "}" +
@@ -142,6 +176,8 @@
 
   var closeButton = panel.querySelector(".gemeente-ai-assistent-close");
   var sendButton = panel.querySelector(".gemeente-ai-assistent-send");
+  var input = panel.querySelector("#gemeente-ai-assistent-input");
+  var messages = panel.querySelector(".gemeente-ai-assistent-messages");
   var note = panel.querySelector(".gemeente-ai-assistent-note");
 
   button.addEventListener("click", function () {
@@ -156,9 +192,91 @@
     button.focus();
   });
 
-  sendButton.addEventListener("click", function () {
-    note.textContent = "Demo: er is nog geen backend of AI-koppeling aangesloten.";
+  sendButton.addEventListener("click", sendMessage);
+
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
   });
+
+  async function sendMessage() {
+    var message = input.value.trim();
+
+    if (!message) {
+      note.textContent = "Typ eerst een vraag.";
+      return;
+    }
+
+    addMessage("user", message);
+    input.value = "";
+    note.textContent = "De assistent denkt na...";
+    sendButton.disabled = true;
+
+    try {
+      // The backend returns a mock response for now; no real AI provider is called.
+      var response = await fetch(apiBase + "/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tenant: tenant || "demo",
+          message: message,
+        }),
+      });
+      var data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "De demo-server gaf een fout terug.");
+      }
+
+      addMessage("assistant", data.message, data.sources || []);
+      note.textContent = "";
+    } catch (error) {
+      addMessage(
+        "assistant",
+        "Sorry, de demo-server is niet bereikbaar. Start de server en probeer het opnieuw."
+      );
+      note.textContent = error.message;
+    } finally {
+      sendButton.disabled = false;
+      input.focus();
+    }
+  }
+
+  function addMessage(sender, text, sources) {
+    var messageElement = document.createElement("div");
+    messageElement.className =
+      "gemeente-ai-assistent-message gemeente-ai-assistent-message-" + sender;
+    messageElement.textContent = text;
+
+    if (sources && sources.length) {
+      messageElement.appendChild(createSourcesList(sources));
+    }
+
+    messages.appendChild(messageElement);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function createSourcesList(sources) {
+    var list = document.createElement("ul");
+    list.className = "gemeente-ai-assistent-sources";
+
+    sources.forEach(function (source) {
+      var item = document.createElement("li");
+      var link = document.createElement("a");
+      link.href = source.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = source.title;
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+
+    return list;
+  }
 
   function escapeHtml(value) {
     return String(value)
