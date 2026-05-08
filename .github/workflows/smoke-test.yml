@@ -25,3 +25,6 @@ jobs:
 
       - name: Run smoke tests
         run: node scripts/smoke-test.js
+
+      - name: Check deployment config
+        run: node scripts/check-deployment-config.js

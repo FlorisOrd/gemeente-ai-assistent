@@ -159,6 +159,24 @@ This is still meant for staging and private demos, not public production. Before
 
 See `docs/deployment.md` for the deployment notes.
 
+## Future FXW/server Deployment
+
+The repo now also has notes for a future traditional Linux server deployment, such as an FXW VPS or managed Linux server with SSH access.
+
+Read:
+
+```text
+docs/fxw-server-deployment.md
+```
+
+Before a staging deployment, check tenant config with:
+
+```bash
+node scripts/check-deployment-config.js
+```
+
+This checks that tenant JSON files have the required deployment fields, warns about localhost-only origins, and warns about `example.com` contact or privacy links. It does not deploy anything and does not require `OPENAI_API_KEY`.
+
 ## Project Structure
 
 ```text
@@ -178,6 +196,7 @@ gemeente-ai-assistent/
   docs/
     architecture.md
     deployment.md
+    fxw-server-deployment.md
     manual-test-checklist.md
     privacy.md
     mvp.md
@@ -185,6 +204,7 @@ gemeente-ai-assistent/
     demo.html
     waterstad.html
   scripts/
+    check-deployment-config.js
     smoke-test.js
   widget/
     widget.js
