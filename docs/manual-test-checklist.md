@@ -59,6 +59,15 @@ Use this checklist before sharing the demo outside a local development context.
 - [ ] Confirm chat still works in real OpenAI mode.
 - [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected.
 
+## Origin Allowlist
+
+- [ ] Confirm the demo still works from `http://localhost:3000`.
+- [ ] Confirm `/api/config?tenant=demo` works from localhost.
+- [ ] Confirm `/api/chat?tenant=demo` works from localhost.
+- [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected.
+- [ ] Send a request with an unapproved `Origin` header and confirm it returns `403`.
+- [ ] Confirm OpenAI is not called when the origin is blocked.
+
 ## Secret Safety
 
 - [ ] Search `widget/widget.js` for `OPENAI_API_KEY` and confirm it is not present.

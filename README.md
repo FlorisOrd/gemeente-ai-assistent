@@ -94,8 +94,11 @@ The demo tenant config controls:
 - Privacy link.
 - Contact link.
 - Allowed topics.
+- Allowed website origins.
 
 Only public-safe fields are returned to the browser. The OpenAI API key stays server-side and is never included in `GET /api/config`, `widget.js`, or `demo.html`.
+
+Tenants now include `allowedOrigins`. This helps prevent random websites from using another municipality's tenant. The demo tenant allows localhost for local testing. Production tenants should list only the real municipality website origins, such as `https://www.gemeente-demo.nl`.
 
 ## Safety Guardrails
 
@@ -105,6 +108,7 @@ This project now includes a few basic guardrails:
 - Messages longer than 1000 characters are rejected.
 - Very large request bodies are rejected.
 - `/api/chat` has a simple in-memory per-IP rate limit: 10 messages per 5 minutes.
+- `/api/chat` and `/api/config` check the request `Origin` against the tenant allowlist.
 - `/api/chat` has a simple MVP topic gate that rejects clearly off-topic questions before mock mode or OpenAI runs.
 - OpenAI responses are capped with a small max output token setting.
 - OpenAI calls request no response storage.

@@ -5,6 +5,10 @@
   "themeColor": "#0f766e",
   "contactUrl": "https://example.com/contact",
   "privacyUrl": "https://example.com/privacy",
+  "allowedOrigins": [
+    "http://localhost:3000",
+    "https://example.com"
+  ],
   "allowedTopics": [
     "paspoorten en identiteitskaarten",
     "verhuizen",

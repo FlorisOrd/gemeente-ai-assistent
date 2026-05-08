@@ -256,16 +256,18 @@
 
     try {
       // The backend returns a mock response for now; no real AI provider is called.
-      var response = await fetch(apiBase + "/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tenant: tenant || "demo",
-          message: message,
-        }),
-      });
+      var response = await fetch(
+        apiBase + "/api/chat?tenant=" + encodeURIComponent(tenant || "demo"),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: message,
+          }),
+        }
+      );
       var data = await response.json();
 
       if (!response.ok) {
