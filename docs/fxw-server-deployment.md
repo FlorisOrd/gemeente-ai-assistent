@@ -24,6 +24,19 @@ Example municipality embed snippet:
 <script src="https://assistant.example.nl/widget/widget.js" data-tenant="waterstad" data-api-base="https://assistant.example.nl"></script>
 ```
 
+Staging embed snippet example:
+
+```html
+<script
+  src="https://assistant.example.nl/widget/widget.js"
+  data-tenant="staging"
+  data-api-base="https://assistant.example.nl"
+  async>
+</script>
+```
+
+The local demo version of this setup is `demo/staging-embed.html`. It uses the same tenant shape, but loads `/widget/widget.js` from localhost.
+
 ## Secrets
 
 `OPENAI_API_KEY` must be stored only on the server. Never put it in GitHub, tenant JSON files, browser files, demo pages, or README examples.

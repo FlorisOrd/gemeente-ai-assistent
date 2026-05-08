@@ -78,6 +78,15 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm both tenants reject cake questions.
 - [ ] Confirm both tenants allow passport questions.
 
+## Staging Embed Simulation
+
+- [ ] Open `/demo/staging-embed.html`.
+- [ ] Confirm the staging assistant loads.
+- [ ] Ask `Hoe vraag ik een paspoort aan?` and confirm it works.
+- [ ] Ask `Hoe bak ik een cake?` and confirm it is rejected.
+- [ ] Confirm the privacy and contact links are shown.
+- [ ] Confirm no API key appears in the page source.
+
 ## Origin Allowlist
 
 - [ ] Confirm the demo still works from `http://localhost:3000`.
