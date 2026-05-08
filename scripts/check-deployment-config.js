@@ -1,0 +1,154 @@
+const fs = require("fs");
+const path = require("path");
+
+const TENANTS_DIR = path.join(__dirname, "..", "apps", "server", "tenants");
+const REQUIRED_FIELDS = [
+  "id",
+  "municipalityName",
+  "assistantName",
+  "themeColor",
+  "contactUrl",
+  "privacyUrl",
+  "allowedOrigins",
+  "allowedTopics",
+  "mockSources",
+];
+
+let failures = 0;
+let warnings = 0;
+
+run();
+
+function run() {
+  console.log("Checking tenant deployment configuration...");
+
+  const tenantFiles = getTenantFiles();
+
+  tenantFiles.forEach(function (fileName) {
+    checkTenantFile(fileName);
+  });
+
+  if (failures > 0) {
+    console.error(
+      "FAIL Deployment config check finished with " + failures + " failure(s)."
+    );
+    process.exit(1);
+  }
+
+  if (warnings > 0) {
+    console.warn(
+      "WARN Deployment config check finished with " + warnings + " warning(s)."
+    );
+    process.exit(0);
+  }
+
+  console.log("PASS Deployment config check passed.");
+}
+
+function getTenantFiles() {
+  try {
+    const tenantFiles = fs
+      .readdirSync(TENANTS_DIR)
+      .filter(function (fileName) {
+        return fileName.endsWith(".json");
+      })
+      .sort();
+
+    if (tenantFiles.length === 0) {
+      fail("No tenant JSON files found.");
+    } else {
+      pass("Found " + tenantFiles.length + " tenant JSON file(s).");
+    }
+
+    return tenantFiles;
+  } catch (error) {
+    fail("Could not read tenant config directory.");
+    return [];
+  }
+}
+
+function checkTenantFile(fileName) {
+  const filePath = path.join(TENANTS_DIR, fileName);
+  const tenant = readTenantJson(filePath, fileName);
+
+  if (!tenant) {
+    return;
+  }
+
+  const label = tenant.id || fileName;
+
+  REQUIRED_FIELDS.forEach(function (fieldName) {
+    if (!hasValue(tenant[fieldName])) {
+      fail(label + " is missing required field: " + fieldName);
+    }
+  });
+
+  if (!Array.isArray(tenant.allowedOrigins) || tenant.allowedOrigins.length === 0) {
+    fail(label + " must have a non-empty allowedOrigins array.");
+  } else {
+    pass(label + " has allowedOrigins.");
+
+    if (
+      tenant.allowedOrigins.every(function (origin) {
+        return String(origin).startsWith("http://localhost");
+      })
+    ) {
+      warn(label + " has only localhost origins.");
+    }
+  }
+
+  if (!Array.isArray(tenant.allowedTopics)) {
+    fail(label + " must have allowedTopics as an array.");
+  }
+
+  if (!Array.isArray(tenant.mockSources)) {
+    fail(label + " must have mockSources as an array.");
+  }
+
+  if (usesExampleCom(tenant.contactUrl)) {
+    warn(label + " contactUrl uses example.com.");
+  }
+
+  if (usesExampleCom(tenant.privacyUrl)) {
+    warn(label + " privacyUrl uses example.com.");
+  }
+}
+
+function readTenantJson(filePath, fileName) {
+  try {
+    const rawJson = fs.readFileSync(filePath, "utf8");
+    const tenant = JSON.parse(rawJson);
+
+    pass(fileName + " contains valid JSON.");
+    return tenant;
+  } catch (error) {
+    fail(fileName + " contains invalid JSON.");
+    return null;
+  }
+}
+
+function hasValue(value) {
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  return value !== undefined && value !== null && String(value).trim() !== "";
+}
+
+function usesExampleCom(value) {
+  return String(value || "").includes("example.com");
+}
+
+function pass(message) {
+  console.log("PASS " + message);
+}
+
+function warn(message) {
+  warnings += 1;
+  console.warn("WARN " + message);
+}
+
+function fail(message) {
+  failures += 1;
+  console.error("FAIL " + message);
+}

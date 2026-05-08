@@ -95,6 +95,10 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm `/ready` does not expose API keys or internal file paths.
 - [ ] Confirm startup logs print port, mode, tenant count, and demo URL.
 - [ ] Confirm startup logs do not print API keys.
+- [ ] Run `node scripts/check-deployment-config.js` before a staging deployment.
+- [ ] Confirm production-like tenants do not use `example.com` contact or privacy links.
+- [ ] Confirm `allowedOrigins` contains the real website domains.
+- [ ] Confirm localhost-only origins are not used for real municipality tenants.
 
 ## Secret Safety
 
