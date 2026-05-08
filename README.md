@@ -136,6 +136,18 @@ To test the rate limit manually, start the server and send more than 10 chat mes
 
 The topic gate is keyword-based and not perfect. It checks the demo tenant's allowed topics plus common municipality words, and rejects obvious off-topic examples such as recipes, football, films, programming help, and relationship advice. A production version should use a stronger policy layer and/or an approved municipal knowledge base.
 
+## Approved Knowledge Sources
+
+The assistant now uses simple approved source files in `apps/server/knowledge`.
+
+Each tenant can have a matching JSON file with approved source titles, links, keywords, and short summaries. The MVP uses keyword matching to find 1 to 3 relevant sources for a visitor question.
+
+If no approved source is found, the assistant should not guess. It returns a friendly Dutch message saying that no approved municipal information is available yet and points the visitor to the official contact page.
+
+When OpenAI mode is enabled, the backend sends only the relevant approved summaries to OpenAI and asks it to answer only from those summaries. The browser does not receive secret prompts or API keys.
+
+For production, replace this with a stronger approved content pipeline, search system, or retrieval system that is reviewed by the municipality.
+
 ## Run Smoke Tests
 
 Run the backend smoke tests with:
@@ -204,6 +216,10 @@ gemeente-ai-assistent/
   apps/
     server/
       server.js
+      knowledge/
+        demo.json
+        staging.json
+        waterstad.json
       tenants/
         demo.json
         staging.json

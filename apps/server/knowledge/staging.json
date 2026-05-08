@@ -1,0 +1,37 @@
+[
+  {
+    "id": "staging-paspoort",
+    "title": "Paspoort aanvragen",
+    "url": "https://example.com/staging/paspoort",
+    "keywords": ["paspoort", "paspoorten", "reisdocument", "identiteitskaart"],
+    "summary": "Voor Gemeente Staging maakt u een afspraak om een paspoort of identiteitskaart aan te vragen. Neem de gevraagde documenten mee naar het loket."
+  },
+  {
+    "id": "staging-verhuizen",
+    "title": "Verhuizing doorgeven",
+    "url": "https://example.com/staging/verhuizen",
+    "keywords": ["verhuizen", "verhuizing", "adres", "inschrijving"],
+    "summary": "Een verhuizing geeft u digitaal door bij Gemeente Staging. Controleer de officiele pagina voor de voorwaarden."
+  },
+  {
+    "id": "staging-afval",
+    "title": "Afvalinzameling",
+    "url": "https://example.com/staging/afval",
+    "keywords": ["afval", "afvalinzameling", "container", "inzameling"],
+    "summary": "Gemeente Staging toont afvalinformatie, inzameldagen en containerregels op de afvalpagina."
+  },
+  {
+    "id": "staging-vergunning",
+    "title": "Vergunning aanvragen",
+    "url": "https://example.com/staging/vergunning",
+    "keywords": ["vergunning", "vergunningen", "aanvraag", "evenement"],
+    "summary": "Voor vergunningen verwijst Gemeente Staging naar aanvraagformulieren en voorwaarden per onderwerp."
+  },
+  {
+    "id": "staging-contact",
+    "title": "Contact met de gemeente",
+    "url": "https://example.com/staging/contact",
+    "keywords": ["contact", "loket", "openingstijden", "afspraak"],
+    "summary": "Voor persoonlijke of urgente vragen neemt u contact op met Gemeente Staging via de contactpagina."
+  }
+]

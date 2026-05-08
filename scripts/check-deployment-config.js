@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const TENANTS_DIR = path.join(__dirname, "..", "apps", "server", "tenants");
+const KNOWLEDGE_DIR = path.join(__dirname, "..", "apps", "server", "knowledge");
 const REQUIRED_FIELDS = [
   "id",
   "municipalityName",
@@ -13,6 +14,7 @@ const REQUIRED_FIELDS = [
   "allowedTopics",
   "mockSources",
 ];
+const REQUIRED_KNOWLEDGE_FIELDS = ["id", "title", "url", "keywords", "summary"];
 
 let failures = 0;
 let warnings = 0;
@@ -112,6 +114,8 @@ function checkTenantFile(fileName) {
   if (usesExampleCom(tenant.privacyUrl)) {
     warn(label + " privacyUrl uses example.com.");
   }
+
+  checkKnowledgeFile(label);
 }
 
 function readTenantJson(filePath, fileName) {
@@ -137,6 +141,57 @@ function hasValue(value) {
 
 function usesExampleCom(value) {
   return String(value || "").includes("example.com");
+}
+
+function checkKnowledgeFile(tenantId) {
+  const knowledgePath = path.join(KNOWLEDGE_DIR, tenantId + ".json");
+
+  if (!fs.existsSync(knowledgePath)) {
+    warn(tenantId + " has no matching knowledge file.");
+    return;
+  }
+
+  const knowledgeItems = readKnowledgeJson(knowledgePath, tenantId);
+
+  if (!knowledgeItems) {
+    return;
+  }
+
+  if (!Array.isArray(knowledgeItems)) {
+    fail(tenantId + " knowledge file must contain an array.");
+    return;
+  }
+
+  knowledgeItems.forEach(function (item, index) {
+    const label = tenantId + " knowledge item " + (item.id || index + 1);
+
+    REQUIRED_KNOWLEDGE_FIELDS.forEach(function (fieldName) {
+      if (!hasValue(item[fieldName])) {
+        fail(label + " is missing required field: " + fieldName);
+      }
+    });
+
+    if (!Array.isArray(item.keywords)) {
+      fail(label + " must have keywords as an array.");
+    }
+
+    if (usesExampleCom(item.url)) {
+      warn(label + " url uses example.com.");
+    }
+  });
+}
+
+function readKnowledgeJson(filePath, tenantId) {
+  try {
+    const rawJson = fs.readFileSync(filePath, "utf8");
+    const knowledgeItems = JSON.parse(rawJson);
+
+    pass(tenantId + " knowledge file contains valid JSON.");
+    return knowledgeItems;
+  } catch (error) {
+    fail(tenantId + " knowledge file contains invalid JSON.");
+    return null;
+  }
 }
 
 function pass(message) {
