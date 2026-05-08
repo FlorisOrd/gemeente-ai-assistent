@@ -1,0 +1,37 @@
+[
+  {
+    "id": "demo-paspoort",
+    "title": "Paspoort aanvragen",
+    "url": "https://example.com/demo/paspoort",
+    "keywords": ["paspoort", "paspoorten", "reisdocument", "identiteitskaart"],
+    "summary": "In Gemeente Demo maakt u online een afspraak voor een paspoort of identiteitskaart. Neem een pasfoto en geldig legitimatiebewijs mee naar het loket."
+  },
+  {
+    "id": "demo-verhuizen",
+    "title": "Verhuizing doorgeven",
+    "url": "https://example.com/demo/verhuizen",
+    "keywords": ["verhuizen", "verhuizing", "adres", "inschrijven"],
+    "summary": "Een verhuizing binnen of naar Gemeente Demo geeft u digitaal door. Doe dit uiterlijk vijf dagen na de verhuisdatum."
+  },
+  {
+    "id": "demo-afval",
+    "title": "Afvalinzameling",
+    "url": "https://example.com/demo/afval",
+    "keywords": ["afval", "afvalinzameling", "container", "inzameldag"],
+    "summary": "Op de afvalpagina van Gemeente Demo vindt u de inzameldagen, informatie over containers en regels voor grof afval."
+  },
+  {
+    "id": "demo-contact",
+    "title": "Contact met de gemeente",
+    "url": "https://example.com/demo/contact",
+    "keywords": ["contact", "telefoon", "loket", "openingstijden", "afspraak"],
+    "summary": "Voor persoonlijke vragen kunt u contact opnemen met Gemeente Demo of een afspraak maken bij het gemeenteloket."
+  },
+  {
+    "id": "demo-vergunning",
+    "title": "Vergunning aanvragen",
+    "url": "https://example.com/demo/vergunning",
+    "keywords": ["vergunning", "vergunningen", "aanvragen", "evenement"],
+    "summary": "Voor sommige activiteiten heeft u een vergunning nodig. Gemeente Demo verwijst inwoners naar het aanvraagformulier en de voorwaarden per vergunning."
+  }
+]

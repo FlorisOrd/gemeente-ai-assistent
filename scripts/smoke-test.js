@@ -125,6 +125,20 @@ async function runSmokeTests() {
     assertEqual(response.statusCode, 200);
   });
 
+  await test("POST /api/chat returns a passport source for demo", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertSourceIncludes(response.json.sources, "Paspoort");
+  });
+
   await test("POST /api/chat rejects an off-topic cake question", async function () {
     const response = await request({
       method: "POST",
@@ -137,6 +151,20 @@ async function runSmokeTests() {
 
     assertEqual(response.statusCode, 200);
     assertEqual(response.json.mode, "off-topic");
+  });
+
+  await test("POST /api/chat returns no-approved-source when no source matches", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe dien ik bezwaar in tegen de WOZ waarde?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.mode, "no-approved-source");
   });
 
   await test("POST /api/chat rejects an unapproved origin", async function () {
@@ -190,6 +218,20 @@ async function runSmokeTests() {
 
     assertEqual(response.statusCode, 200);
     assertEqual(response.json.tenant, "waterstad");
+  });
+
+  await test("POST /api/chat returns a Waterstad parking source", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=waterstad",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe vraag ik een parkeervergunning aan?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertSourceIncludes(response.json.sources, "Parkeren");
   });
 
   await test("POST /api/chat rejects a Waterstad cake question", async function () {
@@ -416,5 +458,17 @@ function assertEqual(actual, expected) {
 function assertGreaterOrEqual(actual, expected) {
   if (actual < expected) {
     throw new Error("Expected at least " + expected + " but got " + actual);
+  }
+}
+
+function assertSourceIncludes(sources, expectedText) {
+  const hasSource = Array.isArray(sources)
+    ? sources.some(function (source) {
+        return String(source.title || "").includes(expectedText);
+      })
+    : false;
+
+  if (!hasSource) {
+    throw new Error("Expected a source title containing " + expectedText);
   }
 }

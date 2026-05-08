@@ -54,6 +54,15 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Ask `Hoe vraag ik een paspoort aan?` and confirm it is allowed.
 - [ ] Ask `Hoe maak ik een afspraak met de gemeente?` and confirm it is allowed.
 
+## Approved Knowledge Sources
+
+- [ ] Ask `Hoe vraag ik een paspoort aan?` and confirm the response shows a passport source.
+- [ ] Open `/demo/waterstad.html`, ask a parking question, and confirm it shows a Waterstad parking source.
+- [ ] Ask a municipality-related but unsupported question, such as `Hoe dien ik bezwaar in tegen de WOZ waarde?`, and confirm it returns `mode: "no-approved-source"`.
+- [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected as off-topic.
+- [ ] Confirm the browser does not receive secret prompts or API keys.
+- [ ] Confirm OpenAI is not called when no approved source is found.
+
 ## Privacy Warning
 
 - [ ] Open the chat panel.

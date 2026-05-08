@@ -5,6 +5,7 @@ const path = require("path");
 const PORT = process.env.PORT || 3000;
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const TENANTS_DIR = path.join(__dirname, "tenants");
+const KNOWLEDGE_DIR = path.join(__dirname, "knowledge");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = "gpt-5.4-mini";
 const MAX_MESSAGE_LENGTH = 1000;
@@ -320,16 +321,32 @@ async function handleChat(request, response) {
     return;
   }
 
+  const knowledgeItems = loadKnowledge(tenant.id);
+  const relevantKnowledge = findRelevantKnowledge(message, knowledgeItems);
+
+  if (relevantKnowledge.length === 0) {
+    logChatStatus("no_approved_source", tenant.id, clientIp);
+    sendJson(response, 200, {
+      tenant: tenant.id,
+      assistantName: tenant.assistantName,
+      message:
+        "Ik heb hiervoor nog geen goedgekeurde gemeentelijke informatie beschikbaar. Controleer de officiele website van de gemeente of neem contact op via de contactpagina.",
+      sources: getContactSources(tenant),
+      mode: "no-approved-source",
+    });
+    return;
+  }
+
   if (OPENAI_API_KEY) {
     try {
-      const openAIMessage = await callOpenAI(message, tenant);
+      const openAIMessage = await callOpenAI(message, tenant, relevantKnowledge);
 
       logChatStatus("openai_success", tenant.id, clientIp);
       sendJson(response, 200, {
         tenant: tenant.id,
         assistantName: tenant.assistantName,
         message: openAIMessage,
-        sources: tenant.mockSources,
+        sources: getSourceLinks(relevantKnowledge),
         mode: "openai",
       });
       return;
@@ -357,10 +374,10 @@ async function handleChat(request, response) {
     message:
       "Bedankt voor uw vraag. Dit is een demo-antwoord van " +
       tenant.assistantName +
-      ". In een echte versie zoekt de assistent informatie op in goedgekeurde gemeentelijke bronnen. Voor nu kan ik alvast aangeven dat uw vraag is ontvangen: \"" +
-      message +
-      "\".",
-    sources: tenant.mockSources,
+      ". Ik heb een relevante goedgekeurde bron gevonden: " +
+      relevantKnowledge[0].title +
+      ". In een echte versie gebruikt de assistent alleen dit soort goedgekeurde gemeentelijke bronnen.",
+    sources: getSourceLinks(relevantKnowledge),
     mode: "mock",
   });
 }
@@ -409,22 +426,104 @@ function normalizeText(value) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-async function callOpenAI(message, tenant) {
-  const allowedTopics = Array.isArray(tenant.allowedTopics)
-    ? tenant.allowedTopics.join(", ")
-    : "algemene gemeentelijke informatie";
+function loadKnowledge(tenantId) {
+  const safeTenantId = String(tenantId).replace(/[^a-z0-9-]/gi, "");
+  const knowledgePath = path.join(KNOWLEDGE_DIR, safeTenantId + ".json");
+
+  if (!fs.existsSync(knowledgePath)) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(fs.readFileSync(knowledgePath, "utf8"));
+  } catch (error) {
+    // Keep raw file errors away from visitors. The deployment checker catches invalid JSON.
+    console.error("knowledge_status=load_failed tenant=" + safeTenantId);
+    return [];
+  }
+}
+
+function findRelevantKnowledge(message, knowledgeItems) {
+  const normalizedMessage = normalizeText(message);
+
+  // MVP keyword matching: simple, readable, and good enough for demos.
+  // Production should replace this with an approved search or retrieval pipeline.
+  return knowledgeItems
+    .map(function (item) {
+      const keywords = Array.isArray(item.keywords) ? item.keywords : [];
+      const titleWords = String(item.title || "")
+        .split(" ")
+        .filter(function (word) {
+          return word.length >= 4;
+        });
+      const searchTerms = keywords.concat(titleWords);
+      const score = searchTerms.reduce(function (total, term) {
+        return normalizedMessage.includes(normalizeText(term)) ? total + 1 : total;
+      }, 0);
+
+      return {
+        item: item,
+        score: score,
+      };
+    })
+    .filter(function (result) {
+      return result.score > 0;
+    })
+    .sort(function (a, b) {
+      return b.score - a.score;
+    })
+    .slice(0, 3)
+    .map(function (result) {
+      return result.item;
+    });
+}
+
+function getSourceLinks(knowledgeItems) {
+  return knowledgeItems.map(function (item) {
+    return {
+      title: item.title,
+      url: item.url,
+    };
+  });
+}
+
+function getContactSources(tenant) {
+  if (!tenant.contactUrl) {
+    return [];
+  }
+
+  return [
+    {
+      title: "Contact met " + tenant.municipalityName,
+      url: tenant.contactUrl,
+    },
+  ];
+}
+
+async function callOpenAI(message, tenant, relevantKnowledge) {
+  const approvedSummaries = relevantKnowledge
+    .map(function (item, index) {
+      return (
+        index +
+        1 +
+        ". " +
+        item.title +
+        "\nURL: " +
+        item.url +
+        "\nSamenvatting: " +
+        item.summary
+      );
+    })
+    .join("\n\n");
   const instructionPrompt =
     "Je bent " +
     tenant.assistantName +
     " voor " +
     tenant.municipalityName +
-    ". Antwoord in helder Nederlands en blijf gericht op gemeentelijke informatie. Richt je vooral op deze onderwerpen: " +
-    allowedTopics +
-    ". Vraag nooit om een BSN. Verwerk geen gevoelige persoonsgegevens, zoals medische gegevens, financiele details of gegevens over persoonlijke dossiers. Neem geen definitieve juridische beslissingen en doe niet alsof je een officieel besluit namens de gemeente neemt. Adviseer gebruikers om officiele gemeentelijke bronnen te controleren voor definitieve informatie. Verwijs urgente of persoonlijke situaties door naar de officiele contactkanalen van de gemeente: " +
+    ". Antwoord in helder Nederlands. Gebruik alleen de goedgekeurde bronsamenvattingen hieronder. Verzin geen details en gebruik geen algemene modelkennis. Als de goedgekeurde samenvattingen onvoldoende informatie bevatten, zeg dat duidelijk en verwijs naar de contactpagina: " +
     tenant.contactUrl +
-    ". Verwijs voor privacyinformatie naar: " +
-    tenant.privacyUrl +
-    ". Houd antwoorden kort en praktisch.";
+    ". Vraag nooit om een BSN. Verwerk geen gevoelige persoonsgegevens. Neem geen definitieve juridische beslissingen en doe niet alsof je een officieel besluit namens de gemeente neemt. Link gebruikers naar de officiele bronnen. Houd antwoorden kort en praktisch.\n\nGoedgekeurde bronsamenvattingen:\n" +
+    approvedSummaries;
 
   const response = await postJson("https://api.openai.com/v1/responses", {
     model: OPENAI_MODEL,

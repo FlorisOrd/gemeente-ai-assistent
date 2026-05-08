@@ -1,0 +1,37 @@
+[
+  {
+    "id": "waterstad-paspoort",
+    "title": "Paspoort aanvragen",
+    "url": "https://example.com/waterstad/paspoort",
+    "keywords": ["paspoort", "paspoorten", "reisdocument", "identiteitskaart"],
+    "summary": "In Gemeente Waterstad vraagt u een paspoort aan op afspraak. Neem een recente pasfoto, uw oude reisdocument en een betaalmiddel mee."
+  },
+  {
+    "id": "waterstad-verhuizen",
+    "title": "Verhuizing doorgeven",
+    "url": "https://example.com/waterstad/verhuizen",
+    "keywords": ["verhuizen", "verhuizing", "adreswijziging", "inschrijven"],
+    "summary": "Een verhuizing naar of binnen Waterstad geeft u online door. De gemeente verwerkt de adreswijziging na controle van uw gegevens."
+  },
+  {
+    "id": "waterstad-afval",
+    "title": "Afvalinzameling",
+    "url": "https://example.com/waterstad/afval",
+    "keywords": ["afval", "afvalinzameling", "container", "milieustraat"],
+    "summary": "Waterstad publiceert inzameldagen, containerinformatie en milieustraatregels op de afvalpagina."
+  },
+  {
+    "id": "waterstad-parkeren",
+    "title": "Parkeren in Waterstad",
+    "url": "https://example.com/waterstad/parkeren",
+    "keywords": ["parkeren", "parkeervergunning", "vergunning", "auto"],
+    "summary": "Op de parkeerpagina van Waterstad vindt u informatie over parkeervergunningen, betaald parkeren en bezoekersregelingen."
+  },
+  {
+    "id": "waterstad-contact",
+    "title": "Contact met de gemeente",
+    "url": "https://example.com/waterstad/contact",
+    "keywords": ["contact", "loket", "openingstijden", "afspraak"],
+    "summary": "Voor persoonlijke situaties of vragen die niet online beantwoord worden, neemt u contact op met Gemeente Waterstad."
+  }
+]
