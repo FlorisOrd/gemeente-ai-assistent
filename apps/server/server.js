@@ -61,6 +61,11 @@ const CONTENT_TYPES = {
 
 const server = http.createServer(async function (request, response) {
   try {
+    if (request.method === "GET" && request.url.startsWith("/api/config")) {
+      handleConfig(request, response);
+      return;
+    }
+
     if (request.method === "POST" && request.url === "/api/chat") {
       await handleChat(request, response);
       return;
@@ -82,6 +87,29 @@ server.listen(PORT, function () {
   console.log("Gemeente AI Assistent demo server");
   console.log("Open http://localhost:" + PORT + "/demo/demo.html");
 });
+
+function handleConfig(request, response) {
+  const url = new URL(request.url, "http://localhost");
+  const tenantId = url.searchParams.get("tenant") || "demo";
+  const tenant = loadTenant(tenantId);
+  const publicConfig = getPublicTenantConfig(tenant);
+
+  // This endpoint returns only public configuration that the browser may safely use.
+  // Do not add API keys, internal settings, prompts, or private tenant data here.
+  sendJson(response, 200, publicConfig);
+}
+
+function getPublicTenantConfig(tenant) {
+  return {
+    id: tenant.id || "demo",
+    municipalityName: tenant.municipalityName || "Gemeente Demo",
+    assistantName: tenant.assistantName || "Gemeente AI Assistent",
+    themeColor: tenant.themeColor || "#0f766e",
+    contactUrl: tenant.contactUrl || "https://example.com/contact",
+    privacyUrl: tenant.privacyUrl || "https://example.com/privacy",
+    allowedTopics: Array.isArray(tenant.allowedTopics) ? tenant.allowedTopics : [],
+  };
+}
 
 async function handleChat(request, response) {
   const body = await readJsonBody(request);

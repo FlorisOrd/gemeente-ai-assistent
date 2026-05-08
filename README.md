@@ -15,6 +15,7 @@ Example of the future embed snippet:
 - A demo HTML page that shows how the widget could be embedded.
 - A widget script that creates a floating chat button and panel.
 - A very small backend server with a `POST /api/chat` endpoint.
+- A public `GET /api/config?tenant=demo` endpoint for browser-safe tenant configuration.
 - Optional server-side OpenAI support when `OPENAI_API_KEY` is set.
 - Basic MVP guardrails for validation, privacy, rate limiting, and cost control.
 - A simple tenant config for `demo`.
@@ -53,11 +54,12 @@ The flow is:
 
 1. The demo page loads `widget/widget.js`.
 2. The widget reads `data-tenant="demo"`.
-3. The visitor types a message.
-4. The widget sends the message to `POST /api/chat`.
-5. The server loads `apps/server/tenants/demo.json`.
-6. The server returns a fake Dutch assistant response.
-7. The widget shows the response and mock source links.
+3. The widget loads public tenant configuration from `GET /api/config?tenant=demo`.
+4. The visitor types a message.
+5. The widget sends the message to `POST /api/chat`.
+6. The server loads `apps/server/tenants/demo.json`.
+7. The server returns a fake Dutch assistant response.
+8. The widget shows the response and mock source links.
 
 ### Real OpenAI Mode
 
@@ -79,6 +81,21 @@ http://localhost:3000/demo/demo.html
 Never commit a real API key. Do not put keys in `widget.js`, `demo.html`, tenant config, README examples, or any file that is committed to git.
 
 `.env.example` shows the variable name only. It is a placeholder, not a real key.
+
+## Tenant Configuration
+
+The widget now loads public tenant configuration from the backend.
+
+The demo tenant config controls:
+
+- Municipality name.
+- Assistant name.
+- Theme color.
+- Privacy link.
+- Contact link.
+- Allowed topics.
+
+Only public-safe fields are returned to the browser. The OpenAI API key stays server-side and is never included in `GET /api/config`, `widget.js`, or `demo.html`.
 
 ## Safety Guardrails
 

@@ -5,6 +5,21 @@
   var tenant = currentScript ? currentScript.getAttribute("data-tenant") : "demo";
   var apiBase = currentScript ? currentScript.getAttribute("data-api-base") || "" : "";
   var widgetId = "gemeente-ai-assistent-widget";
+  var tenantConfig = {
+    id: tenant || "demo",
+    municipalityName: "Gemeente Demo",
+    assistantName: "Gemeente AI Assistent",
+    themeColor: "#0f766e",
+    contactUrl: "https://example.com/contact",
+    privacyUrl: "https://example.com/privacy",
+    allowedTopics: [
+      "paspoorten en identiteitskaarten",
+      "verhuizen",
+      "afval",
+      "vergunningen",
+      "contact met de gemeente",
+    ],
+  };
 
   if (document.getElementById(widgetId)) {
     return;
@@ -18,7 +33,7 @@
   button.className = "gemeente-ai-assistent-button";
   button.setAttribute("aria-expanded", "false");
   button.setAttribute("aria-controls", "gemeente-ai-assistent-panel");
-  button.textContent = "Vraag iets";
+  button.textContent = "Vraag de gemeente";
 
   var panel = document.createElement("section");
   panel.id = "gemeente-ai-assistent-panel";
@@ -30,19 +45,20 @@
   panel.innerHTML =
     '<div class="gemeente-ai-assistent-header">' +
     '  <div>' +
-    '    <strong>Gemeente AI Assistent</strong>' +
+    '    <strong class="gemeente-ai-assistent-title">Gemeente AI Assistent</strong>' +
     '    <span>Tenant: ' + escapeHtml(tenant || "demo") + "</span>" +
     "  </div>" +
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
-    '  <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens.</p>' +
+    '  <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens. Lees de <a href="https://example.com/privacy" target="_blank" rel="noopener noreferrer">privacyinformatie</a>.</p>' +
     '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
-    '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant">Hallo! Stel gerust een vraag. Deze demo gebruikt een mock-antwoord en geen echte AI API.</p>' +
+    '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Ik kan helpen met vragen over paspoorten en identiteitskaarten, verhuizen, afval, vergunningen en contact met de gemeente.</p>' +
     "  </div>" +
     '  <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
     '  <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Bijvoorbeeld: hoe vraag ik een paspoort aan?"></textarea>' +
     '  <button type="button" class="gemeente-ai-assistent-send">Verstuur</button>' +
+    '  <p class="gemeente-ai-assistent-contact"><a href="https://example.com/contact" target="_blank" rel="noopener noreferrer">Neem contact op met de gemeente</a></p>' +
     '  <p class="gemeente-ai-assistent-note" role="status"></p>' +
     "</div>";
 
@@ -114,6 +130,10 @@
     "  color: #7c2d12;" +
     "  font-size: 0.92rem;" +
     "}" +
+    ".gemeente-ai-assistent-privacy-notice a," +
+    ".gemeente-ai-assistent-contact a {" +
+    "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "}" +
     ".gemeente-ai-assistent-messages {" +
     "  display: flex;" +
     "  flex-direction: column;" +
@@ -143,7 +163,7 @@
     "  padding-left: 18px;" +
     "}" +
     ".gemeente-ai-assistent-sources a {" +
-    "  color: #0f766e;" +
+    "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
     "}" +
     ".gemeente-ai-assistent-body p {" +
     "  margin: 0 0 12px;" +
@@ -176,6 +196,10 @@
     "  margin-top: 12px;" +
     "  color: #52616f;" +
     "  font-size: 0.92rem;" +
+    "}" +
+    ".gemeente-ai-assistent-contact {" +
+    "  margin: 12px 0 0;" +
+    "  font-size: 0.92rem;" +
     "}";
 
   container.appendChild(style);
@@ -188,6 +212,13 @@
   var input = panel.querySelector("#gemeente-ai-assistent-input");
   var messages = panel.querySelector(".gemeente-ai-assistent-messages");
   var note = panel.querySelector(".gemeente-ai-assistent-note");
+  var title = panel.querySelector(".gemeente-ai-assistent-title");
+  var intro = panel.querySelector(".gemeente-ai-assistent-intro");
+  var privacyLink = panel.querySelector(".gemeente-ai-assistent-privacy-notice a");
+  var contactLink = panel.querySelector(".gemeente-ai-assistent-contact a");
+
+  applyTenantConfig(tenantConfig);
+  loadTenantConfig();
 
   button.addEventListener("click", function () {
     var isOpen = !panel.hidden;
@@ -290,6 +321,54 @@
     });
 
     return list;
+  }
+
+  async function loadTenantConfig() {
+    try {
+      var response = await fetch(
+        apiBase + "/api/config?tenant=" + encodeURIComponent(tenant || "demo")
+      );
+
+      if (!response.ok) {
+        return;
+      }
+
+      var config = await response.json();
+      tenantConfig = Object.assign({}, tenantConfig, config);
+      applyTenantConfig(tenantConfig);
+    } catch (error) {
+      // Keep the widget usable with safe defaults if public tenant config cannot be loaded.
+      note.textContent = "";
+    }
+  }
+
+  function applyTenantConfig(config) {
+    container.style.setProperty(
+      "--gemeente-ai-assistent-theme",
+      getSafeThemeColor(config.themeColor)
+    );
+    button.style.background = getSafeThemeColor(config.themeColor);
+
+    var assistantName = config.assistantName || "Gemeente AI Assistent";
+    var topics = Array.isArray(config.allowedTopics)
+      ? config.allowedTopics.join(", ")
+      : "gemeentelijke onderwerpen";
+
+    title.textContent = assistantName;
+    button.textContent = "Vraag " + (config.municipalityName || "de gemeente");
+    intro.textContent =
+      "Hoi, ik ben " +
+      assistantName +
+      ". Ik kan helpen met vragen over " +
+      topics +
+      ".";
+
+    privacyLink.href = config.privacyUrl || "https://example.com/privacy";
+    contactLink.href = config.contactUrl || "https://example.com/contact";
+  }
+
+  function getSafeThemeColor(color) {
+    return /^#[0-9a-fA-F]{6}$/.test(color || "") ? color : "#0f766e";
   }
 
   function escapeHtml(value) {
