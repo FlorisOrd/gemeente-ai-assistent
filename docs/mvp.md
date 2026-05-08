@@ -2,7 +2,7 @@
 
 This checklist describes the first useful version of the municipality assistant.
 
-## Current Scaffold
+## Current Mock Version
 
 - [x] Add project README.
 - [x] Add future Codex working rules.
@@ -10,39 +10,40 @@ This checklist describes the first useful version of the municipality assistant.
 - [x] Add privacy principles.
 - [x] Add MVP checklist.
 - [x] Add demo HTML page.
-- [x] Add placeholder widget script.
-- [x] Avoid backend code.
+- [x] Add widget script.
+- [x] Add a small mock backend API.
+- [x] Add a simple demo tenant configuration.
 - [x] Avoid real API keys.
-- [x] Avoid local tool requirements.
+- [x] Avoid npm, Docker, database, and authentication requirements.
 
 ## MVP 1: Static Widget
 
-- [ ] Load widget from one script tag.
-- [ ] Read `data-tenant` from the script tag.
-- [ ] Show a floating chat button.
-- [ ] Open and close a chat panel.
-- [ ] Show clear placeholder text.
+- [x] Load widget from one script tag.
+- [x] Read `data-tenant` from the script tag.
+- [x] Show a floating chat button.
+- [x] Open and close a chat panel.
+- [x] Show a mock assistant response.
 - [ ] Work on desktop and mobile.
 - [ ] Avoid conflicts with host website styling.
 - [ ] Include basic keyboard accessibility.
 
 ## MVP 2: Tenant Configuration
 
-- [ ] Define a simple tenant configuration format.
-- [ ] Support municipality name.
-- [ ] Support theme color.
+- [x] Define a simple tenant configuration format.
+- [x] Support municipality name.
+- [x] Support theme color.
 - [ ] Support contact link.
 - [ ] Support privacy link.
 - [ ] Keep demo tenant configuration fake.
 
 ## MVP 3: Backend Prototype
 
-- [ ] Add a small backend API.
-- [ ] Add a safe demo endpoint.
-- [ ] Do not store messages by default.
+- [x] Add a small backend API.
+- [x] Add a safe demo endpoint.
+- [x] Do not store messages by default.
 - [ ] Add rate limiting.
-- [ ] Add clear error messages.
-- [ ] Document privacy choices.
+- [x] Add clear error messages.
+- [x] Document privacy choices.
 
 ## MVP 4: AI Prototype
 

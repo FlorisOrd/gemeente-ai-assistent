@@ -1,0 +1,16 @@
+{
+  "id": "demo",
+  "municipalityName": "Gemeente Demo",
+  "assistantName": "Demo Gemeente Assistent",
+  "themeColor": "#0f766e",
+  "mockSources": [
+    {
+      "title": "Contact met de gemeente",
+      "url": "https://example.com/contact"
+    },
+    {
+      "title": "Veelgestelde vragen",
+      "url": "https://example.com/veelgestelde-vragen"
+    }
+  ]
+}
