@@ -61,12 +61,17 @@ const CONTENT_TYPES = {
 
 const server = http.createServer(async function (request, response) {
   try {
+    if (request.method === "OPTIONS") {
+      handleOptions(request, response);
+      return;
+    }
+
     if (request.method === "GET" && request.url.startsWith("/api/config")) {
       handleConfig(request, response);
       return;
     }
 
-    if (request.method === "POST" && request.url === "/api/chat") {
+    if (request.method === "POST" && request.url.startsWith("/api/chat")) {
       await handleChat(request, response);
       return;
     }
@@ -92,7 +97,18 @@ function handleConfig(request, response) {
   const url = new URL(request.url, "http://localhost");
   const tenantId = url.searchParams.get("tenant") || "demo";
   const tenant = loadTenant(tenantId);
+  const origin = getRequestOrigin(request);
   const publicConfig = getPublicTenantConfig(tenant);
+
+  if (!isAllowedOrigin(origin, tenant)) {
+    logBlockedOrigin(tenant.id, origin);
+    sendJson(response, 403, {
+      error: "Deze website mag deze assistent niet gebruiken.",
+    });
+    return;
+  }
+
+  sendCorsHeaders(response, origin, tenant);
 
   // This endpoint returns only public configuration that the browser may safely use.
   // Do not add API keys, internal settings, prompts, or private tenant data here.
@@ -111,11 +127,85 @@ function getPublicTenantConfig(tenant) {
   };
 }
 
-async function handleChat(request, response) {
-  const body = await readJsonBody(request);
-  const tenantId = body.tenant || "demo";
-  const message = String(body.message || "").trim();
+function handleOptions(request, response) {
+  const url = new URL(request.url, "http://localhost");
+
+  if (url.pathname !== "/api/chat" && url.pathname !== "/api/config") {
+    response.writeHead(404);
+    response.end();
+    return;
+  }
+
+  const tenantId = url.searchParams.get("tenant") || "demo";
   const tenant = loadTenant(tenantId);
+  const origin = getRequestOrigin(request);
+
+  if (!isAllowedOrigin(origin, tenant)) {
+    logBlockedOrigin(tenant.id, origin);
+    sendJson(response, 403, {
+      error: "Deze website mag deze assistent niet gebruiken.",
+    });
+    return;
+  }
+
+  sendCorsHeaders(response, origin, tenant);
+  response.writeHead(204);
+  response.end();
+}
+
+function getRequestOrigin(request) {
+  return request.headers.origin || "";
+}
+
+function isAllowedOrigin(origin, tenant) {
+  if (!origin) {
+    // Local manual tests and same-origin demo requests may not include an Origin header.
+    // Public browser embeds should send Origin, so production tenants should rely on explicit origins.
+    return true;
+  }
+
+  return Array.isArray(tenant.allowedOrigins)
+    ? tenant.allowedOrigins.includes(origin)
+    : false;
+}
+
+function sendCorsHeaders(response, origin, tenant) {
+  if (origin && isAllowedOrigin(origin, tenant)) {
+    response.setHeader("Access-Control-Allow-Origin", origin);
+    response.setHeader("Vary", "Origin");
+  }
+
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+}
+
+function logBlockedOrigin(tenantId, origin) {
+  console.log(
+    "chat_status=blocked_origin tenant=" +
+      tenantId +
+      " origin=" +
+      (origin || "missing")
+  );
+}
+
+async function handleChat(request, response) {
+  const url = new URL(request.url, "http://localhost");
+  const tenantId = url.searchParams.get("tenant") || "demo";
+  const tenant = loadTenant(tenantId);
+  const origin = getRequestOrigin(request);
+
+  if (!isAllowedOrigin(origin, tenant)) {
+    logBlockedOrigin(tenant.id, origin);
+    sendJson(response, 403, {
+      error: "Deze website mag deze assistent niet gebruiken.",
+    });
+    return;
+  }
+
+  sendCorsHeaders(response, origin, tenant);
+
+  const body = await readJsonBody(request);
+  const message = String(body.message || "").trim();
   const clientIp = getClientIp(request);
 
   if (!message) {
