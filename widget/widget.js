@@ -200,6 +200,12 @@
     "  font-size: 0.78rem;" +
     "  border: 1px solid #d6dce5;" +
     "}" +
+    ".gemeente-ai-assistent-support-code {" +
+    "  display: block;" +
+    "  margin-top: 8px;" +
+    "  color: #52616f;" +
+    "  font-size: 0.78rem;" +
+    "}" +
     ".gemeente-ai-assistent-feedback {" +
     "  display: flex;" +
     "  flex-wrap: wrap;" +
@@ -338,13 +344,22 @@
       if (!response.ok) {
         addMessage(
           "assistant",
-          data.error || "De demo-server kon uw bericht niet verwerken."
+          data.error || "De demo-server kon uw bericht niet verwerken.",
+          [],
+          "",
+          data.requestId
         );
         note.textContent = "";
         return;
       }
 
-      addMessage("assistant", data.message, data.sources || [], data.mode);
+      addMessage(
+        "assistant",
+        data.message,
+        data.sources || [],
+        data.mode,
+        data.requestId
+      );
       note.textContent = "";
     } catch (error) {
       addMessage(
@@ -358,7 +373,7 @@
     }
   }
 
-  function addMessage(sender, text, sources, mode) {
+  function addMessage(sender, text, sources, mode, requestId) {
     var messageElement = document.createElement("div");
     messageElement.className =
       "gemeente-ai-assistent-message gemeente-ai-assistent-message-" + sender;
@@ -366,6 +381,10 @@
 
     if (sender === "assistant" && mode) {
       messageElement.appendChild(createStatusLabel(mode));
+    }
+
+    if (sender === "assistant" && shouldShowSupportCode(mode, requestId)) {
+      messageElement.appendChild(createSupportCode(requestId));
     }
 
     if (sources && sources.length) {
@@ -378,6 +397,23 @@
 
     messages.appendChild(messageElement);
     messages.scrollTop = messages.scrollHeight;
+  }
+
+  function shouldShowSupportCode(mode, requestId) {
+    return Boolean(
+      requestId &&
+        (!mode ||
+          mode === "openai-error" ||
+          mode === "no-approved-source" ||
+          mode === "off-topic")
+    );
+  }
+
+  function createSupportCode(requestId) {
+    var supportCode = document.createElement("span");
+    supportCode.className = "gemeente-ai-assistent-support-code";
+    supportCode.textContent = "Ondersteuningscode: " + requestId;
+    return supportCode;
   }
 
   function createStatusLabel(mode) {

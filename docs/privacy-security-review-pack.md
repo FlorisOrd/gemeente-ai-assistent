@@ -60,7 +60,9 @@ Visitors are warned not to enter sensitive personal data.
 
 The server avoids logging full citizen messages.
 
-Logs should contain only technical status, mode, masked IP information, blocked origin status, and safe errors.
+The app uses request IDs and structured status logs so staging support can connect a user report to technical events without seeing the chat text.
+
+Logs should contain only technical status, request ID, mode, tenant, duration, masked IP information, blocked origin status, and safe errors.
 
 Future deployments should review server, reverse proxy, and hosting logs to make sure citizen messages are not accidentally logged.
 

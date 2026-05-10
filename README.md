@@ -197,6 +197,16 @@ The repo includes practical, non-legal review materials for future municipality 
 
 Use these documents to discuss privacy, security, approved sources, AI transparency, known MVP limitations, and pilot boundaries before sharing the assistant with visitors. They are preparation materials only and are not legal advice.
 
+## Operational Diagnostics
+
+The backend gives every `/api/chat` request a request ID and returns it in the `X-Request-Id` response header.
+
+Errors and support-relevant responses can include the same request ID in JSON, so the widget can show a short Dutch support code.
+
+Server logs are structured JSON status events. They include safe fields such as tenant, mode, status code, duration, masked IP, Origin, and source count. They do not log citizen messages, prompts, API keys, approved source summaries, or raw OpenAI responses.
+
+See `docs/operations.md` for staging support notes.
+
 ## Run Smoke Tests
 
 Run the backend smoke tests with:
@@ -308,6 +318,7 @@ gemeente-ai-assistent/
     fxw-staging-runbook.md
     manual-test-checklist.md
     municipality-integration-guide.md
+    operations.md
     pilot-intake-form.md
     privacy.md
     privacy-security-review-pack.md
