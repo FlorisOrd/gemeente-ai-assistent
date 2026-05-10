@@ -103,6 +103,10 @@ Each tenant config controls:
 - Municipality name.
 - Assistant name.
 - Theme color.
+- Button label.
+- Welcome message.
+- Widget position.
+- Logo text.
 - Privacy link.
 - Contact link.
 - Allowed topics.
@@ -114,6 +118,22 @@ Only public-safe fields are returned to the browser. The OpenAI API key stays se
 Tenants now include `allowedOrigins`. This helps prevent random websites from using another municipality's tenant. The demo tenant allows localhost for local testing. Production tenants should list only the real municipality website origins, such as `https://www.gemeente-demo.nl`.
 
 The same widget code is reused for each tenant. The tenant is selected with `data-tenant`, for example `data-tenant="demo"` or `data-tenant="waterstad"`.
+
+## Visual Customization
+
+Basic widget styling lives in each tenant JSON file.
+
+Municipalities can customize:
+
+- `themeColor`
+- `buttonLabel`
+- `welcomeMessage`
+- `position`, currently `bottom-right` or `bottom-left`
+- `logoText`
+
+The same `widget/widget.js` file is reused for every tenant. Deeper design changes should still be reviewed for accessibility, readable contrast, keyboard use, and fit on the real municipality website.
+
+Open `http://localhost:3000/demo/visual-comparison.html` to compare the demo tenant pages.
 
 ## Safety Guardrails
 
@@ -331,6 +351,7 @@ gemeente-ai-assistent/
     demo.html
     embed-snippet.html
     staging-embed.html
+    visual-comparison.html
     waterstad.html
   scripts/
     check-deployment-config.js

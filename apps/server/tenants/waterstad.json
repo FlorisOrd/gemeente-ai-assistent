@@ -3,6 +3,10 @@
   "municipalityName": "Gemeente Waterstad",
   "assistantName": "Waterstad Assistent",
   "themeColor": "#2563eb",
+  "buttonLabel": "Vraag Waterstad",
+  "welcomeMessage": "Welkom, ik ben de Waterstad Assistent. Stel een vraag over paspoorten, verhuizen, afval, parkeren of contact.",
+  "position": "bottom-left",
+  "logoText": "WS",
   "contactUrl": "https://example.com/waterstad/contact",
   "privacyUrl": "https://example.com/waterstad/privacy",
   "allowedOrigins": [

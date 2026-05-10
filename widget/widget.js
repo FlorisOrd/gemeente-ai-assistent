@@ -10,6 +10,10 @@
     municipalityName: "Gemeente Demo",
     assistantName: "Gemeente AI Assistent",
     themeColor: "#0f766e",
+    buttonLabel: "Vraag de gemeente",
+    welcomeMessage: "Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?",
+    position: "bottom-right",
+    logoText: "AI",
     contactUrl: "https://example.com/contact",
     privacyUrl: "https://example.com/privacy",
     allowedTopics: [
@@ -27,13 +31,16 @@
 
   var container = document.createElement("div");
   container.id = widgetId;
+  container.className = "gemeente-ai-assistent-position-bottom-right";
 
   var button = document.createElement("button");
   button.type = "button";
   button.className = "gemeente-ai-assistent-button";
   button.setAttribute("aria-expanded", "false");
   button.setAttribute("aria-controls", "gemeente-ai-assistent-panel");
-  button.textContent = "Vraag de gemeente";
+  button.innerHTML =
+    '<span class="gemeente-ai-assistent-button-logo" aria-hidden="true">AI</span>' +
+    '<span class="gemeente-ai-assistent-button-label">Vraag de gemeente</span>';
 
   var panel = document.createElement("section");
   panel.id = "gemeente-ai-assistent-panel";
@@ -44,17 +51,20 @@
   // The widget builds its own small interface so the host website only needs one script tag.
   panel.innerHTML =
     '<div class="gemeente-ai-assistent-header">' +
-    '  <div>' +
-    '    <strong class="gemeente-ai-assistent-title">Gemeente AI Assistent</strong>' +
-    '    <span>Tenant: ' + escapeHtml(tenant || "demo") + "</span>" +
+    '  <div class="gemeente-ai-assistent-brand">' +
+    '    <span class="gemeente-ai-assistent-logo" aria-hidden="true">AI</span>' +
+    '    <div>' +
+    '      <strong class="gemeente-ai-assistent-title">Gemeente AI Assistent</strong>' +
+    '      <span>Tenant: ' + escapeHtml(tenant || "demo") + "</span>" +
+    "    </div>" +
     "  </div>" +
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
-    '  <p class="gemeente-ai-assistent-disclaimer">Deze AI-assistent helpt u informatie te vinden, maar neemt geen besluiten. Controleer altijd de officiële gemeentelijke informatie.</p>' +
+    '  <p class="gemeente-ai-assistent-disclaimer">Deze AI-assistent helpt u informatie te vinden, maar neemt geen besluiten. Controleer altijd de officiele gemeentelijke informatie.</p>' +
     '  <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens. Lees de <a href="https://example.com/privacy" target="_blank" rel="noopener noreferrer">privacyinformatie</a>.</p>' +
     '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
-    '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Ik kan helpen met vragen over paspoorten en identiteitskaarten, verhuizen, afval, vergunningen en contact met de gemeente.</p>' +
+    '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?</p>' +
     "  </div>" +
     '  <button type="button" class="gemeente-ai-assistent-clear">Gesprek wissen</button>' +
     '  <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
@@ -68,28 +78,66 @@
   style.textContent =
     "#" + widgetId + " {" +
     "  position: fixed;" +
-    "  right: 20px;" +
     "  bottom: 20px;" +
     "  z-index: 2147483647;" +
     "  font-family: Arial, sans-serif;" +
     "  color: #1f2933;" +
     "}" +
+    "#" + widgetId + ".gemeente-ai-assistent-position-bottom-right {" +
+    "  right: 20px;" +
+    "}" +
+    "#" + widgetId + ".gemeente-ai-assistent-position-bottom-left {" +
+    "  left: 20px;" +
+    "}" +
     "#" + widgetId + " * {" +
     "  box-sizing: border-box;" +
     "}" +
     ".gemeente-ai-assistent-button {" +
+    "  display: inline-flex;" +
+    "  align-items: center;" +
+    "  gap: 10px;" +
     "  border: 0;" +
     "  border-radius: 999px;" +
-    "  padding: 12px 18px;" +
+    "  padding: 10px 16px 10px 10px;" +
     "  background: #0f766e;" +
     "  color: #ffffff;" +
     "  font: inherit;" +
     "  font-weight: 700;" +
     "  cursor: pointer;" +
     "  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);" +
+    "  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;" +
+    "}" +
+    ".gemeente-ai-assistent-button:hover {" +
+    "  filter: brightness(0.96);" +
+    "  transform: translateY(-1px);" +
+    "  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.28);" +
+    "}" +
+    ".gemeente-ai-assistent-button:focus-visible," +
+    ".gemeente-ai-assistent-close:focus-visible," +
+    ".gemeente-ai-assistent-send:focus-visible," +
+    ".gemeente-ai-assistent-clear:focus-visible," +
+    ".gemeente-ai-assistent-feedback button:focus-visible," +
+    ".gemeente-ai-assistent-body textarea:focus-visible {" +
+    "  outline: 3px solid #fbbf24;" +
+    "  outline-offset: 3px;" +
+    "}" +
+    ".gemeente-ai-assistent-button-logo," +
+    ".gemeente-ai-assistent-logo {" +
+    "  display: inline-flex;" +
+    "  align-items: center;" +
+    "  justify-content: center;" +
+    "  width: 34px;" +
+    "  height: 34px;" +
+    "  border-radius: 50%;" +
+    "  font-weight: 800;" +
+    "  letter-spacing: 0;" +
+    "}" +
+    ".gemeente-ai-assistent-button-logo {" +
+    "  background: rgba(255, 255, 255, 0.2);" +
+    "  color: #ffffff;" +
     "}" +
     ".gemeente-ai-assistent-panel {" +
-    "  width: min(360px, calc(100vw - 40px));" +
+    "  width: min(380px, calc(100vw - 32px));" +
     "  margin-bottom: 12px;" +
     "  overflow: hidden;" +
     "  border: 1px solid #d6dce5;" +
@@ -99,12 +147,27 @@
     "}" +
     ".gemeente-ai-assistent-header {" +
     "  display: flex;" +
-    "  align-items: flex-start;" +
+    "  align-items: center;" +
     "  justify-content: space-between;" +
     "  gap: 12px;" +
-    "  padding: 14px 16px;" +
+    "  padding: 16px;" +
     "  background: #0f766e;" +
     "  color: #ffffff;" +
+    "}" +
+    ".gemeente-ai-assistent-brand {" +
+    "  display: flex;" +
+    "  align-items: center;" +
+    "  gap: 10px;" +
+    "  min-width: 0;" +
+    "}" +
+    ".gemeente-ai-assistent-logo {" +
+    "  flex: 0 0 auto;" +
+    "  background: #ffffff;" +
+    "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "}" +
+    ".gemeente-ai-assistent-title {" +
+    "  display: block;" +
+    "  line-height: 1.2;" +
     "}" +
     ".gemeente-ai-assistent-header span {" +
     "  display: block;" +
@@ -120,6 +183,7 @@
     "  background: transparent;" +
     "  color: #ffffff;" +
     "  cursor: pointer;" +
+    "  flex: 0 0 auto;" +
     "}" +
     ".gemeente-ai-assistent-body {" +
     "  padding: 16px;" +
@@ -148,7 +212,7 @@
     "  display: flex;" +
     "  flex-direction: column;" +
     "  gap: 10px;" +
-    "  max-height: 260px;" +
+    "  max-height: 280px;" +
     "  overflow-y: auto;" +
     "  margin-bottom: 14px;" +
     "}" +
@@ -156,7 +220,7 @@
     "  width: fit-content;" +
     "  max-width: 100%;" +
     "  margin: 0;" +
-    "  padding: 10px 12px;" +
+    "  padding: 11px 13px;" +
     "  border-radius: 8px;" +
     "  line-height: 1.4;" +
     "}" +
@@ -259,6 +323,10 @@
     "  color: #ffffff;" +
     "  font: inherit;" +
     "  cursor: pointer;" +
+    "  transition: filter 120ms ease;" +
+    "}" +
+    ".gemeente-ai-assistent-send:hover {" +
+    "  filter: brightness(0.95);" +
     "}" +
     ".gemeente-ai-assistent-note {" +
     "  min-height: 1.4em;" +
@@ -269,6 +337,24 @@
     ".gemeente-ai-assistent-contact {" +
     "  margin: 12px 0 0;" +
     "  font-size: 0.92rem;" +
+    "}" +
+    "@media (max-width: 480px) {" +
+    "  #" + widgetId + " {" +
+    "    right: 12px;" +
+    "    bottom: 12px;" +
+    "    left: 12px;" +
+    "  }" +
+    "  .gemeente-ai-assistent-panel {" +
+    "    width: 100%;" +
+    "  }" +
+    "  .gemeente-ai-assistent-button {" +
+    "    max-width: 100%;" +
+    "  }" +
+    "  .gemeente-ai-assistent-button-label {" +
+    "    overflow: hidden;" +
+    "    text-overflow: ellipsis;" +
+    "    white-space: nowrap;" +
+    "  }" +
     "}";
 
   container.appendChild(style);
@@ -283,6 +369,9 @@
   var messages = panel.querySelector(".gemeente-ai-assistent-messages");
   var note = panel.querySelector(".gemeente-ai-assistent-note");
   var title = panel.querySelector(".gemeente-ai-assistent-title");
+  var headerLogo = panel.querySelector(".gemeente-ai-assistent-logo");
+  var buttonLogo = button.querySelector(".gemeente-ai-assistent-button-logo");
+  var buttonLabel = button.querySelector(".gemeente-ai-assistent-button-label");
   var intro = panel.querySelector(".gemeente-ai-assistent-intro");
   var privacyLink = panel.querySelector(".gemeente-ai-assistent-privacy-notice a");
   var contactLink = panel.querySelector(".gemeente-ai-assistent-contact a");
@@ -532,19 +621,23 @@
   }
 
   function applyTenantConfig(config) {
+    var themeColor = getSafeThemeColor(config.themeColor);
+    var logoText = getSafeLogoText(config.logoText);
+
     container.style.setProperty(
       "--gemeente-ai-assistent-theme",
-      getSafeThemeColor(config.themeColor)
+      themeColor
     );
-    button.style.background = getSafeThemeColor(config.themeColor);
+    container.className = getPositionClass(config.position);
+    button.style.background = themeColor;
 
     var assistantName = config.assistantName || "Gemeente AI Assistent";
-    var topics = Array.isArray(config.allowedTopics)
-      ? config.allowedTopics.join(", ")
-      : "gemeentelijke onderwerpen";
 
     title.textContent = assistantName;
-    button.textContent = "Vraag " + (config.municipalityName || "de gemeente");
+    panel.setAttribute("aria-label", assistantName);
+    buttonLabel.textContent = config.buttonLabel || "Vraag de gemeente";
+    headerLogo.textContent = logoText;
+    buttonLogo.textContent = logoText;
     intro.textContent = getIntroText(config);
 
     privacyLink.href = config.privacyUrl || "https://example.com/privacy";
@@ -552,22 +645,25 @@
   }
 
   function getIntroText(config) {
-    var assistantName = config.assistantName || "Gemeente AI Assistent";
-    var topics = Array.isArray(config.allowedTopics)
-      ? config.allowedTopics.join(", ")
-      : "gemeentelijke onderwerpen";
-
     return (
-      "Hoi, ik ben " +
-      assistantName +
-      ". Ik kan helpen met vragen over " +
-      topics +
-      "."
+      config.welcomeMessage ||
+      "Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?"
     );
   }
 
   function getSafeThemeColor(color) {
     return /^#[0-9a-fA-F]{6}$/.test(color || "") ? color : "#0f766e";
+  }
+
+  function getPositionClass(position) {
+    return position === "bottom-left"
+      ? "gemeente-ai-assistent-position-bottom-left"
+      : "gemeente-ai-assistent-position-bottom-right";
+  }
+
+  function getSafeLogoText(text) {
+    var safeText = String(text || "AI").trim().slice(0, 4);
+    return safeText || "AI";
   }
 
   function escapeHtml(value) {
