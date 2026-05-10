@@ -215,6 +215,24 @@ node scripts/check-deployment-config.js
 
 This checks that tenant JSON files have the required deployment fields, warns about localhost-only origins, and warns about `example.com` contact or privacy links. It does not deploy anything and does not require `OPENAI_API_KEY`.
 
+## FXW Staging Deployment Preparation
+
+The repo includes practical files for a future FXW/Linux staging deployment:
+
+- `ops/fxw/example-env-file.env`
+- `ops/fxw/gemeente-ai-assistent.service.example`
+- `ops/fxw/nginx-site.conf.example`
+- `docs/fxw-staging-runbook.md`
+- `scripts/check-hosted-deployment.js`
+
+After a hosted staging deployment is reachable, run:
+
+```bash
+BASE_URL=https://assistant.example.nl node scripts/check-hosted-deployment.js
+```
+
+This checks `/health`, `/ready`, staging config, staging chat, and blocked origins. It does not require `OPENAI_API_KEY`.
+
 ## Staging Embed Simulation
 
 `demo/staging-embed.html` simulates the future hosted snippet for an FXW/server deployment.
@@ -233,6 +251,11 @@ gemeente-ai-assistent/
   .github/
     workflows/
       smoke-test.yml
+  ops/
+    fxw/
+      example-env-file.env
+      gemeente-ai-assistent.service.example
+      nginx-site.conf.example
   apps/
     server/
       server.js
@@ -248,6 +271,7 @@ gemeente-ai-assistent/
     architecture.md
     deployment.md
     fxw-server-deployment.md
+    fxw-staging-runbook.md
     manual-test-checklist.md
     municipality-integration-guide.md
     privacy.md
@@ -260,6 +284,7 @@ gemeente-ai-assistent/
     waterstad.html
   scripts/
     check-deployment-config.js
+    check-hosted-deployment.js
     smoke-test.js
   widget/
     widget.js

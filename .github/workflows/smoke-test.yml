@@ -28,3 +28,13 @@ jobs:
 
       - name: Check deployment config
         run: node scripts/check-deployment-config.js
+
+      - name: Check hosted deployment
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+        run: |
+          if [ -z "$BASE_URL" ]; then
+            echo "Skipping hosted deployment check because BASE_URL is not set."
+          else
+            node scripts/check-hosted-deployment.js
+          fi

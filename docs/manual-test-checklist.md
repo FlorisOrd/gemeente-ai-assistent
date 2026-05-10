@@ -137,6 +137,14 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm `allowedOrigins` contains the real website domains.
 - [ ] Confirm localhost-only origins are not used for real municipality tenants.
 
+## FXW Staging Deployment
+
+- [ ] Review the `ops/fxw` templates before deployment.
+- [ ] Confirm the templates contain no real API keys.
+- [ ] Confirm `docs/fxw-staging-runbook.md` is understandable.
+- [ ] After hosted deployment, run `BASE_URL=https://assistant.example.nl node scripts/check-hosted-deployment.js`.
+- [ ] Confirm blocked origin returns `403` on the hosted deployment.
+
 ## Secret Safety
 
 - [ ] Search `widget/widget.js` for `OPENAI_API_KEY` and confirm it is not present.

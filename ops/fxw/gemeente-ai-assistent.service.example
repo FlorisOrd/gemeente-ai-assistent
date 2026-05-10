@@ -1,0 +1,30 @@
+# Example systemd service for an FXW VPS or managed Linux server.
+# Copy this to /etc/systemd/system/gemeente-ai-assistent.service and edit placeholders.
+# This file intentionally contains no API key.
+
+[Unit]
+Description=Gemeente AI Assistent staging server
+After=network.target
+
+[Service]
+Type=simple
+
+# Replace this with the directory where the repo is deployed on the server.
+WorkingDirectory=/var/www/gemeente-ai-assistent
+
+# Store real environment values in this server-only file.
+# Example contents are shown in ops/fxw/example-env-file.env.
+EnvironmentFile=/etc/gemeente-ai-assistent.env
+
+# This app uses built-in Node.js only. No npm install is needed for the current MVP.
+ExecStart=/usr/bin/node apps/server/server.js
+
+Restart=on-failure
+RestartSec=5
+
+# Use a dedicated unprivileged user on a real server if possible.
+# User=www-data
+# Group=www-data
+
+[Install]
+WantedBy=multi-user.target
