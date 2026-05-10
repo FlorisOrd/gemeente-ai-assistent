@@ -185,6 +185,18 @@ node scripts/create-tenant.js nieuwegemeente
 
 The generated tenant and knowledge files must be edited and reviewed before use. The script never creates or asks for API keys.
 
+## Privacy, Security, And AI-Risk Review
+
+The repo includes practical, non-legal review materials for future municipality pilots:
+
+- `docs/privacy-security-review-pack.md`
+- `docs/risk-register.md`
+- `docs/dpia-input-notes.md`
+- `docs/ai-transparency-note.md`
+- `docs/source-review-process.md`
+
+Use these documents to discuss privacy, security, approved sources, AI transparency, known MVP limitations, and pilot boundaries before sharing the assistant with visitors. They are preparation materials only and are not legal advice.
+
 ## Run Smoke Tests
 
 Run the backend smoke tests with:
@@ -288,16 +300,21 @@ gemeente-ai-assistent/
         staging.json
         waterstad.json
   docs/
+    ai-transparency-note.md
     architecture.md
     deployment.md
+    dpia-input-notes.md
     fxw-server-deployment.md
     fxw-staging-runbook.md
     manual-test-checklist.md
     municipality-integration-guide.md
     pilot-intake-form.md
     privacy.md
+    privacy-security-review-pack.md
     mvp.md
     pilot-checklist.md
+    risk-register.md
+    source-review-process.md
     tenant-onboarding.md
   demo/
     demo.html
