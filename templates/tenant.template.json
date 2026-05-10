@@ -1,0 +1,25 @@
+{
+  "id": "__TENANT_ID__",
+  "municipalityName": "Gemeente __TENANT_ID__",
+  "assistantName": "__TENANT_ID__ Assistent",
+  "themeColor": "#2563eb",
+  "contactUrl": "https://placeholder.example.com/__TENANT_ID__/contact",
+  "privacyUrl": "https://placeholder.example.com/__TENANT_ID__/privacy",
+  "allowedOrigins": [
+    "https://placeholder.example.com"
+  ],
+  "allowedTopics": [
+    "paspoorten en identiteitskaarten",
+    "verhuizen",
+    "afvalinzameling",
+    "vergunningen",
+    "parkeren",
+    "contact met de gemeente"
+  ],
+  "mockSources": [
+    {
+      "title": "__TENANT_ID__ contact",
+      "url": "https://placeholder.example.com/__TENANT_ID__/contact"
+    }
+  ]
+}

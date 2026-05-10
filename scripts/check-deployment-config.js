@@ -15,6 +15,7 @@ const REQUIRED_FIELDS = [
   "mockSources",
 ];
 const REQUIRED_KNOWLEDGE_FIELDS = ["id", "title", "url", "keywords", "summary"];
+const MIN_SUMMARY_LENGTH = 60;
 
 let failures = 0;
 let warnings = 0;
@@ -97,6 +98,12 @@ function checkTenantFile(fileName) {
     ) {
       warn(label + " has only localhost origins.");
     }
+
+    tenant.allowedOrigins.forEach(function (origin) {
+      if (usesPlaceholderUrl(origin)) {
+        warn(label + " allowedOrigins contains placeholder/example.com.");
+      }
+    });
   }
 
   if (!Array.isArray(tenant.allowedTopics)) {
@@ -107,12 +114,12 @@ function checkTenantFile(fileName) {
     fail(label + " must have mockSources as an array.");
   }
 
-  if (usesExampleCom(tenant.contactUrl)) {
-    warn(label + " contactUrl uses example.com.");
+  if (usesPlaceholderUrl(tenant.contactUrl)) {
+    warn(label + " contactUrl uses placeholder/example.com.");
   }
 
-  if (usesExampleCom(tenant.privacyUrl)) {
-    warn(label + " privacyUrl uses example.com.");
+  if (usesPlaceholderUrl(tenant.privacyUrl)) {
+    warn(label + " privacyUrl uses placeholder/example.com.");
   }
 
   checkKnowledgeFile(label);
@@ -139,8 +146,9 @@ function hasValue(value) {
   return value !== undefined && value !== null && String(value).trim() !== "";
 }
 
-function usesExampleCom(value) {
-  return String(value || "").includes("example.com");
+function usesPlaceholderUrl(value) {
+  const text = String(value || "");
+  return text.includes("example.com") || text.includes("placeholder");
 }
 
 function checkKnowledgeFile(tenantId) {
@@ -175,8 +183,12 @@ function checkKnowledgeFile(tenantId) {
       fail(label + " must have keywords as an array.");
     }
 
-    if (usesExampleCom(item.url)) {
-      warn(label + " url uses example.com.");
+    if (usesPlaceholderUrl(item.url)) {
+      warn(label + " url uses placeholder/example.com.");
+    }
+
+    if (String(item.summary || "").trim().length < MIN_SUMMARY_LENGTH) {
+      warn(label + " summary is very short.");
     }
   });
 }
