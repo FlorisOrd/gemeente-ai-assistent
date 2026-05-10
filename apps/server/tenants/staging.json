@@ -3,6 +3,10 @@
   "municipalityName": "Gemeente Staging",
   "assistantName": "Staging Gemeente Assistent",
   "themeColor": "#1d4ed8",
+  "buttonLabel": "Open assistent",
+  "welcomeMessage": "Hoi, ik ben de staging assistent. Ik help met vragen over goedgekeurde gemeentelijke onderwerpen.",
+  "position": "bottom-right",
+  "logoText": "ST",
   "contactUrl": "https://example.com/staging/contact",
   "privacyUrl": "https://example.com/staging/privacy",
   "allowedOrigins": [

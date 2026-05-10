@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Waterstad Assistent Demo</title>
+    <title>Visuele Vergelijking Gemeente AI Assistent</title>
     <style>
       body {
         margin: 0;
@@ -14,7 +14,7 @@
       }
 
       main {
-        max-width: 760px;
+        max-width: 800px;
         margin: 0 auto;
         padding: 48px 20px;
       }
@@ -24,13 +24,8 @@
         font-size: 2rem;
       }
 
-      code {
-        display: block;
-        overflow-x: auto;
-        padding: 16px;
-        background: #111827;
-        color: #f9fafb;
-        border-radius: 6px;
+      ul {
+        padding-left: 20px;
       }
 
       nav {
@@ -47,28 +42,27 @@
   </head>
   <body>
     <main>
-      <h1>Demo: Waterstad Assistent</h1>
+      <h1>Visuele vergelijking</h1>
       <p>
-        Deze pagina gebruikt dezelfde widget, maar met de tenant
-        <strong>waterstad</strong>.
+        Elke tenant gebruikt dezelfde widgetcode. De visuele verschillen komen
+        uit de publieke tenant-configuratie, zoals kleur, knoptekst,
+        welkomstbericht, positie en logo tekst.
       </p>
-      <p>Toekomstige embed-snippet:</p>
-      <code>&lt;script src="https://example.com/widget.js" data-tenant="waterstad"&gt;&lt;/script&gt;</code>
       <p>
-        De widget laadt publieke tenant-configuratie voor Waterstad, zoals naam,
-        kleur, knoptekst, welkomstbericht, positie, privacylink, contactlink en
-        toegestane onderwerpen. Waterstad gebruikt dezelfde widgetcode, maar een
-        eigen visuele configuratie.
+        Deze pagina toont geen API-key en doet geen echte AI-aanroep. Open de
+        demo's hieronder om de verschillen in de widget te bekijken.
       </p>
+      <ul>
+        <li>Demo gebruikt een groene knop rechtsonder.</li>
+        <li>Waterstad gebruikt een blauwe knop linksonder.</li>
+        <li>Staging gebruikt een eigen welkomstbericht en logo tekst.</li>
+      </ul>
       <nav aria-label="Demo navigatie">
         <a href="./demo.html">Demo tenant</a>
         <a href="./waterstad.html">Waterstad tenant</a>
         <a href="./staging-embed.html">Staging embed simulatie</a>
         <a href="./embed-snippet.html">Embed snippet voorbeelden</a>
-        <a href="./visual-comparison.html">Visuele vergelijking</a>
       </nav>
     </main>
-
-    <script src="../widget/widget.js" data-tenant="waterstad"></script>
   </body>
 </html>

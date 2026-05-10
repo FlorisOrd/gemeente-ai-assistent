@@ -3,6 +3,10 @@
   "municipalityName": "Gemeente Demo",
   "assistantName": "Demo Gemeente Assistent",
   "themeColor": "#0f766e",
+  "buttonLabel": "Stel uw vraag",
+  "welcomeMessage": "Hoi, ik ben de digitale assistent van Gemeente Demo. Waarmee kan ik helpen?",
+  "position": "bottom-right",
+  "logoText": "AI",
   "contactUrl": "https://example.com/contact",
   "privacyUrl": "https://example.com/privacy",
   "allowedOrigins": [

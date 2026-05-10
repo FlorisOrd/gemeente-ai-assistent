@@ -80,6 +80,18 @@ async function runSmokeTests() {
     assertEqual(response.json.assistantName, "Demo Gemeente Assistent");
   });
 
+  await test("GET /api/config returns demo visual fields", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/api/config?tenant=demo",
+      origin: ORIGIN,
+    });
+
+    assertEqual(response.json.buttonLabel, "Stel uw vraag");
+    assertEqual(response.json.position, "bottom-right");
+    assertEqual(response.json.logoText, "AI");
+  });
+
   await test("GET /api/config returns the Waterstad assistant name", async function () {
     const response = await request({
       method: "GET",
@@ -99,6 +111,16 @@ async function runSmokeTests() {
     });
 
     assertEqual(response.json.themeColor, "#2563eb");
+  });
+
+  await test("GET /api/config returns the Waterstad widget position", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/api/config?tenant=waterstad",
+      origin: ORIGIN,
+    });
+
+    assertEqual(response.json.position, "bottom-left");
   });
 
   await test("GET /api/config returns the staging assistant name", async function () {

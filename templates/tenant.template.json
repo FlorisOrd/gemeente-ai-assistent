@@ -3,6 +3,10 @@
   "municipalityName": "Gemeente __TENANT_ID__",
   "assistantName": "__TENANT_ID__ Assistent",
   "themeColor": "#2563eb",
+  "buttonLabel": "Stel uw vraag",
+  "welcomeMessage": "Hoi, ik ben de digitale assistent van Gemeente __TENANT_ID__. Waarmee kan ik helpen?",
+  "position": "bottom-right",
+  "logoText": "AI",
   "contactUrl": "https://placeholder.example.com/__TENANT_ID__/contact",
   "privacyUrl": "https://placeholder.example.com/__TENANT_ID__/privacy",
   "allowedOrigins": [

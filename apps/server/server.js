@@ -186,6 +186,12 @@ function getPublicTenantConfig(tenant) {
     municipalityName: tenant.municipalityName || "Gemeente Demo",
     assistantName: tenant.assistantName || "Gemeente AI Assistent",
     themeColor: tenant.themeColor || "#0f766e",
+    buttonLabel: tenant.buttonLabel || "Vraag de gemeente",
+    welcomeMessage:
+      tenant.welcomeMessage ||
+      "Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?",
+    position: tenant.position || "bottom-right",
+    logoText: tenant.logoText || "AI",
     contactUrl: tenant.contactUrl || "https://example.com/contact",
     privacyUrl: tenant.privacyUrl || "https://example.com/privacy",
     allowedTopics: Array.isArray(tenant.allowedTopics) ? tenant.allowedTopics : [],

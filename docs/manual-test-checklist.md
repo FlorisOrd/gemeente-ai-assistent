@@ -79,6 +79,18 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Click `Gesprek wissen` and confirm the intro message returns.
 - [ ] Confirm keyboard navigation still works for opening, sending, feedback, and clearing.
 
+## Visual Customization
+
+- [ ] Confirm the button label comes from tenant config.
+- [ ] Confirm the welcome message comes from tenant config.
+- [ ] Confirm the theme color comes from tenant config.
+- [ ] Confirm the logo text appears in the button and header.
+- [ ] Confirm `bottom-right` position works for the demo tenant.
+- [ ] Confirm `bottom-left` position works for the Waterstad tenant.
+- [ ] Confirm the mobile layout still fits on a narrow viewport.
+- [ ] Confirm keyboard focus states are visible.
+- [ ] Open `/demo/visual-comparison.html` and confirm it links to the demo pages.
+
 ## Tenant Configuration
 
 - [ ] Confirm the widget title shows the `assistantName` from `apps/server/tenants/demo.json`.

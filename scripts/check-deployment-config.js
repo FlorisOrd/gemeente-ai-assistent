@@ -7,7 +7,6 @@ const REQUIRED_FIELDS = [
   "id",
   "municipalityName",
   "assistantName",
-  "themeColor",
   "contactUrl",
   "privacyUrl",
   "allowedOrigins",
@@ -114,6 +113,26 @@ function checkTenantFile(fileName) {
     fail(label + " must have mockSources as an array.");
   }
 
+  if (!isHexColor(tenant.themeColor)) {
+    warn(label + " themeColor is missing or is not a hex color.");
+  }
+
+  if (!hasValue(tenant.buttonLabel)) {
+    warn(label + " is missing buttonLabel.");
+  }
+
+  if (!hasValue(tenant.welcomeMessage)) {
+    warn(label + " is missing welcomeMessage.");
+  }
+
+  if (tenant.position !== "bottom-right" && tenant.position !== "bottom-left") {
+    warn(label + " position should be bottom-right or bottom-left.");
+  }
+
+  if (String(tenant.logoText || "").trim().length > 4) {
+    warn(label + " logoText should be 4 characters or shorter.");
+  }
+
   if (usesPlaceholderUrl(tenant.contactUrl)) {
     warn(label + " contactUrl uses placeholder/example.com.");
   }
@@ -149,6 +168,10 @@ function hasValue(value) {
 function usesPlaceholderUrl(value) {
   const text = String(value || "");
   return text.includes("example.com") || text.includes("placeholder");
+}
+
+function isHexColor(value) {
+  return /^#[0-9a-fA-F]{6}$/.test(String(value || ""));
 }
 
 function checkKnowledgeFile(tenantId) {
