@@ -99,6 +99,9 @@
     "  --gaa-radius-lg: 8px;" +
     "  --gaa-shadow-panel: 0 20px 44px rgba(15, 23, 42, 0.22);" +
     "  --gaa-shadow-button: 0 8px 20px rgba(15, 23, 42, 0.22);" +
+    "  display: flex;" +
+    "  flex-direction: column;" +
+    "  gap: var(--gaa-space-3);" +
     "  position: fixed;" +
     "  bottom: var(--gaa-space-5);" +
     "  z-index: 2147483647;" +
@@ -108,9 +111,11 @@
     "  color: var(--gaa-color-text);" +
     "}" +
     "#" + widgetId + ".gemeente-ai-assistent-position-bottom-right {" +
+    "  align-items: flex-end;" +
     "  right: var(--gaa-space-5);" +
     "}" +
     "#" + widgetId + ".gemeente-ai-assistent-position-bottom-left {" +
+    "  align-items: flex-start;" +
     "  left: var(--gaa-space-5);" +
     "}" +
     "#" + widgetId + " * {" +
@@ -166,7 +171,6 @@
     "}" +
     ".gemeente-ai-assistent-panel {" +
     "  width: min(400px, calc(100vw - 32px));" +
-    "  margin-bottom: var(--gaa-space-3);" +
     "  overflow: hidden;" +
     "  border: 1px solid var(--gaa-color-border);" +
     "  border-radius: var(--gaa-radius-lg);" +
@@ -426,20 +430,28 @@
   applyTenantConfig(tenantConfig);
   loadTenantConfig();
 
-  button.addEventListener("click", function () {
+  button.addEventListener("click", function (event) {
+    event.preventDefault();
     var isOpen = !panel.hidden;
     panel.hidden = isOpen;
     button.setAttribute("aria-expanded", String(!isOpen));
   });
 
-  closeButton.addEventListener("click", function () {
+  closeButton.addEventListener("click", function (event) {
+    event.preventDefault();
     panel.hidden = true;
     button.setAttribute("aria-expanded", "false");
     button.focus();
   });
 
-  sendButton.addEventListener("click", sendMessage);
-  clearButton.addEventListener("click", resetConversation);
+  sendButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    sendMessage();
+  });
+  clearButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    resetConversation();
+  });
 
   input.addEventListener("keydown", function (event) {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -475,12 +487,12 @@
           }),
         }
       );
-      var data = await response.json();
+      var data = await readJsonResponse(response);
 
       if (!response.ok) {
         addMessage(
           "assistant",
-          data.error || "De demo-server kon uw bericht niet verwerken.",
+          data.error || "Sorry, de assistent kon uw bericht niet verwerken. Probeer het opnieuw.",
           [],
           "",
           data.requestId
@@ -502,10 +514,22 @@
         "assistant",
         "Sorry, de demo-server is niet bereikbaar. Start de server en probeer het opnieuw."
       );
-      note.textContent = error.message;
+      note.textContent = "";
     } finally {
       sendButton.disabled = false;
       input.focus();
+    }
+  }
+
+  async function readJsonResponse(response) {
+    try {
+      return await response.json();
+    } catch (error) {
+      // Some server/proxy failures may return plain text or HTML. Keep that technical
+      // response out of the chat and show a friendly Dutch fallback instead.
+      return {
+        error: "Sorry, de assistent kon uw bericht niet verwerken. Probeer het opnieuw.",
+      };
     }
   }
 
@@ -563,6 +587,7 @@
     var labels = {
       mock: "Demo-antwoord",
       openai: "Antwoord op basis van goedgekeurde bronnen",
+      greeting: "Begroeting",
       "off-topic": "Buiten onderwerp",
       "no-approved-source": "Geen goedgekeurde bron gevonden",
       "openai-error": "Tijdelijke storing",

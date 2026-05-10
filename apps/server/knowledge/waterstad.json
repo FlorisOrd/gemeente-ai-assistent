@@ -33,5 +33,12 @@
     "url": "https://example.com/waterstad/contact",
     "keywords": ["contact", "loket", "openingstijden", "afspraak"],
     "summary": "Voor persoonlijke situaties of vragen die niet online beantwoord worden, neemt u contact op met Gemeente Waterstad."
+  },
+  {
+    "id": "waterstad-woz-bezwaar",
+    "title": "Bezwaar maken tegen de WOZ-waarde",
+    "url": "https://example.com/waterstad/woz-bezwaar",
+    "keywords": ["woz", "woz-waarde", "bezwaar", "belasting", "gemeentelijke belasting"],
+    "summary": "Inwoners van Waterstad kunnen bezwaar maken als zij het niet eens zijn met de WOZ-waarde of gemeentelijke belastingaanslag. De officiele pagina beschrijft de termijn, voorwaarden en indiening."
   }
 ]

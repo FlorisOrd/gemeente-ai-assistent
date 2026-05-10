@@ -33,5 +33,12 @@
     "url": "https://example.com/demo/vergunning",
     "keywords": ["vergunning", "vergunningen", "aanvragen", "evenement"],
     "summary": "Voor sommige activiteiten heeft u een vergunning nodig. Gemeente Demo verwijst inwoners naar het aanvraagformulier en de voorwaarden per vergunning."
+  },
+  {
+    "id": "demo-woz-bezwaar",
+    "title": "Bezwaar maken tegen de WOZ-waarde",
+    "url": "https://example.com/demo/woz-bezwaar",
+    "keywords": ["woz", "woz-waarde", "bezwaar", "belasting", "gemeentelijke belasting"],
+    "summary": "Als u het niet eens bent met de WOZ-waarde of gemeentelijke belastingaanslag van Gemeente Demo, kunt u binnen de genoemde termijn bezwaar maken. Controleer de officiele pagina voor voorwaarden, termijnen en de manier van indienen."
   }
 ]

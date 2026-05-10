@@ -78,6 +78,10 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Click `Niet nuttig` and confirm it says `Bedankt voor uw feedback.`
 - [ ] Click `Gesprek wissen` and confirm the intro message returns.
 - [ ] Confirm keyboard navigation still works for opening, sending, feedback, and clearing.
+- [ ] Open and close the widget and confirm the button does not shift horizontally.
+- [ ] Test `hallo` and confirm it returns a friendly greeting.
+- [ ] Test `Hoe dien ik bezwaar in tegen de WOZ waarde?` and confirm it returns a normal answer with a relevant source.
+- [ ] Confirm neither `hallo` nor the WOZ question shows `Method not allowed`.
 
 ## Visual Customization
 
@@ -101,6 +105,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Check warning and disclaimer hierarchy.
 - [ ] Check mobile or narrow viewport layout.
 - [ ] Check the widget looks professional on the busy test page.
+- [ ] Confirm bottom-right and bottom-left launchers stay visually anchored when opened and closed.
 - [ ] Open `/demo/accessibility-test.html` and review keyboard and 200% zoom behavior.
 
 ## Tenant Configuration

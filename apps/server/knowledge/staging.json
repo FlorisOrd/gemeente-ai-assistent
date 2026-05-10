@@ -33,5 +33,12 @@
     "url": "https://example.com/staging/contact",
     "keywords": ["contact", "loket", "openingstijden", "afspraak"],
     "summary": "Voor persoonlijke of urgente vragen neemt u contact op met Gemeente Staging via de contactpagina."
+  },
+  {
+    "id": "staging-woz-bezwaar",
+    "title": "Bezwaar maken tegen de WOZ-waarde",
+    "url": "https://example.com/staging/woz-bezwaar",
+    "keywords": ["woz", "woz-waarde", "bezwaar", "belasting", "gemeentelijke belasting"],
+    "summary": "Bij vragen over WOZ-waarde of gemeentelijke belasting verwijst Gemeente Staging naar de officiele bezwaarprocedure. Controleer de pagina voor termijnen, voorwaarden en contactmogelijkheden."
   }
 ]
