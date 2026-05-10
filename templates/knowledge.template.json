@@ -1,0 +1,23 @@
+[
+  {
+    "id": "__TENANT_ID__-paspoort",
+    "title": "Paspoort aanvragen",
+    "url": "https://placeholder.example.com/__TENANT_ID__/paspoort",
+    "keywords": ["paspoort", "paspoorten", "reisdocument", "identiteitskaart"],
+    "summary": "Vervang deze tekst door een goedgekeurde samenvatting van de officiele gemeentelijke pagina over paspoorten."
+  },
+  {
+    "id": "__TENANT_ID__-verhuizen",
+    "title": "Verhuizing doorgeven",
+    "url": "https://placeholder.example.com/__TENANT_ID__/verhuizen",
+    "keywords": ["verhuizen", "verhuizing", "adreswijziging", "inschrijven"],
+    "summary": "Vervang deze tekst door een goedgekeurde samenvatting van de officiele gemeentelijke pagina over verhuizen."
+  },
+  {
+    "id": "__TENANT_ID__-contact",
+    "title": "Contact met de gemeente",
+    "url": "https://placeholder.example.com/__TENANT_ID__/contact",
+    "keywords": ["contact", "loket", "openingstijden", "afspraak"],
+    "summary": "Vervang deze tekst door een goedgekeurde samenvatting van de officiele contactpagina van de gemeente."
+  }
+]

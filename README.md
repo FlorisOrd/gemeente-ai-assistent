@@ -168,6 +168,23 @@ The repo now includes practical pilot materials for a municipality or website ma
 
 These explain the embed snippet, tenant selection, `data-api-base`, allowed origins, approved sources, privacy expectations, and pilot checks.
 
+## Tenant Onboarding
+
+The repo includes starter templates and a generator for adding a future municipality tenant:
+
+- `templates/`
+- `scripts/create-tenant.js`
+- `docs/tenant-onboarding.md`
+- `docs/pilot-intake-form.md`
+
+Create starter files with:
+
+```bash
+node scripts/create-tenant.js nieuwegemeente
+```
+
+The generated tenant and knowledge files must be edited and reviewed before use. The script never creates or asks for API keys.
+
 ## Run Smoke Tests
 
 Run the backend smoke tests with:
@@ -251,6 +268,9 @@ gemeente-ai-assistent/
   .github/
     workflows/
       smoke-test.yml
+  templates/
+    knowledge.template.json
+    tenant.template.json
   ops/
     fxw/
       example-env-file.env
@@ -274,9 +294,11 @@ gemeente-ai-assistent/
     fxw-staging-runbook.md
     manual-test-checklist.md
     municipality-integration-guide.md
+    pilot-intake-form.md
     privacy.md
     mvp.md
     pilot-checklist.md
+    tenant-onboarding.md
   demo/
     demo.html
     embed-snippet.html
@@ -285,6 +307,7 @@ gemeente-ai-assistent/
   scripts/
     check-deployment-config.js
     check-hosted-deployment.js
+    create-tenant.js
     smoke-test.js
   widget/
     widget.js

@@ -115,6 +115,14 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm the staging snippet uses `data-api-base`.
 - [ ] Confirm navigation between demo pages works.
 
+## Tenant Onboarding
+
+- [ ] Create a throwaway tenant with `node scripts/create-tenant.js testgemeente`.
+- [ ] Confirm tenant and knowledge files are created.
+- [ ] Confirm `node scripts/check-deployment-config.js` warns about placeholder/example.com URLs.
+- [ ] Delete `apps/server/tenants/testgemeente.json` and `apps/server/knowledge/testgemeente.json` after testing.
+- [ ] Confirm existing smoke tests still pass.
+
 ## Origin Allowlist
 
 - [ ] Confirm the demo still works from `http://localhost:3000`.
