@@ -35,7 +35,9 @@ const MUNICIPALITY_KEYWORDS = [
   "contact",
   "bezwaar",
   "belasting",
+  "gemeentelijke belasting",
   "woz",
+  "woz-waarde",
   "parkeren",
   "uittreksel",
   "geboorte",
@@ -53,6 +55,7 @@ const OFF_TOPIC_KEYWORDS = [
 ];
 const OFF_TOPIC_MESSAGE =
   "Sorry, ik kan alleen helpen met vragen over gemeentelijke onderwerpen. Stel bijvoorbeeld een vraag over paspoorten, verhuizen, afval, vergunningen of contact met de gemeente.";
+const GREETING_WORDS = ["hallo", "hoi", "goedemorgen", "goedemiddag", "goedenavond"];
 
 const CONTENT_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -374,6 +377,30 @@ async function handleChat(request, response) {
     return;
   }
 
+  if (isGreeting(message)) {
+    logEvent("chat_success", {
+      requestId: requestId,
+      tenant: tenant.id,
+      mode: "greeting",
+      statusCode: 200,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+      sourceCount: 0,
+    });
+    sendJson(response, 200, {
+      tenant: tenant.id,
+      assistantName: tenant.assistantName,
+      message:
+        "Hallo, ik ben " +
+        tenant.assistantName +
+        ". Ik kan helpen met vragen over gemeentelijke onderwerpen zoals paspoorten, verhuizen, afval, vergunningen, parkeren, WOZ of contact met de gemeente.",
+      sources: getContactSources(tenant),
+      mode: "greeting",
+    });
+    return;
+  }
+
   if (!isProbablyAllowedTopic(message, tenant)) {
     logEvent("chat_off_topic", {
       requestId: requestId,
@@ -507,6 +534,14 @@ async function handleChat(request, response) {
       ". In een echte versie gebruikt de assistent alleen dit soort goedgekeurde gemeentelijke bronnen.",
     sources: getSourceLinks(relevantKnowledge),
     mode: "mock",
+  });
+}
+
+function isGreeting(message) {
+  const normalizedMessage = normalizeText(message).replace(/[.!?]/g, "").trim();
+
+  return GREETING_WORDS.some(function (greeting) {
+    return normalizedMessage === greeting;
   });
 }
 

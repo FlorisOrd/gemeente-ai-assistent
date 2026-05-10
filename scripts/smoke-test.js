@@ -174,6 +174,35 @@ async function runSmokeTests() {
     assertSourceIncludes(response.json.sources, "Paspoort");
   });
 
+  await test("POST /api/chat returns greeting mode for hallo", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "hallo",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertEqual(response.json.mode, "greeting");
+  });
+
+  await test("POST /api/chat handles a WOZ bezwaar question", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe dien ik bezwaar in tegen de WOZ waarde?",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertBodyDoesNotInclude(response.body, "Method not allowed");
+    assertSourceIncludes(response.json.sources, "WOZ");
+  });
+
   await test("POST /api/chat rejects an off-topic cake question", async function () {
     const response = await request({
       method: "POST",
@@ -194,7 +223,7 @@ async function runSmokeTests() {
       path: "/api/chat?tenant=demo",
       origin: ORIGIN,
       body: {
-        message: "Hoe dien ik bezwaar in tegen de WOZ waarde?",
+        message: "Hoe vraag ik een uittreksel aan?",
       },
     });
 
@@ -539,5 +568,11 @@ function assertSourceIncludes(sources, expectedText) {
 
   if (!hasSource) {
     throw new Error("Expected a source title containing " + expectedText);
+  }
+}
+
+function assertBodyDoesNotInclude(body, unexpectedText) {
+  if (String(body || "").includes(unexpectedText)) {
+    throw new Error("Did not expect response body to contain " + unexpectedText);
   }
 }

@@ -18,6 +18,9 @@ This is not a formal accessibility audit. A real municipality pilot still needs 
 - The widget is a fixed floating component that must not depend on host-site CSS.
 - Supported positions are `bottom-right` and `bottom-left`.
 - The panel should fit inside small screens with at least 12px viewport margin.
+- The launcher must remain visually anchored when the panel opens and closes.
+- For `bottom-right`, the launcher and panel align to the right edge.
+- For `bottom-left`, the launcher and panel align to the left edge.
 - The header contains a short logo text, assistant name, tenant label, and close button.
 - The message list should scroll inside the panel before the full page layout breaks.
 - Controls should follow a predictable order: messages, clear action, input, send action, contact link, status.
