@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toegankelijkheidstest Widget</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+        color: #1f2933;
+        background: #ffffff;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 48px 20px;
+      }
+
+      a {
+        color: #154273;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .test-block {
+        margin-top: 24px;
+        padding: 16px;
+        border: 1px solid #c8d1dc;
+        border-radius: 8px;
+        background: #f3f6f8;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Toegankelijkheidstest widget</h1>
+      <p>
+        Gebruik deze pagina om toetsenbordbediening, focusringen, contrast,
+        tekstgrootte, bronlinks en mobiel gedrag handmatig te controleren.
+      </p>
+      <div class="test-block">
+        <h2>Handmatige checks</h2>
+        <ul>
+          <li>Gebruik Tab om alle knoppen en links te bereiken.</li>
+          <li>Zoom de browser naar 200% en controleer of de widget bruikbaar blijft.</li>
+          <li>Controleer of status en waarschuwingen ook zonder kleur begrijpelijk zijn.</li>
+          <li>Open de widget op een smalle viewport en controleer dat tekst niet overlapt.</li>
+        </ul>
+      </div>
+      <nav aria-label="Demo navigatie">
+        <a href="./demo.html">Demo tenant</a>
+        <a href="./waterstad.html">Waterstad tenant</a>
+        <a href="./staging-embed.html">Staging embed simulatie</a>
+        <a href="./visual-design-review.html">Visuele review</a>
+      </nav>
+    </main>
+
+    <script src="../widget/widget.js" data-tenant="demo"></script>
+  </body>
+</html>

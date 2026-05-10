@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visuele Review Widget</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+        color: #1f2933;
+        background: #ffffff;
+      }
+
+      header,
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      header {
+        padding-bottom: 20px;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      a {
+        color: #154273;
+      }
+
+      .busy-section {
+        margin-top: 24px;
+        padding: 24px;
+        border: 1px solid #c8d1dc;
+        background:
+          linear-gradient(90deg, rgba(21, 66, 115, 0.08) 25%, transparent 25%),
+          linear-gradient(180deg, rgba(21, 66, 115, 0.06) 50%, transparent 50%),
+          #f3f6f8;
+        background-size: 32px 32px;
+      }
+
+      .review-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .review-card {
+        padding: 16px;
+        border: 1px solid #c8d1dc;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .review-card h2 {
+        margin-top: 0;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Visuele review widget</h1>
+      <p>
+        Deze pagina helpt om de widget te beoordelen tegen een rustige,
+        toegankelijke en gemeente-neutrale visuele standaard. De pagina bevat
+        bewust ook een drukkere achtergrond om te controleren of de widget goed
+        leesbaar blijft binnen verschillende websites.
+      </p>
+      <nav aria-label="Demo navigatie">
+        <a href="./demo.html">Demo tenant</a>
+        <a href="./waterstad.html">Waterstad tenant</a>
+        <a href="./staging-embed.html">Staging embed simulatie</a>
+        <a href="./accessibility-test.html">Toegankelijkheidstest</a>
+      </nav>
+    </header>
+    <main>
+      <section class="busy-section" aria-labelledby="busy-heading">
+        <h2 id="busy-heading">Drukke testachtergrond</h2>
+        <p>
+          Open de widget op deze pagina en controleer of paneel, knop,
+          focusringen, bronlinks en statuslabels duidelijk blijven.
+        </p>
+      </section>
+
+      <section aria-labelledby="states-heading">
+        <h2 id="states-heading">Handmatig te testen widget-staten</h2>
+        <div class="review-grid">
+          <div class="review-card">
+            <h2>Normaal antwoord</h2>
+            <p>Vraag: Hoe vraag ik een paspoort aan?</p>
+          </div>
+          <div class="review-card">
+            <h2>Buiten onderwerp</h2>
+            <p>Vraag: Hoe bak ik een cake?</p>
+          </div>
+          <div class="review-card">
+            <h2>Geen bron</h2>
+            <p>Vraag: Hoe dien ik bezwaar in tegen de WOZ waarde?</p>
+          </div>
+          <div class="review-card">
+            <h2>Validatiefout</h2>
+            <p>Probeer een leeg bericht te versturen.</p>
+          </div>
+          <div class="review-card">
+            <h2>Feedback</h2>
+            <p>Klik na een antwoord op Nuttig of Niet nuttig.</p>
+          </div>
+          <div class="review-card">
+            <h2>Mobiel</h2>
+            <p>Bekijk deze pagina op een smalle viewport of met 200% zoom.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="../widget/widget.js" data-tenant="demo"></script>
+  </body>
+</html>
