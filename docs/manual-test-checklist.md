@@ -123,6 +123,13 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Delete `apps/server/tenants/testgemeente.json` and `apps/server/knowledge/testgemeente.json` after testing.
 - [ ] Confirm existing smoke tests still pass.
 
+## Privacy, Security, And AI-Risk Review
+
+- [ ] Review `docs/privacy-security-review-pack.md` before a pilot.
+- [ ] Confirm AI transparency text is visible or linked.
+- [ ] Confirm the source review process has been followed.
+- [ ] Confirm known MVP limitations are understood.
+
 ## Origin Allowlist
 
 - [ ] Confirm the demo still works from `http://localhost:3000`.
