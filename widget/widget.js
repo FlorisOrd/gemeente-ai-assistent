@@ -77,17 +77,41 @@
   var style = document.createElement("style");
   style.textContent =
     "#" + widgetId + " {" +
+    "  --gaa-color-primary: #154273;" +
+    "  --gaa-color-primary-contrast: #ffffff;" +
+    "  --gaa-color-surface: #ffffff;" +
+    "  --gaa-color-surface-muted: #f3f6f8;" +
+    "  --gaa-color-text: #1f2933;" +
+    "  --gaa-color-text-muted: #4b5563;" +
+    "  --gaa-color-border: #c8d1dc;" +
+    "  --gaa-color-focus: #ffb612;" +
+    "  --gaa-color-warning-surface: #fff7ed;" +
+    "  --gaa-color-warning-border: #b45309;" +
+    "  --gaa-color-info-surface: #eef6ff;" +
+    "  --gaa-space-1: 4px;" +
+    "  --gaa-space-2: 8px;" +
+    "  --gaa-space-3: 12px;" +
+    "  --gaa-space-4: 16px;" +
+    "  --gaa-space-5: 20px;" +
+    "  --gaa-space-6: 24px;" +
+    "  --gaa-radius-sm: 4px;" +
+    "  --gaa-radius-md: 6px;" +
+    "  --gaa-radius-lg: 8px;" +
+    "  --gaa-shadow-panel: 0 20px 44px rgba(15, 23, 42, 0.22);" +
+    "  --gaa-shadow-button: 0 8px 20px rgba(15, 23, 42, 0.22);" +
     "  position: fixed;" +
-    "  bottom: 20px;" +
+    "  bottom: var(--gaa-space-5);" +
     "  z-index: 2147483647;" +
-    "  font-family: Arial, sans-serif;" +
-    "  color: #1f2933;" +
+    "  font-family: system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;" +
+    "  font-size: 16px;" +
+    "  line-height: 1.5;" +
+    "  color: var(--gaa-color-text);" +
     "}" +
     "#" + widgetId + ".gemeente-ai-assistent-position-bottom-right {" +
-    "  right: 20px;" +
+    "  right: var(--gaa-space-5);" +
     "}" +
     "#" + widgetId + ".gemeente-ai-assistent-position-bottom-left {" +
-    "  left: 20px;" +
+    "  left: var(--gaa-space-5);" +
     "}" +
     "#" + widgetId + " * {" +
     "  box-sizing: border-box;" +
@@ -95,16 +119,17 @@
     ".gemeente-ai-assistent-button {" +
     "  display: inline-flex;" +
     "  align-items: center;" +
-    "  gap: 10px;" +
-    "  border: 0;" +
+    "  gap: var(--gaa-space-2);" +
+    "  min-height: 44px;" +
+    "  border: 1px solid transparent;" +
     "  border-radius: 999px;" +
-    "  padding: 10px 16px 10px 10px;" +
-    "  background: #0f766e;" +
-    "  color: #ffffff;" +
+    "  padding: 9px var(--gaa-space-4) 9px 10px;" +
+    "  background: var(--gaa-color-primary);" +
+    "  color: var(--gaa-color-primary-contrast);" +
     "  font: inherit;" +
     "  font-weight: 700;" +
     "  cursor: pointer;" +
-    "  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);" +
+    "  box-shadow: var(--gaa-shadow-button);" +
     "  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;" +
     "}" +
     ".gemeente-ai-assistent-button:hover {" +
@@ -117,8 +142,11 @@
     ".gemeente-ai-assistent-send:focus-visible," +
     ".gemeente-ai-assistent-clear:focus-visible," +
     ".gemeente-ai-assistent-feedback button:focus-visible," +
+    ".gemeente-ai-assistent-sources a:focus-visible," +
+    ".gemeente-ai-assistent-contact a:focus-visible," +
+    ".gemeente-ai-assistent-privacy-notice a:focus-visible," +
     ".gemeente-ai-assistent-body textarea:focus-visible {" +
-    "  outline: 3px solid #fbbf24;" +
+    "  outline: 3px solid var(--gaa-color-focus);" +
     "  outline-offset: 3px;" +
     "}" +
     ".gemeente-ai-assistent-button-logo," +
@@ -134,36 +162,36 @@
     "}" +
     ".gemeente-ai-assistent-button-logo {" +
     "  background: rgba(255, 255, 255, 0.2);" +
-    "  color: #ffffff;" +
+    "  color: var(--gaa-color-primary-contrast);" +
     "}" +
     ".gemeente-ai-assistent-panel {" +
-    "  width: min(380px, calc(100vw - 32px));" +
-    "  margin-bottom: 12px;" +
+    "  width: min(400px, calc(100vw - 32px));" +
+    "  margin-bottom: var(--gaa-space-3);" +
     "  overflow: hidden;" +
-    "  border: 1px solid #d6dce5;" +
-    "  border-radius: 8px;" +
-    "  background: #ffffff;" +
-    "  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.24);" +
+    "  border: 1px solid var(--gaa-color-border);" +
+    "  border-radius: var(--gaa-radius-lg);" +
+    "  background: var(--gaa-color-surface);" +
+    "  box-shadow: var(--gaa-shadow-panel);" +
     "}" +
     ".gemeente-ai-assistent-header {" +
     "  display: flex;" +
     "  align-items: center;" +
     "  justify-content: space-between;" +
-    "  gap: 12px;" +
-    "  padding: 16px;" +
-    "  background: #0f766e;" +
-    "  color: #ffffff;" +
+    "  gap: var(--gaa-space-3);" +
+    "  padding: var(--gaa-space-4);" +
+    "  background: var(--gaa-color-primary);" +
+    "  color: var(--gaa-color-primary-contrast);" +
     "}" +
     ".gemeente-ai-assistent-brand {" +
     "  display: flex;" +
     "  align-items: center;" +
-    "  gap: 10px;" +
+    "  gap: var(--gaa-space-3);" +
     "  min-width: 0;" +
     "}" +
     ".gemeente-ai-assistent-logo {" +
     "  flex: 0 0 auto;" +
-    "  background: #ffffff;" +
-    "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "  background: var(--gaa-color-primary-contrast);" +
+    "  color: var(--gaa-color-primary);" +
     "}" +
     ".gemeente-ai-assistent-title {" +
     "  display: block;" +
@@ -172,155 +200,170 @@
     ".gemeente-ai-assistent-header span {" +
     "  display: block;" +
     "  margin-top: 2px;" +
-    "  font-size: 0.82rem;" +
+    "  font-size: 13px;" +
     "  opacity: 0.88;" +
     "}" +
     ".gemeente-ai-assistent-close {" +
-    "  width: 28px;" +
-    "  height: 28px;" +
+    "  width: 40px;" +
+    "  height: 40px;" +
     "  border: 1px solid rgba(255, 255, 255, 0.45);" +
     "  border-radius: 50%;" +
     "  background: transparent;" +
-    "  color: #ffffff;" +
+    "  color: var(--gaa-color-primary-contrast);" +
     "  cursor: pointer;" +
     "  flex: 0 0 auto;" +
     "}" +
     ".gemeente-ai-assistent-body {" +
-    "  padding: 16px;" +
+    "  padding: var(--gaa-space-4);" +
     "}" +
     ".gemeente-ai-assistent-disclaimer {" +
-    "  margin: 0 0 12px;" +
-    "  padding: 10px 12px;" +
-    "  border-left: 4px solid var(--gemeente-ai-assistent-theme, #0f766e);" +
-    "  background: #eef6ff;" +
+    "  margin: 0 0 var(--gaa-space-3);" +
+    "  padding: var(--gaa-space-3);" +
+    "  border-left: 4px solid var(--gaa-color-primary);" +
+    "  background: var(--gaa-color-info-surface);" +
     "  color: #1f3a5f;" +
-    "  font-size: 0.92rem;" +
+    "  font-size: 14px;" +
     "}" +
     ".gemeente-ai-assistent-privacy-notice {" +
-    "  margin: 0 0 12px;" +
-    "  padding: 10px 12px;" +
-    "  border-left: 4px solid #f59e0b;" +
-    "  background: #fff7ed;" +
+    "  margin: 0 0 var(--gaa-space-3);" +
+    "  padding: var(--gaa-space-3);" +
+    "  border-left: 4px solid var(--gaa-color-warning-border);" +
+    "  background: var(--gaa-color-warning-surface);" +
     "  color: #7c2d12;" +
-    "  font-size: 0.92rem;" +
+    "  font-size: 14px;" +
     "}" +
     ".gemeente-ai-assistent-privacy-notice a," +
     ".gemeente-ai-assistent-contact a {" +
-    "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "  color: var(--gaa-color-primary);" +
+    "  font-weight: 700;" +
+    "  text-underline-offset: 3px;" +
     "}" +
     ".gemeente-ai-assistent-messages {" +
     "  display: flex;" +
     "  flex-direction: column;" +
-    "  gap: 10px;" +
+    "  gap: var(--gaa-space-3);" +
     "  max-height: 280px;" +
     "  overflow-y: auto;" +
-    "  margin-bottom: 14px;" +
+    "  margin-bottom: var(--gaa-space-4);" +
     "}" +
     ".gemeente-ai-assistent-message {" +
     "  width: fit-content;" +
     "  max-width: 100%;" +
     "  margin: 0;" +
-    "  padding: 11px 13px;" +
-    "  border-radius: 8px;" +
-    "  line-height: 1.4;" +
+    "  padding: var(--gaa-space-3);" +
+    "  border-radius: var(--gaa-radius-lg);" +
+    "  line-height: 1.5;" +
+    "  font-size: 16px;" +
     "}" +
     ".gemeente-ai-assistent-message-user {" +
     "  align-self: flex-end;" +
-    "  background: #e6fffb;" +
+    "  background: var(--gaa-color-primary);" +
+    "  color: var(--gaa-color-primary-contrast);" +
     "}" +
     ".gemeente-ai-assistent-message-assistant {" +
     "  align-self: flex-start;" +
-    "  background: #eef2f7;" +
+    "  background: var(--gaa-color-surface-muted);" +
+    "  border: 1px solid var(--gaa-color-border);" +
     "}" +
     ".gemeente-ai-assistent-sources {" +
-    "  margin-top: 10px;" +
-    "  padding-top: 8px;" +
-    "  border-top: 1px solid #d6dce5;" +
+    "  margin-top: var(--gaa-space-3);" +
+    "  padding-top: var(--gaa-space-2);" +
+    "  border-top: 1px solid var(--gaa-color-border);" +
     "}" +
     ".gemeente-ai-assistent-sources-label {" +
     "  display: block;" +
-    "  margin-bottom: 4px;" +
-    "  color: #52616f;" +
-    "  font-size: 0.84rem;" +
+    "  margin-bottom: var(--gaa-space-1);" +
+    "  color: var(--gaa-color-text-muted);" +
+    "  font-size: 13px;" +
     "  font-weight: 700;" +
     "}" +
     ".gemeente-ai-assistent-sources-list {" +
     "  margin: 0;" +
-    "  padding-left: 18px;" +
+    "  padding-left: var(--gaa-space-5);" +
     "}" +
     ".gemeente-ai-assistent-sources a {" +
-    "  color: var(--gemeente-ai-assistent-theme, #0f766e);" +
+    "  display: inline-block;" +
+    "  padding: 2px 0;" +
+    "  color: var(--gaa-color-primary);" +
     "  font-weight: 700;" +
     "  text-decoration: underline;" +
+    "  text-underline-offset: 3px;" +
     "}" +
     ".gemeente-ai-assistent-status-label {" +
     "  display: block;" +
     "  width: fit-content;" +
-    "  margin-top: 8px;" +
-    "  padding: 3px 7px;" +
+    "  margin-top: var(--gaa-space-2);" +
+    "  padding: var(--gaa-space-1) var(--gaa-space-2);" +
     "  border-radius: 999px;" +
-    "  background: #ffffff;" +
-    "  color: #52616f;" +
-    "  font-size: 0.78rem;" +
-    "  border: 1px solid #d6dce5;" +
+    "  background: var(--gaa-color-surface);" +
+    "  color: var(--gaa-color-text-muted);" +
+    "  font-size: 13px;" +
+    "  border: 1px solid var(--gaa-color-border);" +
     "}" +
     ".gemeente-ai-assistent-support-code {" +
     "  display: block;" +
-    "  margin-top: 8px;" +
-    "  color: #52616f;" +
-    "  font-size: 0.78rem;" +
+    "  margin-top: var(--gaa-space-2);" +
+    "  color: var(--gaa-color-text-muted);" +
+    "  font-size: 13px;" +
     "}" +
     ".gemeente-ai-assistent-feedback {" +
     "  display: flex;" +
     "  flex-wrap: wrap;" +
     "  align-items: center;" +
-    "  gap: 6px;" +
-    "  margin-top: 8px;" +
+    "  gap: var(--gaa-space-2);" +
+    "  margin-top: var(--gaa-space-3);" +
     "}" +
     ".gemeente-ai-assistent-feedback button," +
     ".gemeente-ai-assistent-clear {" +
-    "  border: 1px solid #bcc7d3;" +
-    "  border-radius: 6px;" +
-    "  background: #ffffff;" +
-    "  color: #1f2933;" +
+    "  min-height: 36px;" +
+    "  border: 1px solid var(--gaa-color-border);" +
+    "  border-radius: var(--gaa-radius-md);" +
+    "  background: var(--gaa-color-surface);" +
+    "  color: var(--gaa-color-text);" +
     "  font: inherit;" +
-    "  font-size: 0.86rem;" +
+    "  font-size: 14px;" +
     "  cursor: pointer;" +
     "}" +
     ".gemeente-ai-assistent-feedback button {" +
-    "  padding: 5px 8px;" +
+    "  padding: var(--gaa-space-2) var(--gaa-space-3);" +
+    "}" +
+    ".gemeente-ai-assistent-feedback button:disabled {" +
+    "  cursor: default;" +
+    "  opacity: 0.72;" +
     "}" +
     ".gemeente-ai-assistent-feedback-message {" +
-    "  color: #52616f;" +
-    "  font-size: 0.84rem;" +
+    "  color: var(--gaa-color-text-muted);" +
+    "  font-size: 13px;" +
     "}" +
     ".gemeente-ai-assistent-clear {" +
-    "  margin: 0 0 12px;" +
-    "  padding: 7px 9px;" +
+    "  margin: 0 0 var(--gaa-space-3);" +
+    "  padding: var(--gaa-space-2) var(--gaa-space-3);" +
     "}" +
     ".gemeente-ai-assistent-body p {" +
     "  margin: 0 0 12px;" +
     "}" +
     ".gemeente-ai-assistent-body label {" +
     "  display: block;" +
-    "  margin-bottom: 6px;" +
+    "  margin-bottom: var(--gaa-space-2);" +
     "  font-weight: 700;" +
     "}" +
     ".gemeente-ai-assistent-body textarea {" +
     "  width: 100%;" +
     "  resize: vertical;" +
-    "  padding: 10px;" +
-    "  border: 1px solid #bcc7d3;" +
-    "  border-radius: 6px;" +
+    "  min-height: 96px;" +
+    "  padding: var(--gaa-space-3);" +
+    "  border: 1px solid var(--gaa-color-border);" +
+    "  border-radius: var(--gaa-radius-md);" +
     "  font: inherit;" +
     "}" +
     ".gemeente-ai-assistent-send {" +
-    "  margin-top: 10px;" +
+    "  min-height: 44px;" +
+    "  margin-top: var(--gaa-space-3);" +
     "  border: 0;" +
-    "  border-radius: 6px;" +
-    "  padding: 10px 12px;" +
-    "  background: #1f2933;" +
-    "  color: #ffffff;" +
+    "  border-radius: var(--gaa-radius-md);" +
+    "  padding: var(--gaa-space-3) var(--gaa-space-4);" +
+    "  background: var(--gaa-color-text);" +
+    "  color: var(--gaa-color-surface);" +
     "  font: inherit;" +
     "  cursor: pointer;" +
     "  transition: filter 120ms ease;" +
@@ -328,21 +371,25 @@
     ".gemeente-ai-assistent-send:hover {" +
     "  filter: brightness(0.95);" +
     "}" +
+    ".gemeente-ai-assistent-send:disabled {" +
+    "  cursor: progress;" +
+    "  opacity: 0.78;" +
+    "}" +
     ".gemeente-ai-assistent-note {" +
     "  min-height: 1.4em;" +
-    "  margin-top: 12px;" +
-    "  color: #52616f;" +
-    "  font-size: 0.92rem;" +
+    "  margin-top: var(--gaa-space-3);" +
+    "  color: var(--gaa-color-text-muted);" +
+    "  font-size: 14px;" +
     "}" +
     ".gemeente-ai-assistent-contact {" +
-    "  margin: 12px 0 0;" +
-    "  font-size: 0.92rem;" +
+    "  margin: var(--gaa-space-3) 0 0;" +
+    "  font-size: 14px;" +
     "}" +
     "@media (max-width: 480px) {" +
     "  #" + widgetId + " {" +
-    "    right: 12px;" +
-    "    bottom: 12px;" +
-    "    left: 12px;" +
+    "    right: var(--gaa-space-3);" +
+    "    bottom: var(--gaa-space-3);" +
+    "    left: var(--gaa-space-3);" +
     "  }" +
     "  .gemeente-ai-assistent-panel {" +
     "    width: 100%;" +
@@ -621,15 +668,12 @@
   }
 
   function applyTenantConfig(config) {
-    var themeColor = getSafeThemeColor(config.themeColor);
+    var theme = getAccessibleTheme(config.themeColor);
     var logoText = getSafeLogoText(config.logoText);
 
-    container.style.setProperty(
-      "--gemeente-ai-assistent-theme",
-      themeColor
-    );
+    container.style.setProperty("--gaa-color-primary", theme.color);
+    container.style.setProperty("--gaa-color-primary-contrast", theme.contrast);
     container.className = getPositionClass(config.position);
-    button.style.background = themeColor;
 
     var assistantName = config.assistantName || "Gemeente AI Assistent";
 
@@ -653,6 +697,60 @@
 
   function getSafeThemeColor(color) {
     return /^#[0-9a-fA-F]{6}$/.test(color || "") ? color : "#0f766e";
+  }
+
+  function getAccessibleTheme(color) {
+    var safeColor = getSafeThemeColor(color);
+    var whiteContrast = getContrastRatio(safeColor, "#ffffff");
+    var blackContrast = getContrastRatio(safeColor, "#111827");
+
+    if (whiteContrast >= 4.5) {
+      return {
+        color: safeColor,
+        contrast: "#ffffff",
+      };
+    }
+
+    if (blackContrast >= 4.5) {
+      return {
+        color: safeColor,
+        contrast: "#111827",
+      };
+    }
+
+    return {
+      color: "#154273",
+      contrast: "#ffffff",
+    };
+  }
+
+  function getContrastRatio(firstColor, secondColor) {
+    var first = getRelativeLuminance(firstColor);
+    var second = getRelativeLuminance(secondColor);
+    var lighter = Math.max(first, second);
+    var darker = Math.min(first, second);
+
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  function getRelativeLuminance(color) {
+    var rgb = hexToRgb(color).map(function (channel) {
+      var value = channel / 255;
+      return value <= 0.03928
+        ? value / 12.92
+        : Math.pow((value + 0.055) / 1.055, 2.4);
+    });
+
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  }
+
+  function hexToRgb(color) {
+    var normalized = getSafeThemeColor(color).replace("#", "");
+    return [
+      parseInt(normalized.slice(0, 2), 16),
+      parseInt(normalized.slice(2, 4), 16),
+      parseInt(normalized.slice(4, 6), 16),
+    ];
   }
 
   function getPositionClass(position) {

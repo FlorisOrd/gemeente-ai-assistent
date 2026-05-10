@@ -91,6 +91,18 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm keyboard focus states are visible.
 - [ ] Open `/demo/visual-comparison.html` and confirm it links to the demo pages.
 
+## Professional Visual Review
+
+- [ ] Open `/demo/visual-design-review.html`.
+- [ ] Compare demo, waterstad, and staging visual variants.
+- [ ] Check focus states on open, close, input, send, source links, feedback, and clear controls.
+- [ ] Check source labels are easy to find.
+- [ ] Check status labels are readable and not color-only.
+- [ ] Check warning and disclaimer hierarchy.
+- [ ] Check mobile or narrow viewport layout.
+- [ ] Check the widget looks professional on the busy test page.
+- [ ] Open `/demo/accessibility-test.html` and review keyboard and 200% zoom behavior.
+
 ## Tenant Configuration
 
 - [ ] Confirm the widget title shows the `assistantName` from `apps/server/tenants/demo.json`.

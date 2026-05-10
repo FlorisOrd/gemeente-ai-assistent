@@ -15,6 +15,8 @@ const REQUIRED_FIELDS = [
 ];
 const REQUIRED_KNOWLEDGE_FIELDS = ["id", "title", "url", "keywords", "summary"];
 const MIN_SUMMARY_LENGTH = 60;
+const MAX_BUTTON_LABEL_LENGTH = 32;
+const MAX_WELCOME_MESSAGE_LENGTH = 180;
 
 let failures = 0;
 let warnings = 0;
@@ -114,22 +116,41 @@ function checkTenantFile(fileName) {
   }
 
   if (!isHexColor(tenant.themeColor)) {
-    warn(label + " themeColor is missing or is not a hex color.");
+    warn(label + " themeColor must be a valid hex color such as #154273.");
+  } else if (getContrastRatio(tenant.themeColor, "#ffffff") < 4.5) {
+    warn(
+      label +
+        " themeColor may not have enough contrast with white text; choose a darker color or review widget contrast."
+    );
   }
 
   if (!hasValue(tenant.buttonLabel)) {
-    warn(label + " is missing buttonLabel.");
+    warn(label + " is missing buttonLabel for the floating widget button.");
+  } else if (String(tenant.buttonLabel).trim().length > MAX_BUTTON_LABEL_LENGTH) {
+    warn(
+      label +
+        " buttonLabel is long and may not fit well in the floating button."
+    );
   }
 
   if (!hasValue(tenant.welcomeMessage)) {
-    warn(label + " is missing welcomeMessage.");
+    warn(label + " is missing welcomeMessage for the first assistant message.");
+  } else if (
+    String(tenant.welcomeMessage).trim().length > MAX_WELCOME_MESSAGE_LENGTH
+  ) {
+    warn(
+      label +
+        " welcomeMessage is long; keep the first assistant message short and scannable."
+    );
   }
 
   if (tenant.position !== "bottom-right" && tenant.position !== "bottom-left") {
-    warn(label + " position should be bottom-right or bottom-left.");
+    warn(label + " position is not supported; use bottom-right or bottom-left.");
   }
 
-  if (String(tenant.logoText || "").trim().length > 4) {
+  if (!hasValue(tenant.logoText)) {
+    warn(label + " logoText is empty; use a short label such as AI.");
+  } else if (String(tenant.logoText || "").trim().length > 4) {
     warn(label + " logoText should be 4 characters or shorter.");
   }
 
@@ -172,6 +193,35 @@ function usesPlaceholderUrl(value) {
 
 function isHexColor(value) {
   return /^#[0-9a-fA-F]{6}$/.test(String(value || ""));
+}
+
+function getContrastRatio(firstColor, secondColor) {
+  const first = getRelativeLuminance(firstColor);
+  const second = getRelativeLuminance(secondColor);
+  const lighter = Math.max(first, second);
+  const darker = Math.min(first, second);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function getRelativeLuminance(color) {
+  const rgb = hexToRgb(color).map(function (channel) {
+    const value = channel / 255;
+    return value <= 0.03928
+      ? value / 12.92
+      : Math.pow((value + 0.055) / 1.055, 2.4);
+  });
+
+  return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+}
+
+function hexToRgb(color) {
+  const normalized = String(color).replace("#", "");
+  return [
+    parseInt(normalized.slice(0, 2), 16),
+    parseInt(normalized.slice(2, 4), 16),
+    parseInt(normalized.slice(4, 6), 16),
+  ];
 }
 
 function checkKnowledgeFile(tenantId) {

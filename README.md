@@ -135,6 +135,25 @@ The same `widget/widget.js` file is reused for every tenant. Deeper design chang
 
 Open `http://localhost:3000/demo/visual-comparison.html` to compare the demo tenant pages.
 
+## Professional Visual Design
+
+The widget now follows a professional visual design specification for a calm, trustworthy public-service experience.
+
+Read:
+
+- `docs/visual-design-spec.md`
+- `docs/accessibility-checklist.md`
+
+Open:
+
+```text
+http://localhost:3000/demo/visual-design-review.html
+```
+
+The widget uses internal design tokens with CSS custom properties such as `--gaa-color-primary`, `--gaa-space-4`, and `--gaa-radius-md`. The approach is inspired by WCAG 2.2 AA expectations and NL Design System principles, while keeping the widget lightweight and embeddable.
+
+Visual work still needs human review before a municipality pilot, especially on the real municipality website.
+
 ## Safety Guardrails
 
 This project now includes a few basic guardrails:
@@ -331,6 +350,7 @@ gemeente-ai-assistent/
         waterstad.json
   docs/
     ai-transparency-note.md
+    accessibility-checklist.md
     architecture.md
     deployment.md
     dpia-input-notes.md
@@ -347,11 +367,14 @@ gemeente-ai-assistent/
     risk-register.md
     source-review-process.md
     tenant-onboarding.md
+    visual-design-spec.md
   demo/
+    accessibility-test.html
     demo.html
     embed-snippet.html
     staging-embed.html
     visual-comparison.html
+    visual-design-review.html
     waterstad.html
   scripts/
     check-deployment-config.js
