@@ -32,6 +32,17 @@
         color: #f9fafb;
         border-radius: 6px;
       }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      a {
+        color: #2563eb;
+      }
     </style>
   </head>
   <body>
@@ -48,9 +59,12 @@
         De productievariant zou naar het publieke assistent-domein verwijzen.
         De API-key staat nooit in deze snippet.
       </p>
-      <p>
-        <a href="./demo.html">Terug naar de demo tenant</a>
-      </p>
+      <nav aria-label="Demo navigatie">
+        <a href="./demo.html">Demo tenant</a>
+        <a href="./waterstad.html">Waterstad tenant</a>
+        <a href="./staging-embed.html">Staging embed simulatie</a>
+        <a href="./embed-snippet.html">Embed snippet voorbeelden</a>
+      </nav>
     </main>
 
     <!-- Future production example:
