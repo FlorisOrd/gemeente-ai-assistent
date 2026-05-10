@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const PORT = process.env.PORT || 3000;
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
@@ -111,6 +112,10 @@ server.listen(PORT, function () {
 
 function handleHealth(response) {
   // Health checks are intentionally public and contain no tenant or secret data.
+  logEvent("health_check", {
+    statusCode: 200,
+    mode: getServerMode(),
+  });
   sendJson(response, 200, {
     status: "ok",
     service: "gemeente-ai-assistent",
@@ -125,14 +130,18 @@ function handleReady(response) {
     tenantFiles.forEach(function (tenantFile) {
       loadTenantFromFile(tenantFile);
     });
-
+    logEvent("ready_check", {
+      statusCode: 200,
+    });
     sendJson(response, 200, {
       status: "ready",
       tenants: tenantFiles.length,
     });
   } catch (error) {
     // Keep readiness errors safe for browsers and logs. Do not expose file paths.
-    console.error("readiness_status=failed");
+    logEvent("ready_check", {
+      statusCode: 500,
+    });
     sendJson(response, 500, {
       status: "error",
       error: "Tenantconfiguratie kan niet worden geladen.",
@@ -148,7 +157,11 @@ function handleConfig(request, response) {
   const publicConfig = getPublicTenantConfig(tenant);
 
   if (!isAllowedOrigin(origin, tenant)) {
-    logBlockedOrigin(tenant.id, origin);
+    logEvent("chat_blocked_origin", {
+      tenant: tenant.id,
+      statusCode: 403,
+      origin: origin || "missing",
+    });
     sendJson(response, 403, {
       error: "Deze website mag deze assistent niet gebruiken.",
     });
@@ -159,6 +172,11 @@ function handleConfig(request, response) {
 
   // This endpoint returns only public configuration that the browser may safely use.
   // Do not add API keys, internal settings, prompts, or private tenant data here.
+  logEvent("config_loaded", {
+    tenant: tenant.id,
+    statusCode: 200,
+    origin: origin || "missing",
+  });
   sendJson(response, 200, publicConfig);
 }
 
@@ -188,7 +206,11 @@ function handleOptions(request, response) {
   const origin = getRequestOrigin(request);
 
   if (!isAllowedOrigin(origin, tenant)) {
-    logBlockedOrigin(tenant.id, origin);
+    logEvent("chat_blocked_origin", {
+      tenant: tenant.id,
+      statusCode: 403,
+      origin: origin || "missing",
+    });
     sendJson(response, 403, {
       error: "Deze website mag deze assistent niet gebruiken.",
     });
@@ -252,54 +274,110 @@ function sendCorsHeaders(response, origin, tenant) {
   response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 }
 
-function logBlockedOrigin(tenantId, origin) {
-  console.log(
-    "chat_status=blocked_origin tenant=" +
-      tenantId +
-      " origin=" +
-      (origin || "missing")
-  );
-}
-
 async function handleChat(request, response) {
+  const requestId = createRequestId();
+  const startedAt = Date.now();
   const url = new URL(request.url, "http://localhost");
   const tenantId = url.searchParams.get("tenant") || "demo";
   const tenant = loadTenant(tenantId);
   const origin = getRequestOrigin(request);
+  const clientIp = getClientIp(request);
+
+  response.setHeader("X-Request-Id", requestId);
+
+  logEvent("chat_started", {
+    requestId: requestId,
+    tenant: tenant.id,
+    mode: getServerMode(),
+    ip: clientIp,
+    origin: origin || "missing",
+  });
 
   if (!isAllowedOrigin(origin, tenant)) {
-    logBlockedOrigin(tenant.id, origin);
+    logEvent("chat_blocked_origin", {
+      requestId: requestId,
+      tenant: tenant.id,
+      statusCode: 403,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+    });
     sendJson(response, 403, {
       error: "Deze website mag deze assistent niet gebruiken.",
+      requestId: requestId,
     });
     return;
   }
 
   sendCorsHeaders(response, origin, tenant);
 
-  const body = await readJsonBody(request);
+  let body;
+
+  try {
+    body = await readJsonBody(request);
+  } catch (error) {
+    logEvent("chat_validation_error", {
+      requestId: requestId,
+      tenant: tenant.id,
+      statusCode: 400,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+    });
+    sendJson(response, 400, {
+      error: "Het bericht kon niet worden gelezen. Probeer het opnieuw.",
+      requestId: requestId,
+    });
+    return;
+  }
+
   const message = String(body.message || "").trim();
-  const clientIp = getClientIp(request);
 
   if (!message) {
+    logEvent("chat_validation_error", {
+      requestId: requestId,
+      tenant: tenant.id,
+      statusCode: 400,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+    });
     sendJson(response, 400, {
       error: "Typ eerst een vraag voordat u het bericht verstuurt.",
+      requestId: requestId,
     });
     return;
   }
 
   if (message.length > MAX_MESSAGE_LENGTH) {
+    logEvent("chat_validation_error", {
+      requestId: requestId,
+      tenant: tenant.id,
+      statusCode: 400,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+    });
     sendJson(response, 400, {
       error:
         "Uw bericht is te lang. Houd uw vraag korter dan " +
         MAX_MESSAGE_LENGTH +
         " tekens.",
+      requestId: requestId,
     });
     return;
   }
 
   if (!isProbablyAllowedTopic(message, tenant)) {
-    logChatStatus("off_topic", tenant.id, clientIp);
+    logEvent("chat_off_topic", {
+      requestId: requestId,
+      tenant: tenant.id,
+      mode: "off-topic",
+      statusCode: 200,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+    });
     sendJson(response, 200, {
       tenant: tenant.id,
       assistantName: tenant.assistantName,
@@ -313,10 +391,18 @@ async function handleChat(request, response) {
   const rateLimit = checkRateLimit(clientIp);
 
   if (!rateLimit.allowed) {
-    logChatStatus("rate_limited", tenant.id, clientIp);
+    logEvent("chat_rate_limited", {
+      requestId: requestId,
+      tenant: tenant.id,
+      statusCode: 429,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+    });
     sendJson(response, 429, {
       error:
         "U heeft te veel berichten kort achter elkaar gestuurd. Wacht een paar minuten en probeer het daarna opnieuw.",
+      requestId: requestId,
     });
     return;
   }
@@ -325,7 +411,16 @@ async function handleChat(request, response) {
   const relevantKnowledge = findRelevantKnowledge(message, knowledgeItems);
 
   if (relevantKnowledge.length === 0) {
-    logChatStatus("no_approved_source", tenant.id, clientIp);
+    logEvent("chat_no_approved_source", {
+      requestId: requestId,
+      tenant: tenant.id,
+      mode: "no-approved-source",
+      statusCode: 200,
+      durationMs: getDurationMs(startedAt),
+      ip: clientIp,
+      origin: origin || "missing",
+      sourceCount: 0,
+    });
     sendJson(response, 200, {
       tenant: tenant.id,
       assistantName: tenant.assistantName,
@@ -341,7 +436,16 @@ async function handleChat(request, response) {
     try {
       const openAIMessage = await callOpenAI(message, tenant, relevantKnowledge);
 
-      logChatStatus("openai_success", tenant.id, clientIp);
+      logEvent("chat_success", {
+        requestId: requestId,
+        tenant: tenant.id,
+        mode: "openai",
+        statusCode: 200,
+        durationMs: getDurationMs(startedAt),
+        ip: clientIp,
+        origin: origin || "missing",
+        sourceCount: relevantKnowledge.length,
+      });
       sendJson(response, 200, {
         tenant: tenant.id,
         assistantName: tenant.assistantName,
@@ -352,8 +456,16 @@ async function handleChat(request, response) {
       return;
     } catch (error) {
       // Keep raw provider errors on the server only. Visitors get a friendly Dutch message.
-      console.error("OpenAI request failed:", error.message);
-      logChatStatus("openai_error", tenant.id, clientIp);
+      logEvent("chat_openai_error", {
+        requestId: requestId,
+        tenant: tenant.id,
+        mode: "openai-error",
+        statusCode: 200,
+        durationMs: getDurationMs(startedAt),
+        ip: clientIp,
+        origin: origin || "missing",
+        sourceCount: relevantKnowledge.length,
+      });
       sendJson(response, 200, {
         tenant: tenant.id,
         assistantName: tenant.assistantName,
@@ -361,13 +473,23 @@ async function handleChat(request, response) {
           "Sorry, de assistent kan nu geen antwoord ophalen. Probeer het later opnieuw of neem contact op met de gemeente via de officiele contactkanalen.",
         sources: tenant.mockSources,
         mode: "openai-error",
+        requestId: requestId,
       });
       return;
     }
   }
 
   // This is intentionally a mock answer. It keeps the demo working without an API key.
-  logChatStatus("mock_success", tenant.id, clientIp);
+  logEvent("chat_success", {
+    requestId: requestId,
+    tenant: tenant.id,
+    mode: "mock",
+    statusCode: 200,
+    durationMs: getDurationMs(startedAt),
+    ip: clientIp,
+    origin: origin || "missing",
+    sourceCount: relevantKnowledge.length,
+  });
   sendJson(response, 200, {
     tenant: tenant.id,
     assistantName: tenant.assistantName,
@@ -579,16 +701,46 @@ function getClientIp(request) {
   return request.socket.remoteAddress || "unknown";
 }
 
-function logChatStatus(status, tenantId, clientIp) {
-  // Avoid logging citizen messages. Even a simple question may contain personal data.
-  console.log(
-    "chat_status=" +
-      status +
-      " tenant=" +
-      tenantId +
-      " ip=" +
-      maskIp(clientIp)
+function createRequestId() {
+  // Request IDs are random technical references. They never contain citizen messages.
+  return (
+    "req_" + Date.now().toString(36) + "_" + crypto.randomBytes(4).toString("hex")
   );
+}
+
+function getDurationMs(startedAt) {
+  return Date.now() - startedAt;
+}
+
+function logEvent(eventName, details) {
+  const detailsObject = details || {};
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    event: eventName,
+  };
+  const safeFields = [
+    "requestId",
+    "tenant",
+    "mode",
+    "statusCode",
+    "durationMs",
+    "origin",
+    "sourceCount",
+  ];
+
+  safeFields.forEach(function (field) {
+    if (detailsObject[field] !== undefined) {
+      logEntry[field] = detailsObject[field];
+    }
+  });
+
+  if (detailsObject.ip) {
+    logEntry.maskedIp = maskIp(detailsObject.ip);
+  }
+
+  // Logs deliberately avoid citizen messages, prompts, API keys, source summaries,
+  // and raw OpenAI responses because those may contain sensitive personal data.
+  console.log(JSON.stringify(logEntry));
 }
 
 function maskIp(clientIp) {

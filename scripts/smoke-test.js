@@ -125,6 +125,19 @@ async function runSmokeTests() {
     assertEqual(response.statusCode, 200);
   });
 
+  await test("POST /api/chat includes a request ID header", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertTruthy(response.headers["x-request-id"]);
+  });
+
   await test("POST /api/chat returns a passport source for demo", async function () {
     const response = await request({
       method: "POST",
@@ -180,6 +193,20 @@ async function runSmokeTests() {
     assertEqual(response.statusCode, 403);
   });
 
+  await test("POST /api/chat blocked origin includes a request ID", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: "https://evil.example",
+      body: {
+        message: "Hoe vraag ik een paspoort aan?",
+      },
+    });
+
+    assertTruthy(response.headers["x-request-id"]);
+    assertTruthy(response.json.requestId);
+  });
+
   await test("POST /api/chat rejects an empty message", async function () {
     const response = await request({
       method: "POST",
@@ -191,6 +218,20 @@ async function runSmokeTests() {
     });
 
     assertEqual(response.statusCode, 400);
+  });
+
+  await test("POST /api/chat validation error includes a request ID", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "",
+      },
+    });
+
+    assertTruthy(response.headers["x-request-id"]);
+    assertTruthy(response.json.requestId);
   });
 
   await test("POST /api/chat rejects a message over 1000 characters", async function () {
@@ -458,6 +499,12 @@ function assertEqual(actual, expected) {
 function assertGreaterOrEqual(actual, expected) {
   if (actual < expected) {
     throw new Error("Expected at least " + expected + " but got " + actual);
+  }
+}
+
+function assertTruthy(value) {
+  if (!value) {
+    throw new Error("Expected a truthy value");
   }
 }
 

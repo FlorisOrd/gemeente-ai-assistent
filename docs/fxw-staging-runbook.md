@@ -169,7 +169,27 @@ BASE_URL=https://assistant.example.nl node scripts/check-hosted-deployment.js
 
 This hosted check does not need `OPENAI_API_KEY`.
 
-## 10. Rollback Plan
+## 10. Checking Logs Safely
+
+If the app runs with systemd, view logs with:
+
+```bash
+sudo journalctl -u gemeente-ai-assistent
+```
+
+To follow logs while testing:
+
+```bash
+sudo journalctl -u gemeente-ai-assistent -f
+```
+
+The app writes privacy-safe structured status logs. Search by request ID when the widget shows an `Ondersteuningscode`.
+
+Never ask users to send BSN, medical data, financial details, case numbers, or other sensitive personal data for support.
+
+Do not enable raw message logging. Logs should stay limited to technical fields such as request ID, tenant, status, timestamp, duration, masked IP, and Origin.
+
+## 11. Rollback Plan
 
 Keep the previous working version available.
 
@@ -180,7 +200,7 @@ If the new deployment fails:
 3. Start the service again: `sudo systemctl start gemeente-ai-assistent`
 4. Recheck `/health` and `/ready`.
 
-## 11. Switching Modes
+## 12. Switching Modes
 
 Mock mode:
 
