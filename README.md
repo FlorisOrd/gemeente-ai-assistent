@@ -18,7 +18,7 @@ Example of the future embed snippet:
 - A public `GET /api/config?tenant=demo` endpoint for browser-safe tenant configuration.
 - Optional server-side OpenAI support when `OPENAI_API_KEY` is set.
 - Basic MVP guardrails for validation, privacy, rate limiting, and cost control.
-- Tenant configs for `demo` and `waterstad`.
+- Tenant configs for `demo`, `waterstad`, and `staging`.
 - Documentation for the planned architecture, privacy principles, and MVP scope.
 
 ## What is not included yet
@@ -158,6 +158,16 @@ The `Nuttig` and `Niet nuttig` buttons are local-only for now. They update the p
 
 The `Gesprek wissen` button only clears the visible browser conversation and restores the intro message. It does not call the server.
 
+## Municipality Integration Package
+
+The repo now includes practical pilot materials for a municipality or website manager:
+
+- `docs/municipality-integration-guide.md`
+- `docs/pilot-checklist.md`
+- `demo/embed-snippet.html`
+
+These explain the embed snippet, tenant selection, `data-api-base`, allowed origins, approved sources, privacy expectations, and pilot checks.
+
 ## Run Smoke Tests
 
 Run the backend smoke tests with:
@@ -239,10 +249,13 @@ gemeente-ai-assistent/
     deployment.md
     fxw-server-deployment.md
     manual-test-checklist.md
+    municipality-integration-guide.md
     privacy.md
     mvp.md
+    pilot-checklist.md
   demo/
     demo.html
+    embed-snippet.html
     staging-embed.html
     waterstad.html
   scripts/

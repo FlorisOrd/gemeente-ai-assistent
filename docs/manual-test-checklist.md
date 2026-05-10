@@ -107,6 +107,14 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm the privacy and contact links are shown.
 - [ ] Confirm no API key appears in the page source.
 
+## Embed Snippet Examples
+
+- [ ] Open `/demo/embed-snippet.html`.
+- [ ] Confirm snippets do not contain API keys.
+- [ ] Confirm snippets use `data-tenant`.
+- [ ] Confirm the staging snippet uses `data-api-base`.
+- [ ] Confirm navigation between demo pages works.
+
 ## Origin Allowlist
 
 - [ ] Confirm the demo still works from `http://localhost:3000`.
