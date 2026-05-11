@@ -17,6 +17,10 @@ Use this checklist before publishing a staging release candidate to an FXW/serve
 - [ ] `/health` shows the expected version.
 - [ ] Version number in `VERSION` is checked.
 - [ ] `VERSION` matches the latest `CHANGELOG.md` entry.
+- [ ] GitHub release tag is created, for example `v0.1.0-staging`.
+- [ ] Release notes are copied from `CHANGELOG.md`.
+- [ ] Deployed version matches the `/health` version.
+- [ ] FXW server checked out the release tag, not an arbitrary branch state.
 
 ## Content And Tenant Checks
 
@@ -30,5 +34,4 @@ Use this checklist before publishing a staging release candidate to an FXW/serve
 - [ ] Privacy/security review pack is reviewed.
 - [ ] FXW staging runbook is reviewed.
 - [ ] Current limitations are understood.
-- [ ] Release notes are written.
 - [ ] The staging deployment is still treated as a private pilot/demo, not public production.
