@@ -92,10 +92,18 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Test `Hoe dien ik bezwaar in tegen de WOZ waarde?` and confirm it returns a normal answer with a relevant source.
 - [ ] Confirm neither `hallo` nor the WOZ question shows `Method not allowed`.
 - [ ] Send multiple follow-up questions and confirm the textarea and send button remain reachable.
+- [ ] Confirm no persistent `Neem contact op met de gemeente` link is visible in the composer.
+- [ ] Confirm the input has placeholder `Typ uw vraag`.
+- [ ] Confirm there is no visible `Uw vraag` label above the input.
+- [ ] Confirm the send button is a compact icon button inside the input row.
+- [ ] Confirm keyboard sending with Enter still works.
+- [ ] Confirm Shift+Enter still creates a newline.
+- [ ] Confirm a screen-reader label exists for the input, even though it is visually hidden.
+- [ ] Confirm the message area has more room than before.
 - [ ] Confirm the disclaimer and privacy warning scroll away with the conversation.
 - [ ] Confirm there is only one internal scrollbar during normal use.
 - [ ] Confirm the content area scrolls when the conversation grows.
-- [ ] Confirm the contact link has comfortable spacing above the bottom of the panel.
+- [ ] Confirm no-approved-source responses can still include contact source links.
 - [ ] Confirm the mobile or narrow viewport still keeps the input usable.
 
 ## Visual Customization
@@ -120,6 +128,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Check source labels are easy to find.
 - [ ] Check status labels are readable and not color-only.
 - [ ] Check warning and disclaimer hierarchy.
+- [ ] Check the compact composer, inline send button, and placeholder-based prompt.
 - [ ] Check mobile or narrow viewport layout.
 - [ ] Check the widget looks professional on the busy test page.
 - [ ] Confirm bottom-right and bottom-left launchers stay visually anchored when opened and closed.
@@ -139,7 +148,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm the widget title shows the `assistantName` from `apps/server/tenants/demo.json`.
 - [ ] Confirm the widget theme color matches `themeColor` from `apps/server/tenants/demo.json`.
 - [ ] Confirm the privacy link opens `privacyUrl` from `apps/server/tenants/demo.json`.
-- [ ] Confirm the contact link opens `contactUrl` from `apps/server/tenants/demo.json`.
+- [ ] Confirm no-approved-source contact sources use `contactUrl` from `apps/server/tenants/demo.json`.
 - [ ] Confirm chat still works in mock mode.
 - [ ] Confirm chat still works in real OpenAI mode.
 - [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected.
@@ -159,7 +168,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm the staging assistant loads.
 - [ ] Ask `Hoe vraag ik een paspoort aan?` and confirm it works.
 - [ ] Ask `Hoe bak ik een cake?` and confirm it is rejected.
-- [ ] Confirm the privacy and contact links are shown.
+- [ ] Confirm the privacy link is shown and unsupported questions can still show contact sources.
 - [ ] Confirm no API key appears in the page source.
 
 ## Embed Snippet Examples
