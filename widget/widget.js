@@ -61,17 +61,21 @@
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
-    '  <p class="gemeente-ai-assistent-disclaimer">Deze AI-assistent helpt u informatie te vinden, maar neemt geen besluiten. Controleer altijd de officiele gemeentelijke informatie.</p>' +
-    '  <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens. Lees de <a href="https://example.com/privacy" target="_blank" rel="noopener noreferrer">privacyinformatie</a>.</p>' +
+    '  <div class="gemeente-ai-assistent-notices">' +
+    '    <p class="gemeente-ai-assistent-disclaimer">Deze AI-assistent helpt u informatie te vinden, maar neemt geen besluiten. Controleer altijd de officiele gemeentelijke informatie.</p>' +
+    '    <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens. Lees de <a href="https://example.com/privacy" target="_blank" rel="noopener noreferrer">privacyinformatie</a>.</p>' +
+    "  </div>" +
     '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
     '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?</p>' +
     "  </div>" +
-    '  <button type="button" class="gemeente-ai-assistent-clear">Gesprek wissen</button>' +
-    '  <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
-    '  <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Bijvoorbeeld: hoe vraag ik een paspoort aan?"></textarea>' +
-    '  <button type="button" class="gemeente-ai-assistent-send">Verstuur</button>' +
-    '  <p class="gemeente-ai-assistent-contact"><a href="https://example.com/contact" target="_blank" rel="noopener noreferrer">Neem contact op met de gemeente</a></p>' +
-    '  <p class="gemeente-ai-assistent-note" role="status"></p>' +
+    '  <div class="gemeente-ai-assistent-composer">' +
+    '    <button type="button" class="gemeente-ai-assistent-clear">Gesprek wissen</button>' +
+    '    <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
+    '    <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Bijvoorbeeld: hoe vraag ik een paspoort aan?"></textarea>' +
+    '    <button type="button" class="gemeente-ai-assistent-send">Verstuur</button>' +
+    '    <p class="gemeente-ai-assistent-contact"><a href="https://example.com/contact" target="_blank" rel="noopener noreferrer">Neem contact op met de gemeente</a></p>' +
+    '    <p class="gemeente-ai-assistent-note" role="status"></p>' +
+    "  </div>" +
     "</div>";
 
   var style = document.createElement("style");
@@ -196,12 +200,16 @@
     "  display: flex;" +
     "  flex-direction: column;" +
     "  width: min(var(--gaa-panel-width), calc(100vw - 32px));" +
+    "  height: min(680px, calc(100vh - 96px));" +
     "  max-height: calc(100vh - 96px);" +
     "  overflow: hidden;" +
     "  border: 1px solid var(--gaa-color-border);" +
     "  border-radius: var(--gaa-radius-lg);" +
     "  background: var(--gaa-color-surface);" +
     "  box-shadow: var(--gaa-shadow-panel);" +
+    "}" +
+    ".gemeente-ai-assistent-panel[hidden] {" +
+    "  display: none;" +
     "}" +
     ".gemeente-ai-assistent-header {" +
     "  display: flex;" +
@@ -261,8 +269,12 @@
     "  flex-direction: column;" +
     "  flex: 1 1 auto;" +
     "  min-height: 0;" +
-    "  overflow-y: auto;" +
+    "  overflow: hidden;" +
     "  padding: var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-5);" +
+    "}" +
+    ".gemeente-ai-assistent-notices," +
+    ".gemeente-ai-assistent-composer {" +
+    "  flex: 0 0 auto;" +
     "}" +
     ".gemeente-ai-assistent-disclaimer {" +
     "  margin: 0 0 var(--gaa-space-3);" +
@@ -298,7 +310,7 @@
     "  gap: var(--gaa-space-3);" +
     "  flex: 1 1 auto;" +
     "  min-height: 140px;" +
-    "  max-height: clamp(160px, 30vh, 300px);" +
+    "  max-height: none;" +
     "  overflow-y: auto;" +
     "  margin-bottom: var(--gaa-space-4);" +
     "  padding-right: 2px;" +
@@ -479,6 +491,7 @@
     "  }" +
     "  .gemeente-ai-assistent-panel {" +
     "    width: 100%;" +
+    "    height: min(640px, calc(100vh - 80px));" +
     "    max-height: calc(100vh - 80px);" +
     "  }" +
     "  .gemeente-ai-assistent-header {" +
@@ -489,7 +502,6 @@
     "  }" +
     "  .gemeente-ai-assistent-messages {" +
     "    min-height: 110px;" +
-    "    max-height: clamp(140px, 30vh, 260px);" +
     "  }" +
     "  .gemeente-ai-assistent-button {" +
     "    max-width: 100%;" +
@@ -499,6 +511,14 @@
     "    overflow: hidden;" +
     "    text-overflow: ellipsis;" +
     "    white-space: nowrap;" +
+    "  }" +
+    "}" +
+    "@media (max-height: 640px) {" +
+    "  .gemeente-ai-assistent-messages {" +
+    "    min-height: 72px;" +
+    "  }" +
+    "  .gemeente-ai-assistent-body textarea {" +
+    "    min-height: 72px;" +
     "  }" +
     "}";
 
@@ -526,16 +546,12 @@
 
   button.addEventListener("click", function (event) {
     event.preventDefault();
-    var isOpen = !panel.hidden;
-    panel.hidden = isOpen;
-    button.setAttribute("aria-expanded", String(!isOpen));
+    setPanelOpen(panel.hidden);
   });
 
   closeButton.addEventListener("click", function (event) {
     event.preventDefault();
-    panel.hidden = true;
-    button.setAttribute("aria-expanded", "false");
-    button.focus();
+    setPanelOpen(false, true);
   });
 
   sendButton.addEventListener("click", function (event) {
@@ -553,6 +569,29 @@
       sendMessage();
     }
   });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !panel.hidden) {
+      event.preventDefault();
+      setPanelOpen(false, true);
+    }
+  });
+
+  function setPanelOpen(isOpen, focusLauncher) {
+    panel.hidden = !isOpen;
+    button.setAttribute("aria-expanded", String(isOpen));
+
+    if (isOpen) {
+      window.setTimeout(function () {
+        input.focus();
+      }, 0);
+      return;
+    }
+
+    if (focusLauncher) {
+      button.focus();
+    }
+  }
 
   async function sendMessage() {
     var message = input.value.trim();

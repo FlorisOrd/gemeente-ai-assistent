@@ -24,6 +24,7 @@ This is not a formal accessibility audit. A real municipality pilot still needs 
 - The widget panel must remain usable when conversation history grows.
 - The input area must remain reachable for follow-up questions.
 - Contact and footer links must have comfortable spacing from the panel bottom.
+- The body should not create a competing scrollbar during normal use; the message list is the primary internal scroll area.
 - The header contains a short logo text, assistant name, tenant label, and close button.
 - The message list should scroll inside the panel before the full page layout breaks.
 - Controls should follow a predictable order: messages, clear action, input, send action, contact link, status.
