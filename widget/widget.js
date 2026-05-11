@@ -70,10 +70,11 @@
     "  </div>" +
     '  <div class="gemeente-ai-assistent-composer">' +
     '    <button type="button" class="gemeente-ai-assistent-clear">Gesprek wissen</button>' +
-    '    <label for="gemeente-ai-assistent-input">Uw vraag</label>' +
-    '    <textarea id="gemeente-ai-assistent-input" rows="3" placeholder="Bijvoorbeeld: hoe vraag ik een paspoort aan?"></textarea>' +
-    '    <button type="button" class="gemeente-ai-assistent-send">Verstuur</button>' +
-    '    <p class="gemeente-ai-assistent-contact"><a href="https://example.com/contact" target="_blank" rel="noopener noreferrer">Neem contact op met de gemeente</a></p>' +
+    '    <label class="gemeente-ai-assistent-visually-hidden" for="gemeente-ai-assistent-input">Typ uw vraag</label>' +
+    '    <div class="gemeente-ai-assistent-input-row">' +
+    '      <textarea id="gemeente-ai-assistent-input" rows="2" placeholder="Typ uw vraag"></textarea>' +
+    '      <button type="button" class="gemeente-ai-assistent-send" aria-label="Verstuur bericht"><span aria-hidden="true">➤</span></button>' +
+    "    </div>" +
     '    <p class="gemeente-ai-assistent-note" role="status"></p>' +
     "  </div>" +
     "</div>";
@@ -174,11 +175,21 @@
     ".gemeente-ai-assistent-clear:focus-visible," +
     ".gemeente-ai-assistent-feedback button:focus-visible," +
     ".gemeente-ai-assistent-sources a:focus-visible," +
-    ".gemeente-ai-assistent-contact a:focus-visible," +
     ".gemeente-ai-assistent-privacy-notice a:focus-visible," +
-    ".gemeente-ai-assistent-body textarea:focus-visible {" +
+    ".gemeente-ai-assistent-input-row:focus-within {" +
     "  outline: 3px solid var(--gaa-color-focus);" +
     "  outline-offset: 3px;" +
+    "}" +
+    ".gemeente-ai-assistent-visually-hidden {" +
+    "  position: absolute;" +
+    "  width: 1px;" +
+    "  height: 1px;" +
+    "  padding: 0;" +
+    "  margin: -1px;" +
+    "  overflow: hidden;" +
+    "  clip: rect(0, 0, 0, 0);" +
+    "  white-space: nowrap;" +
+    "  border: 0;" +
     "}" +
     ".gemeente-ai-assistent-button-logo," +
     ".gemeente-ai-assistent-logo {" +
@@ -306,8 +317,7 @@
     "  font-size: var(--gaa-font-size-support);" +
     "  line-height: var(--gaa-line-height-body);" +
     "}" +
-    ".gemeente-ai-assistent-privacy-notice a," +
-    ".gemeente-ai-assistent-contact a {" +
+    ".gemeente-ai-assistent-privacy-notice a {" +
     "  color: var(--gaa-color-primary);" +
     "  font-weight: 700;" +
     "  text-underline-offset: 3px;" +
@@ -430,42 +440,52 @@
     "  margin: 0 0 var(--gaa-space-3);" +
     "  padding: var(--gaa-space-2) var(--gaa-space-3);" +
     "}" +
-    ".gemeente-ai-assistent-body p {" +
-    "  margin: 0 0 12px;" +
-    "}" +
-    ".gemeente-ai-assistent-body label {" +
-    "  display: block;" +
-    "  margin-bottom: var(--gaa-space-2);" +
-    "  font-weight: 700;" +
-    "  font-size: var(--gaa-font-size-support);" +
-    "}" +
-    ".gemeente-ai-assistent-body textarea {" +
-    "  width: 100%;" +
-    "  resize: vertical;" +
-    "  min-height: 96px;" +
-    "  padding: var(--gaa-space-3);" +
+    ".gemeente-ai-assistent-input-row {" +
+    "  display: flex;" +
+    "  align-items: flex-end;" +
+    "  gap: var(--gaa-space-2);" +
+    "  min-height: 52px;" +
+    "  padding: var(--gaa-space-1);" +
     "  border: 1px solid var(--gaa-color-border);" +
     "  border-radius: var(--gaa-radius-md);" +
-    "  font: inherit;" +
-    "  line-height: var(--gaa-line-height-body);" +
+    "  background: var(--gaa-color-surface);" +
     "  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);" +
     "  transition: border-color var(--gaa-transition-fast), box-shadow var(--gaa-transition-fast);" +
     "}" +
-    ".gemeente-ai-assistent-body textarea:hover {" +
+    ".gemeente-ai-assistent-input-row:hover {" +
     "  border-color: #9aa8b6;" +
     "}" +
-    ".gemeente-ai-assistent-send {" +
+    ".gemeente-ai-assistent-body textarea {" +
     "  width: 100%;" +
-    "  min-height: 44px;" +
-    "  margin-top: var(--gaa-space-3);" +
-    "  margin-bottom: var(--gaa-space-1);" +
+    "  flex: 1 1 auto;" +
+    "  resize: none;" +
+    "  min-height: 42px;" +
+    "  max-height: 96px;" +
+    "  padding: 9px var(--gaa-space-2);" +
+    "  border: 0;" +
+    "  border-radius: var(--gaa-radius-sm);" +
+    "  background: transparent;" +
+    "  color: var(--gaa-color-text);" +
+    "  font: inherit;" +
+    "  line-height: var(--gaa-line-height-body);" +
+    "  outline: 0;" +
+    "}" +
+    ".gemeente-ai-assistent-send {" +
+    "  display: inline-flex;" +
+    "  align-items: center;" +
+    "  justify-content: center;" +
+    "  flex: 0 0 auto;" +
+    "  width: 40px;" +
+    "  height: 40px;" +
     "  border: 1px solid transparent;" +
     "  border-radius: var(--gaa-radius-md);" +
-    "  padding: var(--gaa-space-3) var(--gaa-space-4);" +
+    "  padding: 0;" +
     "  background: var(--gaa-color-primary);" +
     "  color: var(--gaa-color-primary-contrast);" +
     "  font: inherit;" +
+    "  font-size: 18px;" +
     "  font-weight: 700;" +
+    "  line-height: 1;" +
     "  cursor: pointer;" +
     "  transition: filter var(--gaa-transition-fast), transform var(--gaa-transition-fast);" +
     "}" +
@@ -477,15 +497,12 @@
     "  opacity: 0.78;" +
     "}" +
     ".gemeente-ai-assistent-note {" +
-    "  min-height: 1.4em;" +
-    "  margin-top: var(--gaa-space-2);" +
-    "  margin-bottom: var(--gaa-space-2);" +
+    "  margin: var(--gaa-space-2) 0 0;" +
     "  color: var(--gaa-color-text-muted);" +
     "  font-size: var(--gaa-font-size-support);" +
     "}" +
-    ".gemeente-ai-assistent-contact {" +
-    "  margin: var(--gaa-space-4) 0 var(--gaa-space-2);" +
-    "  font-size: var(--gaa-font-size-support);" +
+    ".gemeente-ai-assistent-note:empty {" +
+    "  display: none;" +
     "}" +
     "@media (max-width: 480px) {" +
     "  #" + widgetId + " {" +
@@ -522,7 +539,7 @@
     "}" +
     "@media (max-height: 640px) {" +
     "  .gemeente-ai-assistent-body textarea {" +
-    "    min-height: 72px;" +
+    "    min-height: 40px;" +
     "  }" +
     "}";
 
@@ -544,7 +561,6 @@
   var buttonLabel = button.querySelector(".gemeente-ai-assistent-button-label");
   var intro = panel.querySelector(".gemeente-ai-assistent-intro");
   var privacyLink = panel.querySelector(".gemeente-ai-assistent-privacy-notice a");
-  var contactLink = panel.querySelector(".gemeente-ai-assistent-contact a");
 
   applyTenantConfig(tenantConfig);
   loadTenantConfig();
@@ -860,7 +876,6 @@
     intro.textContent = getIntroText(config);
 
     privacyLink.href = config.privacyUrl || "https://example.com/privacy";
-    contactLink.href = config.contactUrl || "https://example.com/contact";
   }
 
   function getIntroText(config) {

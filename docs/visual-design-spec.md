@@ -23,13 +23,15 @@ This is not a formal accessibility audit. A real municipality pilot still needs 
 - For `bottom-left`, the launcher and panel align to the left edge.
 - The widget panel must remain usable when conversation history grows.
 - The input area must remain reachable for follow-up questions.
-- Contact and footer links must have comfortable spacing from the panel bottom.
+- The composer should be compact so conversation content has priority.
+- Persistent contact links should not consume composer space.
+- Contact should be suggested contextually in assistant answers or source links.
 - The widget uses one scrollable content area containing notices and messages.
 - The composer remains fixed at the bottom of the panel.
 - Avoid double scrollbars; the body and messages list should not create competing scroll areas.
 - The header contains a short logo text, assistant name, tenant label, and close button.
 - The message list should scroll inside the panel before the full page layout breaks.
-- Controls should follow a predictable order: messages, clear action, input, send action, contact link, status.
+- Controls should follow a predictable order: messages, clear action, compact input row, status.
 
 ## Typography Rules
 
@@ -80,6 +82,7 @@ Use a compact 4px-based scale:
 - Buttons must be real `<button>` elements.
 - Buttons need visible text labels.
 - Icon-only buttons are not allowed unless an accessible label is present and the icon meaning is obvious.
+- The send action may be an inline icon button when it has an accessible label.
 - Primary actions should be visually clear but calm.
 - Target size should be at least 24px by 24px, preferably around 40px or larger.
 
@@ -119,6 +122,7 @@ Use a compact 4px-based scale:
 - Use a consistent high-contrast focus ring.
 - Focus must appear on the open button, close button, textarea, send button, source links, feedback buttons, and clear-conversation button.
 - Do not remove default focus unless replacing it with a stronger visible state.
+- Placeholder text may provide the visible prompt when a visually hidden label preserves accessibility.
 
 ## Accessibility Requirements
 
