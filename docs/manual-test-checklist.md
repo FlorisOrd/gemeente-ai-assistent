@@ -58,7 +58,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 
 - [ ] Ask `Hoe vraag ik een paspoort aan?` and confirm the response shows a passport source.
 - [ ] Open `/demo/waterstad.html`, ask a parking question, and confirm it shows a Waterstad parking source.
-- [ ] Ask a municipality-related but unsupported question, such as `Hoe dien ik bezwaar in tegen de WOZ waarde?`, and confirm it returns `mode: "no-approved-source"`.
+- [ ] Ask a municipality-related but unsupported question, such as `Hoe vraag ik een uittreksel aan?`, and confirm it returns `mode: "no-approved-source"`.
 - [ ] Ask `Hoe bak ik een cake?` and confirm it is still rejected as off-topic.
 - [ ] Confirm the browser does not receive secret prompts or API keys.
 - [ ] Confirm OpenAI is not called when no approved source is found.
@@ -98,6 +98,8 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 ## Professional Visual Review
 
 - [ ] Open `/demo/visual-design-review.html`.
+- [ ] Open `/demo/visual-states.html`.
+- [ ] Test every listed visual state on `/demo/visual-states.html`.
 - [ ] Compare demo, waterstad, and staging visual variants.
 - [ ] Check focus states on open, close, input, send, source links, feedback, and clear controls.
 - [ ] Check source labels are easy to find.
@@ -106,6 +108,12 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Check mobile or narrow viewport layout.
 - [ ] Check the widget looks professional on the busy test page.
 - [ ] Confirm bottom-right and bottom-left launchers stay visually anchored when opened and closed.
+- [ ] Confirm the launcher stays anchored on every tested visual state.
+- [ ] Confirm `hallo` works.
+- [ ] Confirm `Hoe dien ik bezwaar in tegen de WOZ waarde?` works.
+- [ ] Confirm no state shows `Method not allowed`.
+- [ ] Confirm feedback and clear conversation still work.
+- [ ] Confirm mobile or narrow layout still works after several messages.
 - [ ] Open `/demo/accessibility-test.html` and review keyboard and 200% zoom behavior.
 
 ## Tenant Configuration

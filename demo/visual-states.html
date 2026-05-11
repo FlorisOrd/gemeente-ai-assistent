@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visuele Staten Review</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+        color: #1f2933;
+        background: #ffffff;
+      }
+
+      header,
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      header {
+        padding-bottom: 16px;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      a {
+        color: #154273;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .review-panel {
+        margin-top: 24px;
+        padding: 20px;
+        border: 1px solid #c8d1dc;
+        border-radius: 8px;
+        background: #f7f9fc;
+      }
+
+      .busy-background {
+        margin-top: 24px;
+        padding: 24px;
+        border: 1px solid #c8d1dc;
+        background:
+          linear-gradient(90deg, rgba(21, 66, 115, 0.08) 25%, transparent 25%),
+          linear-gradient(180deg, rgba(21, 66, 115, 0.06) 50%, transparent 50%),
+          #f3f6f8;
+        background-size: 32px 32px;
+      }
+
+      .state-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .state-card {
+        padding: 16px;
+        border: 1px solid #c8d1dc;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .state-card h3 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+      }
+
+      code {
+        display: inline-block;
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: #e5eaf0;
+        color: #1f2933;
+        font-size: 0.95em;
+      }
+
+      .checklist {
+        columns: 2;
+        gap: 28px;
+        padding-left: 20px;
+      }
+
+      .checklist li {
+        break-inside: avoid;
+        margin-bottom: 8px;
+      }
+
+      @media (max-width: 700px) {
+        header,
+        main {
+          padding: 28px 16px;
+        }
+
+        .checklist {
+          columns: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Visuele staten review</h1>
+      <p>
+        Gebruik deze pagina om veelvoorkomende widget-staten rustig en
+        systematisch te controleren. De widget op deze pagina gebruikt de demo
+        tenant en toont geen API-key.
+      </p>
+      <nav aria-label="Demo navigatie">
+        <a href="./demo.html">Demo tenant</a>
+        <a href="./waterstad.html">Waterstad tenant</a>
+        <a href="./staging-embed.html">Staging embed simulatie</a>
+        <a href="./embed-snippet.html">Embed snippet voorbeelden</a>
+        <a href="./visual-comparison.html">Visuele vergelijking</a>
+        <a href="./visual-design-review.html">Visuele review</a>
+        <a href="./accessibility-test.html">Toegankelijkheidstest</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="busy-background" aria-labelledby="busy-heading">
+        <h2 id="busy-heading">Drukke testachtergrond</h2>
+        <p>
+          Open de widget en controleer of de launcher, het paneel, focusringen,
+          tekst, bronnen en statuslabels goed leesbaar blijven op een drukkere
+          hostpagina.
+        </p>
+      </section>
+
+      <section class="review-panel" aria-labelledby="states-heading">
+        <h2 id="states-heading">Staten om handmatig te testen</h2>
+        <div class="state-grid">
+          <article class="state-card">
+            <h3>Normaal antwoord</h3>
+            <p>Vraag: <code>Hoe vraag ik een paspoort aan?</code></p>
+          </article>
+          <article class="state-card">
+            <h3>Begroeting</h3>
+            <p>Vraag: <code>hallo</code></p>
+          </article>
+          <article class="state-card">
+            <h3>Buiten onderwerp</h3>
+            <p>Vraag: <code>Hoe bak ik een cake?</code></p>
+          </article>
+          <article class="state-card">
+            <h3>Geen goedgekeurde bron</h3>
+            <p>Vraag: <code>Hoe vraag ik een uittreksel aan?</code></p>
+          </article>
+          <article class="state-card">
+            <h3>Validatiefout</h3>
+            <p>Laat het invoerveld leeg en klik op <code>Verstuur</code>.</p>
+          </article>
+          <article class="state-card">
+            <h3>Rate limit</h3>
+            <p>Stuur meer dan 10 berichten binnen 5 minuten vanaf dezelfde browser.</p>
+          </article>
+          <article class="state-card">
+            <h3>Feedback geklikt</h3>
+            <p>Klik na een antwoord op <code>Nuttig</code> of <code>Niet nuttig</code>.</p>
+          </article>
+          <article class="state-card">
+            <h3>Gesprek wissen</h3>
+            <p>Klik op <code>Gesprek wissen</code> en controleer of de intro terugkomt.</p>
+          </article>
+          <article class="state-card">
+            <h3>Bottom-right tenant</h3>
+            <p>Open de demo of staging pagina en controleer dat de launcher rechts blijft staan.</p>
+          </article>
+          <article class="state-card">
+            <h3>Bottom-left tenant</h3>
+            <p>Open Waterstad en controleer dat de launcher links blijft staan.</p>
+          </article>
+          <article class="state-card">
+            <h3>Mobiel of smal scherm</h3>
+            <p>Maak het venster smaller of zoom naar 200% en controleer de bruikbaarheid.</p>
+          </article>
+          <article class="state-card">
+            <h3>WOZ bezwaar</h3>
+            <p>Vraag: <code>Hoe dien ik bezwaar in tegen de WOZ waarde?</code></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="review-panel" aria-labelledby="checklist-heading">
+        <h2 id="checklist-heading">Korte visuele checklist</h2>
+        <ul class="checklist">
+          <li>Launcher blijft horizontaal op dezelfde plek bij openen en sluiten.</li>
+          <li>Paneel voelt stabiel en rustig.</li>
+          <li>Assistantnaam, gemeentenaam en sluitknop zijn goed uitgelijnd.</li>
+          <li>Disclaimer en privacywaarschuwing zijn zichtbaar maar niet schreeuwerig.</li>
+          <li>Berichtbubbels hebben duidelijke hiërarchie en tekst loopt netjes door.</li>
+          <li>Bronnen zijn duidelijk gelabeld en links zijn herkenbaar.</li>
+          <li>Statuslabels voelen als metadata, niet als grote foutmeldingen.</li>
+          <li>Feedbackknoppen zijn echte knoppen en tonen een duidelijke gekozen staat.</li>
+          <li>Textarea en verzendknop voelen als één invoergebied.</li>
+          <li>Focusringen zijn duidelijk zichtbaar met toetsenbordbediening.</li>
+          <li>Mobiele layout blijft bruikbaar en niet krap.</li>
+          <li>Geen staat toont rauwe technische tekst zoals Method not allowed.</li>
+        </ul>
+      </section>
+    </main>
+
+    <script src="../widget/widget.js" data-tenant="demo"></script>
+  </body>
+</html>

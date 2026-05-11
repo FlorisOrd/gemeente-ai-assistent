@@ -150,6 +150,12 @@ Open:
 http://localhost:3000/demo/visual-design-review.html
 ```
 
+For a more structured state-by-state review, open:
+
+```text
+http://localhost:3000/demo/visual-states.html
+```
+
 The widget uses internal design tokens with CSS custom properties such as `--gaa-color-primary`, `--gaa-space-4`, and `--gaa-radius-md`. The approach is inspired by WCAG 2.2 AA expectations and NL Design System principles, while keeping the widget lightweight and embeddable.
 
 Visual work still needs human review before a municipality pilot, especially on the real municipality website.
@@ -375,6 +381,7 @@ gemeente-ai-assistent/
     staging-embed.html
     visual-comparison.html
     visual-design-review.html
+    visual-states.html
     waterstad.html
   scripts/
     check-deployment-config.js
