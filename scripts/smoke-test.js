@@ -188,6 +188,24 @@ async function runSmokeTests() {
     assertEqual(response.json.mode, "greeting");
   });
 
+  await test("POST /api/chat handles short WOZ question", async function () {
+    const response = await request({
+      method: "POST",
+      path: "/api/chat?tenant=demo",
+      origin: ORIGIN,
+      body: {
+        message: "woz",
+      },
+    });
+
+    assertEqual(response.statusCode, 200);
+    assertBodyDoesNotInclude(response.body, "Method not allowed");
+    assertOneOf(response.json.mode, ["mock", "openai", "no-approved-source"]);
+    if (response.json.mode !== "no-approved-source") {
+      assertSourceIncludes(response.json.sources, "WOZ");
+    }
+  });
+
   await test("POST /api/chat handles a WOZ bezwaar question", async function () {
     const response = await request({
       method: "POST",
@@ -556,6 +574,14 @@ function assertGreaterOrEqual(actual, expected) {
 function assertTruthy(value) {
   if (!value) {
     throw new Error("Expected a truthy value");
+  }
+}
+
+function assertOneOf(actual, expectedValues) {
+  if (!expectedValues.includes(actual)) {
+    throw new Error(
+      "Expected one of " + expectedValues.join(", ") + " but got " + actual
+    );
   }
 }
 
