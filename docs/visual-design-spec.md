@@ -11,7 +11,7 @@ This is not a formal accessibility audit. A real municipality pilot still needs 
 - Accessible: readable text, visible focus, sufficient contrast, and real HTML controls.
 - Clear: labels should explain actions and states in plain language.
 - Municipality-neutral: the base design should work for many municipalities.
-- Source-grounded: sources, status labels, and warnings must be easy to find.
+- Source-grounded: approved links and warnings must be easy to find without making the answer feel like a technical report.
 
 ## Layout Rules
 
@@ -25,7 +25,7 @@ This is not a formal accessibility audit. A real municipality pilot still needs 
 - The input area must remain reachable for follow-up questions.
 - The composer should be compact so conversation content has priority.
 - Persistent contact links should not consume composer space.
-- Contact should be suggested contextually in assistant answers or source links.
+- Contact should be suggested contextually in assistant answers or follow-up links.
 - The widget uses one scrollable content area containing notices and messages.
 - The composer remains fixed at the bottom of the panel.
 - Avoid double scrollbars; the body and messages list should not create competing scroll areas.
@@ -48,7 +48,7 @@ This is not a formal accessibility audit. A real municipality pilot still needs 
 - Tenant color may be used as the primary color only when contrast remains readable.
 - Primary buttons and headers must have readable foreground text.
 - Links must be visibly underlined or otherwise clearly recognizable as links.
-- Warnings and status labels may use color, but must also include text.
+- Warnings and error states may use color, but must also include text.
 - Do not rely on color alone to communicate errors, warnings, or status.
 
 ## Spacing Scale
@@ -96,14 +96,16 @@ Use a compact 4px-based scale:
 
 ## Source-Link Rules
 
-- Sources must appear under the answer with the label `Gebruikte bron(nen):`.
-- Source links should be underlined and have enough spacing for touch use.
-- Source links should use official or approved URLs.
-- Do not hide sources behind icons or vague labels.
+- Links should appear as contextual follow-up actions, not as a standard citation box.
+- Use natural labels such as `Meer informatie:` or `Lees meer:`.
+- For contact-oriented fallback answers, use a natural label such as `Meer hulp:`.
+- Follow-up links should be underlined and have enough spacing for touch use.
+- Follow-up links should use official or approved URLs.
+- Do not hide links behind icons or vague labels.
 
 ## Error And Status Message Rules
 
-- Status labels must use plain Dutch such as `Buiten onderwerp` or `Geen goedgekeurde bron gevonden`.
+- Backend modes such as `mock`, `greeting`, `off-topic`, and `no-approved-source` are internal metadata and should not appear as routine visitor-facing labels.
 - Support codes should only appear for support-relevant responses.
 - Loading text should be calm and clear.
 - Errors should be friendly and should not expose raw technical details.
@@ -120,7 +122,7 @@ Use a compact 4px-based scale:
 
 - Focus states must be visible for keyboard users.
 - Use a consistent high-contrast focus ring.
-- Focus must appear on the open button, close button, textarea, send button, source links, feedback buttons, and clear-conversation button.
+- Focus must appear on the open button, close button, textarea, send button, follow-up links, feedback buttons, and clear-conversation button.
 - Do not remove default focus unless replacing it with a stronger visible state.
 - Placeholder text may provide the visible prompt when a visually hidden label preserves accessibility.
 
@@ -145,7 +147,7 @@ Tenant JSON may control:
 - `logoText`
 - Contact and privacy URLs
 
-Tenant customization should not override safety text, privacy warnings, source labels, or focus behavior without review.
+Tenant customization should not override safety text, privacy warnings, follow-up link behavior, or focus behavior without review.
 
 ## Visual Acceptance Criteria
 
