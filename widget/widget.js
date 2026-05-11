@@ -98,7 +98,6 @@
     "  --gaa-color-info-surface: #eef6ff;" +
     "  --gaa-color-assistant-bubble: #f7f9fc;" +
     "  --gaa-color-user-bubble: var(--gaa-color-primary);" +
-    "  --gaa-color-status-surface: #f8fafc;" +
     "  --gaa-space-1: 4px;" +
     "  --gaa-space-2: 8px;" +
     "  --gaa-space-3: 12px;" +
@@ -174,7 +173,7 @@
     ".gemeente-ai-assistent-send:focus-visible," +
     ".gemeente-ai-assistent-clear:focus-visible," +
     ".gemeente-ai-assistent-feedback button:focus-visible," +
-    ".gemeente-ai-assistent-sources a:focus-visible," +
+    ".gemeente-ai-assistent-followup-links a:focus-visible," +
     ".gemeente-ai-assistent-privacy-notice a:focus-visible," +
     ".gemeente-ai-assistent-input-row:focus-within {" +
     "  outline: 3px solid var(--gaa-color-focus);" +
@@ -351,47 +350,35 @@
     "  border: 1px solid var(--gaa-color-border);" +
     "  border-bottom-left-radius: var(--gaa-radius-sm);" +
     "}" +
-    ".gemeente-ai-assistent-sources {" +
+    ".gemeente-ai-assistent-followup-links {" +
+    "  display: flex;" +
+    "  flex-wrap: wrap;" +
+    "  align-items: baseline;" +
+    "  gap: var(--gaa-space-1) var(--gaa-space-2);" +
     "  margin-top: var(--gaa-space-3);" +
-    "  padding: var(--gaa-space-2) var(--gaa-space-3);" +
-    "  border: 1px solid var(--gaa-color-border);" +
-    "  border-radius: var(--gaa-radius-md);" +
-    "  background: var(--gaa-color-surface-raised);" +
+    "  padding-top: var(--gaa-space-2);" +
+    "  border-top: 1px solid var(--gaa-color-border);" +
     "}" +
-    ".gemeente-ai-assistent-sources-label {" +
-    "  display: block;" +
-    "  margin-bottom: var(--gaa-space-1);" +
+    ".gemeente-ai-assistent-followup-label {" +
     "  color: var(--gaa-color-text-muted);" +
     "  font-size: var(--gaa-font-size-meta);" +
     "  font-weight: 700;" +
     "}" +
-    ".gemeente-ai-assistent-sources-list {" +
+    ".gemeente-ai-assistent-followup-list {" +
+    "  display: flex;" +
+    "  flex-wrap: wrap;" +
+    "  gap: var(--gaa-space-1) var(--gaa-space-2);" +
     "  margin: 0;" +
-    "  padding-left: var(--gaa-space-4);" +
+    "  padding: 0;" +
+    "  list-style: none;" +
     "}" +
-    ".gemeente-ai-assistent-sources li + li {" +
-    "  margin-top: var(--gaa-space-1);" +
-    "}" +
-    ".gemeente-ai-assistent-sources a {" +
+    ".gemeente-ai-assistent-followup-links a {" +
     "  display: inline-block;" +
-    "  padding: 3px 0;" +
+    "  padding: 2px 0;" +
     "  color: var(--gaa-color-primary);" +
     "  font-weight: 700;" +
     "  text-decoration: underline;" +
     "  text-underline-offset: 3px;" +
-    "}" +
-    ".gemeente-ai-assistent-status-label {" +
-    "  display: inline-flex;" +
-    "  align-items: center;" +
-    "  width: fit-content;" +
-    "  margin-top: var(--gaa-space-2);" +
-    "  padding: 3px var(--gaa-space-2);" +
-    "  border-radius: 999px;" +
-    "  background: var(--gaa-color-status-surface);" +
-    "  color: var(--gaa-color-text-muted);" +
-    "  font-size: var(--gaa-font-size-meta);" +
-    "  border: 1px solid var(--gaa-color-border);" +
-    "  line-height: var(--gaa-line-height-tight);" +
     "}" +
     ".gemeente-ai-assistent-support-code {" +
     "  display: block;" +
@@ -704,16 +691,12 @@
       "gemeente-ai-assistent-message gemeente-ai-assistent-message-" + sender;
     messageElement.textContent = text;
 
-    if (sender === "assistant" && mode) {
-      messageElement.appendChild(createStatusLabel(mode));
-    }
-
     if (sender === "assistant" && shouldShowSupportCode(mode, requestId)) {
       messageElement.appendChild(createSupportCode(requestId));
     }
 
     if (sources && sources.length) {
-      messageElement.appendChild(createSourcesList(sources));
+      messageElement.appendChild(createFollowupLinks(sources, mode));
     }
 
     if (sender === "assistant") {
@@ -728,9 +711,7 @@
     return Boolean(
       requestId &&
         (!mode ||
-          mode === "openai-error" ||
-          mode === "no-approved-source" ||
-          mode === "off-topic")
+          mode === "openai-error")
     );
   }
 
@@ -741,35 +722,16 @@
     return supportCode;
   }
 
-  function createStatusLabel(mode) {
-    var label = document.createElement("span");
-    label.className = "gemeente-ai-assistent-status-label";
-    label.textContent = getFriendlyModeLabel(mode);
-    return label;
-  }
-
-  function getFriendlyModeLabel(mode) {
-    var labels = {
-      mock: "Demo-antwoord",
-      openai: "Antwoord op basis van goedgekeurde bronnen",
-      greeting: "Begroeting",
-      "off-topic": "Buiten onderwerp",
-      "no-approved-source": "Geen goedgekeurde bron gevonden",
-      "openai-error": "Tijdelijke storing",
-    };
-
-    return labels[mode] || "Antwoord";
-  }
-
-  function createSourcesList(sources) {
+  function createFollowupLinks(sources, mode) {
     var wrapper = document.createElement("div");
     var label = document.createElement("span");
     var list = document.createElement("ul");
 
-    wrapper.className = "gemeente-ai-assistent-sources";
-    label.className = "gemeente-ai-assistent-sources-label";
-    label.textContent = "Gebruikte bron(nen):";
-    list.className = "gemeente-ai-assistent-sources-list";
+    wrapper.className = "gemeente-ai-assistent-followup-links";
+    label.className = "gemeente-ai-assistent-followup-label";
+    label.textContent =
+      mode === "no-approved-source" ? "Meer hulp:" : "Meer informatie:";
+    list.className = "gemeente-ai-assistent-followup-list";
 
     sources.forEach(function (source) {
       var item = document.createElement("li");

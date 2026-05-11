@@ -80,8 +80,10 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Open the widget again.
 - [ ] Close the widget with the Escape key.
 - [ ] Confirm `aria-expanded` changes between `true` and `false`.
-- [ ] Ask a question with sources and confirm the `Gebruikte bron(nen):` label appears.
-- [ ] Confirm a friendly mode label appears after answers.
+- [ ] Ask a question with sources and confirm links appear naturally as `Meer informatie:` or similar.
+- [ ] Ask `hoi` and confirm no visible `Begroeting` mode label is shown.
+- [ ] Ask `woz` and confirm no visible `Demo-antwoord` or other mode label is shown.
+- [ ] Confirm `Gebruikte bron(nen):` is not shown.
 - [ ] Click `Nuttig` and confirm it says `Bedankt voor uw feedback.`
 - [ ] Click `Niet nuttig` and confirm it says `Bedankt voor uw feedback.`
 - [ ] Click `Gesprek wissen` and confirm the intro message returns.
@@ -103,7 +105,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm the disclaimer and privacy warning scroll away with the conversation.
 - [ ] Confirm there is only one internal scrollbar during normal use.
 - [ ] Confirm the content area scrolls when the conversation grows.
-- [ ] Confirm no-approved-source responses can still include contact source links.
+- [ ] Confirm no-approved-source responses can still include a useful contact or help link when available.
 - [ ] Confirm the mobile or narrow viewport still keeps the input usable.
 
 ## Visual Customization
@@ -124,9 +126,9 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Open `/demo/visual-states.html`.
 - [ ] Test every listed visual state on `/demo/visual-states.html`.
 - [ ] Compare demo, waterstad, and staging visual variants.
-- [ ] Check focus states on open, close, input, send, source links, feedback, and clear controls.
-- [ ] Check source labels are easy to find.
-- [ ] Check status labels are readable and not color-only.
+- [ ] Check focus states on open, close, input, send, follow-up links, feedback, and clear controls.
+- [ ] Check follow-up links are natural, readable, and keyboard accessible.
+- [ ] Check routine backend mode labels are not visible to visitors.
 - [ ] Check warning and disclaimer hierarchy.
 - [ ] Check the compact composer, inline send button, and placeholder-based prompt.
 - [ ] Check mobile or narrow viewport layout.
