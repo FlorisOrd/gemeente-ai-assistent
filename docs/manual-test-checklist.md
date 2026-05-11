@@ -210,6 +210,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Check `/health` in a browser or with curl.
 - [ ] Check `/ready` in a browser or with curl.
 - [ ] Confirm `/health` does not expose API keys.
+- [ ] Confirm `/health` shows a non-empty `version` field.
 - [ ] Confirm `/ready` does not expose API keys or internal file paths.
 - [ ] Confirm startup logs print port, mode, tenant count, and demo URL.
 - [ ] Confirm startup logs do not print API keys.
@@ -225,6 +226,12 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm `docs/fxw-staging-runbook.md` is understandable.
 - [ ] After hosted deployment, run `BASE_URL=https://assistant.example.nl node scripts/check-hosted-deployment.js`.
 - [ ] Confirm blocked origin returns `403` on the hosted deployment.
+
+## Staging Release Candidate
+
+- [ ] Confirm `VERSION` matches the latest entry in `CHANGELOG.md`.
+- [ ] Confirm `docs/release-checklist.md` is completed before staging deployment.
+- [ ] Confirm `docs/current-limitations.md` has been reviewed before staging deployment.
 
 ## Secret Safety
 

@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const TENANTS_DIR = path.join(__dirname, "tenants");
 const KNOWLEDGE_DIR = path.join(__dirname, "knowledge");
+const VERSION_FILE = path.join(ROOT_DIR, "VERSION");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = "gpt-5.4-mini";
 const MAX_MESSAGE_LENGTH = 1000;
@@ -111,6 +112,7 @@ server.listen(PORT, function () {
   console.log("Gemeente AI Assistent demo server");
   console.log("port=" + PORT);
   console.log("mode=" + getServerMode());
+  console.log("version=" + getAppVersion());
   console.log("tenants_loaded=" + getTenantCountForLog());
   console.log("demo_url=http://localhost:" + PORT + "/demo/demo.html");
 });
@@ -125,7 +127,16 @@ function handleHealth(response) {
     status: "ok",
     service: "gemeente-ai-assistent",
     mode: getServerMode(),
+    version: getAppVersion(),
   });
+}
+
+function getAppVersion() {
+  try {
+    return fs.readFileSync(VERSION_FILE, "utf8").trim() || "unknown";
+  } catch (error) {
+    return "unknown";
+  }
 }
 
 function handleReady(response) {

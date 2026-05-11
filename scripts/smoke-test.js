@@ -42,6 +42,15 @@ async function runSmokeTests() {
     assertEqual(response.json.mode, "mock");
   });
 
+  await test("GET /health returns a non-empty version", async function () {
+    const response = await request({
+      method: "GET",
+      path: "/health",
+    });
+
+    assertTruthy(response.json.version);
+  });
+
   await test("GET /ready returns 200", async function () {
     const response = await request({
       method: "GET",

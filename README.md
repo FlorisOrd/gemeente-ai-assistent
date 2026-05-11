@@ -272,7 +272,7 @@ This helps catch broken origin checks, topic gate behavior, and validation befor
 
 The app now has basic endpoints that hosting platforms can use during a private staging deployment:
 
-- `GET /health` returns whether the server is running and whether it is in `mock` or `openai` mode.
+- `GET /health` returns whether the server is running, whether it is in `mock` or `openai` mode, and the current version from `VERSION`.
 - `GET /ready` checks whether tenant config files can be loaded and returns the number of tenants found.
 
 The server reads `PORT` from the environment, which most hosting providers set automatically. `OPENAI_API_KEY` is still optional. Without it, the app runs in mock mode. With it, the backend can call OpenAI, but the browser still never receives the key.
@@ -280,6 +280,24 @@ The server reads `PORT` from the environment, which most hosting providers set a
 This is still meant for staging and private demos, not public production. Before production, the project still needs stronger rate limiting, monitoring, security review, privacy review, and approved municipal knowledge sources.
 
 See `docs/deployment.md` for the deployment notes.
+
+## Staging Release Candidate
+
+The current first staging release candidate is tracked with:
+
+- `VERSION`
+- `CHANGELOG.md`
+- `docs/release-checklist.md`
+- `docs/current-limitations.md`
+
+Before deploying to FXW staging, run:
+
+```bash
+node scripts/smoke-test.js
+node scripts/check-deployment-config.js
+```
+
+Then review the release checklist, changelog, and current limitations. This release candidate is still for private staging and pilot preparation, not public production.
 
 ## Future FXW/server Deployment
 
@@ -331,6 +349,8 @@ No API key is exposed in the snippet. The browser still only receives public ten
 gemeente-ai-assistent/
   README.md
   AGENTS.md
+  CHANGELOG.md
+  VERSION
   .env.example
   .github/
     workflows/
@@ -358,6 +378,7 @@ gemeente-ai-assistent/
     ai-transparency-note.md
     accessibility-checklist.md
     architecture.md
+    current-limitations.md
     deployment.md
     dpia-input-notes.md
     fxw-server-deployment.md
@@ -368,6 +389,7 @@ gemeente-ai-assistent/
     pilot-intake-form.md
     privacy.md
     privacy-security-review-pack.md
+    release-checklist.md
     mvp.md
     pilot-checklist.md
     risk-register.md
