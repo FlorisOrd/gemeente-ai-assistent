@@ -98,7 +98,9 @@ const server = http.createServer(async function (request, response) {
       return;
     }
 
-    sendJson(response, 405, { error: "Method not allowed" });
+    sendJson(response, 405, {
+      error: "Deze aanvraagmethode wordt niet ondersteund. Verstuur chatberichten via de widget.",
+    });
   } catch (error) {
     console.error(error);
     sendJson(response, 500, { error: "Er ging iets mis in de demo-server." });

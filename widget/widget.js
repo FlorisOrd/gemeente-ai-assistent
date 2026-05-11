@@ -193,6 +193,8 @@
     "  color: var(--gaa-color-primary-contrast);" +
     "}" +
     ".gemeente-ai-assistent-panel {" +
+    "  display: flex;" +
+    "  flex-direction: column;" +
     "  width: min(var(--gaa-panel-width), calc(100vw - 32px));" +
     "  max-height: calc(100vh - 96px);" +
     "  overflow: hidden;" +
@@ -209,6 +211,7 @@
     "  padding: var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-5);" +
     "  background: var(--gaa-color-primary);" +
     "  color: var(--gaa-color-primary-contrast);" +
+    "  flex: 0 0 auto;" +
     "}" +
     ".gemeente-ai-assistent-brand {" +
     "  display: flex;" +
@@ -256,7 +259,10 @@
     ".gemeente-ai-assistent-body {" +
     "  display: flex;" +
     "  flex-direction: column;" +
-    "  padding: var(--gaa-space-4);" +
+    "  flex: 1 1 auto;" +
+    "  min-height: 0;" +
+    "  overflow-y: auto;" +
+    "  padding: var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-5);" +
     "}" +
     ".gemeente-ai-assistent-disclaimer {" +
     "  margin: 0 0 var(--gaa-space-3);" +
@@ -290,7 +296,9 @@
     "  display: flex;" +
     "  flex-direction: column;" +
     "  gap: var(--gaa-space-3);" +
-    "  max-height: min(320px, 38vh);" +
+    "  flex: 1 1 auto;" +
+    "  min-height: 140px;" +
+    "  max-height: clamp(160px, 30vh, 300px);" +
     "  overflow-y: auto;" +
     "  margin-bottom: var(--gaa-space-4);" +
     "  padding-right: 2px;" +
@@ -434,6 +442,7 @@
     "  width: 100%;" +
     "  min-height: 44px;" +
     "  margin-top: var(--gaa-space-3);" +
+    "  margin-bottom: var(--gaa-space-1);" +
     "  border: 1px solid transparent;" +
     "  border-radius: var(--gaa-radius-md);" +
     "  padding: var(--gaa-space-3) var(--gaa-space-4);" +
@@ -453,12 +462,13 @@
     "}" +
     ".gemeente-ai-assistent-note {" +
     "  min-height: 1.4em;" +
-    "  margin-top: var(--gaa-space-3);" +
+    "  margin-top: var(--gaa-space-2);" +
+    "  margin-bottom: var(--gaa-space-2);" +
     "  color: var(--gaa-color-text-muted);" +
     "  font-size: var(--gaa-font-size-support);" +
     "}" +
     ".gemeente-ai-assistent-contact {" +
-    "  margin: var(--gaa-space-3) 0 0;" +
+    "  margin: var(--gaa-space-4) 0 var(--gaa-space-2);" +
     "  font-size: var(--gaa-font-size-support);" +
     "}" +
     "@media (max-width: 480px) {" +
@@ -475,10 +485,11 @@
     "    padding: var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-4);" +
     "  }" +
     "  .gemeente-ai-assistent-body {" +
-    "    padding: var(--gaa-space-3);" +
+    "    padding: var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-4);" +
     "  }" +
     "  .gemeente-ai-assistent-messages {" +
-    "    max-height: min(300px, 36vh);" +
+    "    min-height: 110px;" +
+    "    max-height: clamp(140px, 30vh, 260px);" +
     "  }" +
     "  .gemeente-ai-assistent-button {" +
     "    max-width: 100%;" +
@@ -575,7 +586,7 @@
       if (!response.ok) {
         addMessage(
           "assistant",
-          data.error || "Sorry, de assistent kon uw bericht niet verwerken. Probeer het opnieuw.",
+          getFriendlyErrorMessage(response, data),
           [],
           "",
           data.requestId
@@ -614,6 +625,17 @@
         error: "Sorry, de assistent kon uw bericht niet verwerken. Probeer het opnieuw.",
       };
     }
+  }
+
+  function getFriendlyErrorMessage(response, data) {
+    if (response.status === 405) {
+      return "Sorry, de assistent kon uw bericht niet verwerken. Probeer het opnieuw.";
+    }
+
+    return (
+      data.error ||
+      "Sorry, de assistent kon uw bericht niet verwerken. Probeer het opnieuw."
+    );
   }
 
   function addMessage(sender, text, sources, mode, requestId) {
