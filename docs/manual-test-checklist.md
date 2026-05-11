@@ -73,6 +73,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm the AI assistant disclaimer is visible.
 - [ ] Confirm the privacy warning is visible.
 - [ ] Open the widget with the launcher button.
+- [ ] Confirm the disclaimer and privacy warning are visible initially.
 - [ ] Close the widget with the launcher button.
 - [ ] Open the widget again.
 - [ ] Close the widget with the `x` button.
@@ -91,8 +92,9 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Test `Hoe dien ik bezwaar in tegen de WOZ waarde?` and confirm it returns a normal answer with a relevant source.
 - [ ] Confirm neither `hallo` nor the WOZ question shows `Method not allowed`.
 - [ ] Send multiple follow-up questions and confirm the textarea and send button remain reachable.
+- [ ] Confirm the disclaimer and privacy warning scroll away with the conversation.
 - [ ] Confirm there is only one internal scrollbar during normal use.
-- [ ] Confirm the messages area scrolls when the conversation grows.
+- [ ] Confirm the content area scrolls when the conversation grows.
 - [ ] Confirm the contact link has comfortable spacing above the bottom of the panel.
 - [ ] Confirm the mobile or narrow viewport still keeps the input usable.
 
@@ -129,6 +131,7 @@ Before merging a pull request, check that the GitHub Actions smoke test passes. 
 - [ ] Confirm feedback and clear conversation still work.
 - [ ] Confirm mobile or narrow layout still works after several messages.
 - [ ] Confirm the close button, launcher toggle, Escape key, and single-scrollbar behavior work.
+- [ ] Confirm the composer stays fixed at the bottom while notices and messages scroll.
 - [ ] Open `/demo/accessibility-test.html` and review keyboard and 200% zoom behavior.
 
 ## Tenant Configuration

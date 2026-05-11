@@ -61,12 +61,12 @@
     '  <button type="button" class="gemeente-ai-assistent-close" aria-label="Sluit assistent">x</button>' +
     "</div>" +
     '<div class="gemeente-ai-assistent-body">' +
-    '  <div class="gemeente-ai-assistent-notices">' +
+    '  <div class="gemeente-ai-assistent-scroll-area">' +
     '    <p class="gemeente-ai-assistent-disclaimer">Deze AI-assistent helpt u informatie te vinden, maar neemt geen besluiten. Controleer altijd de officiele gemeentelijke informatie.</p>' +
     '    <p class="gemeente-ai-assistent-privacy-notice">Deel geen BSN, medische gegevens of andere gevoelige persoonsgegevens. Lees de <a href="https://example.com/privacy" target="_blank" rel="noopener noreferrer">privacyinformatie</a>.</p>' +
-    "  </div>" +
-    '  <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
-    '    <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?</p>' +
+    '    <div class="gemeente-ai-assistent-messages" aria-live="polite">' +
+    '      <p class="gemeente-ai-assistent-message gemeente-ai-assistent-message-assistant gemeente-ai-assistent-intro">Hoi, ik ben Gemeente AI Assistent. Waarmee kan ik helpen?</p>' +
+    "    </div>" +
     "  </div>" +
     '  <div class="gemeente-ai-assistent-composer">' +
     '    <button type="button" class="gemeente-ai-assistent-clear">Gesprek wissen</button>' +
@@ -270,11 +270,19 @@
     "  flex: 1 1 auto;" +
     "  min-height: 0;" +
     "  overflow: hidden;" +
-    "  padding: var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-5);" +
+    "  padding: 0;" +
     "}" +
-    ".gemeente-ai-assistent-notices," +
+    ".gemeente-ai-assistent-scroll-area {" +
+    "  flex: 1 1 auto;" +
+    "  min-height: 0;" +
+    "  overflow-y: auto;" +
+    "  padding: var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-3);" +
+    "}" +
     ".gemeente-ai-assistent-composer {" +
     "  flex: 0 0 auto;" +
+    "  padding: var(--gaa-space-4) var(--gaa-space-4) var(--gaa-space-5);" +
+    "  border-top: 1px solid var(--gaa-color-border);" +
+    "  background: var(--gaa-color-surface);" +
     "}" +
     ".gemeente-ai-assistent-disclaimer {" +
     "  margin: 0 0 var(--gaa-space-3);" +
@@ -308,12 +316,8 @@
     "  display: flex;" +
     "  flex-direction: column;" +
     "  gap: var(--gaa-space-3);" +
-    "  flex: 1 1 auto;" +
-    "  min-height: 140px;" +
-    "  max-height: none;" +
-    "  overflow-y: auto;" +
-    "  margin-bottom: var(--gaa-space-4);" +
-    "  padding-right: 2px;" +
+    "  margin: 0;" +
+    "  overflow: visible;" +
     "}" +
     ".gemeente-ai-assistent-message {" +
     "  width: fit-content;" +
@@ -498,10 +502,13 @@
     "    padding: var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-4);" +
     "  }" +
     "  .gemeente-ai-assistent-body {" +
-    "    padding: var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-4);" +
+    "    padding: 0;" +
     "  }" +
-    "  .gemeente-ai-assistent-messages {" +
-    "    min-height: 110px;" +
+    "  .gemeente-ai-assistent-scroll-area {" +
+    "    padding: var(--gaa-space-3);" +
+    "  }" +
+    "  .gemeente-ai-assistent-composer {" +
+    "    padding: var(--gaa-space-3) var(--gaa-space-3) var(--gaa-space-4);" +
     "  }" +
     "  .gemeente-ai-assistent-button {" +
     "    max-width: 100%;" +
@@ -514,9 +521,6 @@
     "  }" +
     "}" +
     "@media (max-height: 640px) {" +
-    "  .gemeente-ai-assistent-messages {" +
-    "    min-height: 72px;" +
-    "  }" +
     "  .gemeente-ai-assistent-body textarea {" +
     "    min-height: 72px;" +
     "  }" +
@@ -531,6 +535,7 @@
   var sendButton = panel.querySelector(".gemeente-ai-assistent-send");
   var clearButton = panel.querySelector(".gemeente-ai-assistent-clear");
   var input = panel.querySelector("#gemeente-ai-assistent-input");
+  var scrollArea = panel.querySelector(".gemeente-ai-assistent-scroll-area");
   var messages = panel.querySelector(".gemeente-ai-assistent-messages");
   var note = panel.querySelector(".gemeente-ai-assistent-note");
   var title = panel.querySelector(".gemeente-ai-assistent-title");
@@ -700,7 +705,7 @@
     }
 
     messages.appendChild(messageElement);
-    messages.scrollTop = messages.scrollHeight;
+    scrollArea.scrollTop = scrollArea.scrollHeight;
   }
 
   function shouldShowSupportCode(mode, requestId) {
@@ -804,6 +809,7 @@
   function resetConversation() {
     messages.innerHTML = "";
     addIntroMessage();
+    scrollArea.scrollTop = 0;
     note.textContent = "";
     input.focus();
   }
