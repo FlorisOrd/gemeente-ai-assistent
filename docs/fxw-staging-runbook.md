@@ -20,12 +20,54 @@ On the server, choose a deployment directory. The examples use:
 /var/www/gemeente-ai-assistent
 ```
 
-Clone the repo there, or pull the latest version if it already exists:
+Clone the repo there, or update it if it already exists. For staging releases, fetch tags and check out the release tag instead of deploying a random branch state:
 
 ```bash
 cd /var/www/gemeente-ai-assistent
-git pull
+git fetch --tags
+git checkout v0.1.0-staging
 ```
+
+Do not edit code directly on the server. Make code changes through pull requests, create a new GitHub release tag, and deploy that tag.
+
+Server-only environment variables still live outside GitHub. `OPENAI_API_KEY` must be stored only on the server.
+
+## Deploying A Tagged Release
+
+Use `docs/release-process.md` before deploying a staging release.
+
+On the FXW server:
+
+```bash
+cd /var/www/gemeente-ai-assistent
+git fetch --tags
+git checkout v0.1.0-staging
+sudo systemctl restart gemeente-ai-assistent
+```
+
+Then check the deployment:
+
+```text
+https://assistant.example.nl/health
+https://assistant.example.nl/ready
+```
+
+After the hosted staging deployment is reachable, run from your local machine or Codespaces:
+
+```bash
+BASE_URL=https://assistant.example.nl node scripts/check-hosted-deployment.js
+```
+
+For rollback, check out the previous working tag and restart the service:
+
+```bash
+cd /var/www/gemeente-ai-assistent
+git fetch --tags
+git checkout v0.0.9-staging
+sudo systemctl restart gemeente-ai-assistent
+```
+
+After rollback, recheck `/health`, `/ready`, and the hosted deployment checker.
 
 ## 2. Create The Server-Only Environment File
 
@@ -196,7 +238,7 @@ Keep the previous working version available.
 If the new deployment fails:
 
 1. Stop the service: `sudo systemctl stop gemeente-ai-assistent`
-2. Restore the previous repo version or deployment folder.
+2. Check out the previous working release tag, for example `git checkout v0.0.9-staging`.
 3. Start the service again: `sudo systemctl start gemeente-ai-assistent`
 4. Recheck `/health` and `/ready`.
 

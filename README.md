@@ -299,6 +299,18 @@ node scripts/check-deployment-config.js
 
 Then review the release checklist, changelog, and current limitations. This release candidate is still for private staging and pilot preparation, not public production.
 
+## Release Process
+
+Staging deployments should use GitHub release tags, not random untagged commits.
+
+Read:
+
+```text
+docs/release-process.md
+```
+
+The version lives in `VERSION`, release notes live in `CHANGELOG.md`, and the GitHub release tag should use a format such as `v0.1.0-staging`.
+
 ## Future FXW/server Deployment
 
 The repo now also has notes for a future traditional Linux server deployment, such as an FXW VPS or managed Linux server with SSH access.
@@ -390,6 +402,7 @@ gemeente-ai-assistent/
     privacy.md
     privacy-security-review-pack.md
     release-checklist.md
+    release-process.md
     mvp.md
     pilot-checklist.md
     risk-register.md
