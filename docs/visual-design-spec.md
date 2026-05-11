@@ -137,6 +137,17 @@ Tenant JSON may control:
 
 Tenant customization should not override safety text, privacy warnings, source labels, or focus behavior without review.
 
+## Visual Acceptance Criteria
+
+- The launcher does not move horizontally when the panel opens or closes.
+- The panel feels stable, calm, and intentionally aligned.
+- Body text is readable at normal size and at narrow viewport widths.
+- Focus states are obvious for keyboard users.
+- Source links are clear, visibly clickable, and easy to scan.
+- Warnings are visible but not overwhelming.
+- The mobile layout is usable and does not feel cramped.
+- Demo, Waterstad, and staging variants still feel like one product family.
+
 ## What Not To Do
 
 - No tiny text.
